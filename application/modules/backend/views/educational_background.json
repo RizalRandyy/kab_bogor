@@ -1,0 +1,27 @@
+[
+    {
+        "latest_education": {
+            "level": "",
+            "institusi": "",
+            "fakultas": "",
+            "startdate": "",
+            "finishdate": ""
+        },
+        "education_level": [
+            {
+                "level": "",
+                "institusi": "",
+                "fakultas": "",
+                "startdate": "",
+                "finishdate": ""
+            },
+            {
+                "level": "",
+                "institusi": "",
+                "fakultas": "",
+                "startdate": "",
+                "finishdate": ""
+            }
+        ]
+    }
+]

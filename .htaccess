@@ -1,0 +1,20 @@
+RewriteEngine On
+#RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule (.*) index.php/$1
+php_value memory_limit 1024M
+php_value post_max_size 1024M
+php_value upload_max_filesize 1024M
+php_value max_execution_time 1800
+php_value max_input_time 1800
+
+#protect clickjaking
+Header always append X-Frame-Options SAMEORIGIN
+Header set X-XSS-Protection "1; mode=block"
+Header set X-Content-Type-Options nosniff
+
+# Apache config
+<FilesMatch ".(eot|ttf|otf|woff)">
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>

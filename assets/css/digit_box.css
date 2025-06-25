@@ -1,0 +1,14 @@
+.digit-group input {
+    width: 40px !important;
+    height: 50px !important;
+    background-color: #18182a;
+    border: none;
+    line-height: 50px;
+    text-align: left;
+    font-size: 24px;
+    font-family: "Raleway", sans-serif;
+    font-weight: 200;
+    color: white;
+    margin: 0 2px;
+    padding: 0 12.5px;
+}
