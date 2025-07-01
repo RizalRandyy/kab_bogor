@@ -29,7 +29,7 @@
         overflow:auto;
         padding-top: 20px;
        /* padding-top: 100px;
-        padding-bottom:150px; /* this needs to be bigger than footer height*/*/
+        padding-bottom:150px; /* this needs to be bigger than footer height*/
     }
 
     .footer {

@@ -17,29 +17,29 @@
 								<div class="col-lg-12 col-md-12 col-sm-12">
 									<div class="row p-0">
 										<div class="col-md-6 col-lg-12">
-	                                        <form>
-	                                            <div class="form-group row">
-	                                                <label for="idKegiatan" class="col-sm-4 col-form-label text-sm">Kegiatan ASB</label>
-	                                                <div class="col-sm-8">
+											<form>
+												<div class="form-group row">
+													<label for="idKegiatan" class="col-sm-4 col-form-label text-sm">Kegiatan ASB</label>
+													<div class="col-sm-8">
 														<select class="form-control" id="idKegiatan" ng-model="idKegiatan">
 															<option value="" disabled>Pilih Kegiatan ASB</option>
 															<option ng-repeat="x in options_kegiatan" value="{{x.id}}" name="{{x.id+'-'+x.kodeKelompok}}" id="{{x.id+'-'+x.kodeKelompok}}">{{x.kodeKelompok}} - {{x.UraianKegiatan}} - ({{x.satuan}}) - {{x.tahunASB}}</option>
 														</select>
 													</div>
-	                                            </div>
-	                                            <div class="form-group row">
-	                                                <label for="idKelItem" class="col-sm-4 col-form-label text-sm">Kelompok HSPK</label>
+												</div>
+												<div class="form-group row">
+													<label for="idKelItem" class="col-sm-4 col-form-label text-sm">Kelompok HSPK</label>
 													<div class="col-sm-8">
-														<select multiple class="form-control select2" id="item" ng-model="idKelItem">
+														<select multiple class="form-control select2" id="item" >
 															<option value="" disabled>Pilih Kelompok HSPK</option>
 															<option ng-repeat="option2 in options_kel_spesifikasi" value="{{option2.id}}" name="{{option2.id}}" id="{{option2.id}}">{{option2.kodeKelompok}} - {{option2.UraianKegiatan}} - {{option2.satuan}} - {{option2.tahunPekerjaan}} - {{option2.harga}}</option>
 														</select>
 														<div><span>Silahkan pilih beberapa item</span></div>
 													</div>
-	                                            </div>
-	                                            <div class="row">
+												</div>
+												<div class="row">
 													<div class="col-lg-12 col-md-12 col-sm-12">
-														
+
 														<div class="table-responsive">
 															<table class="table table-striped table-md">
 																<thead>
@@ -49,9 +49,10 @@
 																	<tr>
 																		<th class="text-center">Kelompok HSPK</th>
 																		<th class="text-center">Harga</th>
+																		<th class="text-center">Action</th>
 																	</tr>
 																</thead>
-																<tbody>
+																<tbody id="table-body">
 																	<tr>
 																		<td class="text-center" colspan="2" ng-show="loading">
 																			<img class="loader-img" src="<?= base_url('assets/img/loadertsel.gif') ?>" alt="loader">
@@ -66,14 +67,17 @@
 																			<input type="text" name="total[]" class="form-control text-right" ng-value="getTotal(id, total_item[id])| currency:'Rp. '" disabled>
 																			<input type="hidden" name="total_hide[]" ng-value="getTotal(id, total_item[id])" disabled>
 																		</td>
+																		<td style="width: 5%;">
+																			<button type="button" class="btn btn-danger btn-sm" ng-click="removeItem(id)">Hapus</button>
+																		</td>
 																	</tr>
 																</tbody>
 															</table>
 														</div>
 													</div>
 												</div>
-	                                        </form>
-	                                    </div>
+											</form>
+										</div>
 									</div>
 								</div>
 								<div class="col-12 col-md-12 col-lg-12 text-right">

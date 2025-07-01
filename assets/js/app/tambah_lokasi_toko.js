@@ -74,6 +74,7 @@ mainApp
 		var nama_toko = $('#nama_toko').val();
 		var tautan = $('#tautan').val();
 		var tipe = $('#tipe').val();
+		var koordinat = $('#koordinat').val();
 
 		if (nama_toko == "") {
 			$('#nama_toko').focus();
@@ -87,6 +88,12 @@ mainApp
 				icon: "warning",
 				title: 'Masukan Link Tautan!',
 			});
+		} else if (koordinat == "") {
+			$('#koordinat').focus();
+			return Toast.fire({
+				icon: "warning",
+				title: 'Masukan Koordinat!',
+			});
 		}
 
 		var formData = new FormData();
@@ -95,7 +102,8 @@ mainApp
 			formData.append("id", $scope.id);
 		}
 		formData.append("nama_toko", nama_toko);
-		formData.append("tautan", tautan);
+		formData.append("tautan", tautan)
+		formData.append("koordinat", koordinat);
 
 		Swal.fire({
 			title: 'Loading...',

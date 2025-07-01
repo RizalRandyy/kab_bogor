@@ -6,6 +6,14 @@
 	.loader-img {
 		width: 25px !important;
 	}
+
+	#map {
+		height: 200px;
+		width: 100%;
+		margin-bottom: 20px;
+		border-radius: 10px;
+		border: 1px solid #ddd;
+	}
 </style>
 <div class="main-content" ng-controller="<?= $page ?>" id="<?= $page ?>">
 	<section class="section">
@@ -19,15 +27,19 @@
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6" style="color:white; margin-top:37px;">
 						<?php if ($users['role_access']['lokasi_toko']['accessadd_lokasi_toko'] == 'on') { ?>
-						<form class="form-inline float-right">
-							<div class="mb-2 mr-2">
-                                <a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
-                                	<i class="fas fa-plus"></i> Tambah
-                                </a>
-                            </div> 
-						</form>
+							<form class="form-inline float-right">
+								<div class="mb-2 mr-2">
+									<a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
+										<i class="fas fa-plus"></i> Tambah
+									</a>
+								</div>
+							</form>
 						<?php } ?>
 					</div>
+					<div class="col-lg-12 col-md-12 col-sm-12	">
+						<div id="map"></div>
+					</div>
+
 				</div>
 				<div class="card card-statistic-2">
 					<div class="card-stats p-3">
@@ -54,7 +66,7 @@
 													<input ng-if="b != 'reset'" type="text" class="form-control no-margin form-filter " ng-model="search_Method.val[b]" ng-change="searchMethod(b, search_Method.val[b])" ng-model-options="{debounce: 2000}">
 												</td>
 												<td class="no-padding px-1"></td>
-											</tr> 
+											</tr>
 											<tr ng-show="message != null">
 												<td colspan="6" class="text-center" ng-bind="message"></td>
 											</tr>
@@ -74,14 +86,14 @@
 															<a href="" class="btn btn-success btn-sm p-1" title="Edit: {{value.nama_toko}}" ng-click="edit(value)">
 																<i class="fas fa-edit"></i>&nbsp;
 															</a>
-														<?php }?>
+														<?php } ?>
 														<?php if ($users['role_access']['lokasi_toko']['accessdelete_lokasi_toko'] == 'on') { ?>
 															<a href="" class="btn btn-danger btn-sm p-1" title="Delete: {{value.nama_toko}}" ng-click="delete(value)">
 																<i class="fas fa-trash"></i>&nbsp;
 															</a>
-														<?php }?>
+														<?php } ?>
 													</td>
-												<?php }?>
+												<?php } ?>
 											</tr>
 										</tbody>
 									</table>
@@ -97,3 +109,23 @@
 		</div>
 	</section>
 </div>
+
+
+<!-- <script>
+	document.addEventListener("DOMContentLoaded", function() {
+		var map = L.map('map').setView([-6.9297534, 107.6135855], 15.6);
+
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+
+		}).addTo(map);
+
+		L.marker([-6.9311947, 107.6130318]).addTo(map)
+			.bindPopup("Universitas Langlanbuana")
+			.openPopup();
+
+		L.marker([-6.9289822, 107.6078851]).addTo(map)
+			.bindPopup("Universitas Pasundan Lengkong")
+			.openPopup();
+	});
+</script> -->
