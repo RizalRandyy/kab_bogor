@@ -25,13 +25,13 @@
 						<div class="row">
 							<div class="col-lg-12 col-md-12 col-sm-12">
 								<?php if ($users['role_access']['kegiatan_hspk']['accessadd_kegiatan_hspk'] == 'on') { ?>
-								<form class="form-inline float-right">
-									<div class="mb-2 mr-2">
-		                                <a href="" class="btn btn-success btn-sm" style="float: right;" title="Tambah Data" ng-click="tambah()">
-		                                	<i class="fas fa-plus"></i> Tambah
-		                                </a>
-		                            </div> 
-								</form>
+									<form class="form-inline float-right">
+										<div class="mb-2 mr-2">
+											<a href="" class="btn btn-success btn-sm" style="float: right;" title="Tambah Data" ng-click="tambah()">
+												<i class="fas fa-plus"></i> Tambah
+											</a>
+										</div>
+									</form>
 								<?php } ?>
 								<div class="table-responsive">
 									<table class="table table-striped table-md" style="font-size: 12px;">
@@ -59,7 +59,7 @@
 													<input ng-if="b != 'reset'" type="text" class="form-control no-margin form-filter " ng-model="search_Method.val[b]" ng-change="searchMethod(b, search_Method.val[b])" ng-model-options="{debounce: 2000}">
 												</td>
 												<td class="no-padding px-1"></td>
-											</tr> 
+											</tr>
 											<tr ng-show="message != null">
 												<td colspan="6" class="text-center" ng-bind="message"></td>
 											</tr>
@@ -84,14 +84,14 @@
 															<a href="" class="btn btn-success btn-sm p-1" title="Edit: {{value.title}}" ng-click="edit(value)">
 																<i class="fas fa-edit"></i>&nbsp;
 															</a>
-														<?php }?>
+														<?php } ?>
 														<?php if ($users['role_access']['kegiatan_hspk']['accessdelete_kegiatan_hspk'] == 'on') { ?>
 															<a href="" class="btn btn-danger btn-sm p-1" title="Delete: {{value.title}}" ng-click="delete(value)">
 																<i class="fas fa-trash"></i>&nbsp;
 															</a>
-														<?php }?>
+														<?php } ?>
 													</td>
-												<?php }?>
+												<?php } ?>
 											</tr>
 										</tbody>
 									</table>

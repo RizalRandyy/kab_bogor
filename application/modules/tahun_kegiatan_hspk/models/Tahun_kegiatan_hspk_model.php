@@ -1,30 +1,41 @@
 <?php
 class Tahun_kegiatan_hspk_model extends CI_Model
 {
-    public function getData($params,$users)
+    public function getData($params, $users)
     {
         $start = ($params['offset'] - 1) * $params['limit'];
         $keyresult = (array)json_decode($params['keyword']);
 
-        $this->db->select('tb_thn_kegiatan.id,tahunPekerjaan,kodeKelompok,tb_kegiatan.UraianKegiatan,tb_kegiatan.satuan')
-                ->join('tb_kegiatan', 'tb_thn_kegiatan.idKegiatan = tb_kegiatan.id');
+        $this->db->select('
+            tb_thn_kegiatan.id,
+            tahunPekerjaan,
+            kodeKelompok,
+            tb_kegiatan.UraianKegiatan as UraianKegiatan,
+            tb_kegiatan.idBidangTeknis as idBidangTeknis,
+            tb_bidang_teknis.namaBidangTeknis as namaBidangTeknis,
+            tb_kegiatan.satuan as satuan
+        ')
+            ->join('tb_kegiatan', 'tb_thn_kegiatan.idKegiatan = tb_kegiatan.id')
+            ->join('tb_bidang_teknis', 'tb_kegiatan.idBidangTeknis = tb_bidang_teknis.idBidangTeknis', 'left');
 
         if (!empty($keyresult)) {
             foreach ($keyresult as $key => $value) {
-                if($value){
-                    if($key == 'UraianKegiatan'){
+                if ($value) {
+                    if ($key == 'UraianKegiatan') {
                         $this->db->like('tb_kegiatan.UraianKegiatan', $value);
-                    } elseif($key == 'satuan'){
+                    } elseif ($key == 'satuan') {
                         $this->db->like('tb_kegiatan.satuan', $value);
-                    } else{
+                    } elseif ($key == 'namaBidangTeknis') {
+                        $this->db->like('tb_bidang_teknis.namaBidangTeknis', $value);
+                    } else {
                         $this->db->like($key, $value);
                     }
                 }
             }
         }
-        
+
         $tot = clone $this->db;
-        $this->db->order_by('tb_thn_kegiatan.idKegiatan ASC, tahunPekerjaan DESC');
+        $this->db->order_by('tahunPekerjaan DESC')->order_by('tb_thn_kegiatan.idKegiatan ASC');
         $get_data = $this->db->limit($params['limit'], $start)->get('tb_thn_kegiatan')->result_array();
         $get_count = $tot->get('tb_thn_kegiatan')->num_rows();
 
@@ -33,7 +44,7 @@ class Tahun_kegiatan_hspk_model extends CI_Model
                 $get_data[$key]['id'] = encrypt_url($value['id']);
             }
         }
-        
+
         return [
             'count' => $get_count,
             'data' => !empty($get_data) ? $get_data : [],
@@ -43,8 +54,19 @@ class Tahun_kegiatan_hspk_model extends CI_Model
 
     public function getkegiatan()
     {
-        $get_data = $this->db->select('id,idKegiatan,UraianKegiatan,satuan')
-                            ->order_by('idKegiatan')->get('tb_kegiatan')->result_array();
+        $get_data = $this->db->select('
+            tb_kegiatan.id,
+            idKegiatan,
+            tb_kegiatan.idBidangTeknis,
+            tb_bidang_teknis.namaBidangTeknis,
+            UraianKegiatan,
+            satuan
+        ')
+            ->from('tb_kegiatan')
+            ->join('tb_bidang_teknis', 'tb_kegiatan.idBidangTeknis = tb_bidang_teknis.idBidangTeknis', 'left')
+            ->order_by('idKegiatan')
+            ->get()
+            ->result_array();
 
         return [
             'data' => !empty($get_data) ? $get_data : []
@@ -54,7 +76,7 @@ class Tahun_kegiatan_hspk_model extends CI_Model
     public function saveData($params)
     {
         $kelompok_item = $this->db->where('id', $params['idKegiatan'])
-                                    ->get('tb_kegiatan')->first_row();
+            ->get('tb_kegiatan')->first_row();
 
         $kodeKelompok = $kelompok_item->idKegiatan;
 
@@ -63,17 +85,17 @@ class Tahun_kegiatan_hspk_model extends CI_Model
             unset($params['id']);
 
             $cek = $this->db->select('*')
-                            ->join('tb_kegiatan','tb_thn_kegiatan.idKegiatan = tb_kegiatan.id')
-                            ->where('tb_thn_kegiatan.id !=', $id)
-                            ->where('tb_thn_kegiatan.idKegiatan', $params['idKegiatan'])
-                            ->where('tahunPekerjaan', $params['tahunPekerjaan'])
-                            ->get('tb_thn_kegiatan')->first_row();
+                ->join('tb_kegiatan', 'tb_thn_kegiatan.idKegiatan = tb_kegiatan.id')
+                ->where('tb_thn_kegiatan.id !=', $id)
+                ->where('tb_thn_kegiatan.idKegiatan', $params['idKegiatan'])
+                ->where('tahunPekerjaan', $params['tahunPekerjaan'])
+                ->get('tb_thn_kegiatan')->first_row();
 
             $params['kodeKelompok'] = $kodeKelompok;
 
-            if($cek){
+            if ($cek) {
                 return [
-                    'message' => 'Edit Tahun Kegiatan Gagal! Kode Kegiatan '.$kodeKelompok.' & Tahun '.$params['tahunPekerjaan'].' sudah ada!',
+                    'message' => 'Edit Tahun Kegiatan Gagal! Kode Kegiatan ' . $kodeKelompok . ' & Tahun ' . $params['tahunPekerjaan'] . ' sudah ada!',
                     'status' => 500,
                 ];
             }
@@ -92,16 +114,16 @@ class Tahun_kegiatan_hspk_model extends CI_Model
         } else {
 
             $cek = $this->db->select('*')
-                            ->join('tb_kegiatan','tb_thn_kegiatan.idKegiatan = tb_kegiatan.id')
-                            ->where('tb_thn_kegiatan.idKegiatan', $params['idKegiatan'])
-                            ->where('tahunPekerjaan', $params['tahunPekerjaan'])
-                            ->get('tb_thn_kegiatan')->first_row();
+                ->join('tb_kegiatan', 'tb_thn_kegiatan.idKegiatan = tb_kegiatan.id')
+                ->where('tb_thn_kegiatan.idKegiatan', $params['idKegiatan'])
+                ->where('tahunPekerjaan', $params['tahunPekerjaan'])
+                ->get('tb_thn_kegiatan')->first_row();
 
             $params['kodeKelompok'] = $kodeKelompok;
 
-            if($cek){
+            if ($cek) {
                 return [
-                    'message' => 'Tambah Tahun Kegiatan Gagal! Kode Kegiatan '.$kodeKelompok.' & Tahun '.$params['tahunPekerjaan'].' sudah ada!',
+                    'message' => 'Tambah Tahun Kegiatan Gagal! Kode Kegiatan ' . $kodeKelompok . ' & Tahun ' . $params['tahunPekerjaan'] . ' sudah ada!',
                     'status' => 500,
                 ];
             }
@@ -120,7 +142,7 @@ class Tahun_kegiatan_hspk_model extends CI_Model
         }
     }
 
-    public function getReqById($id,$users)
+    public function getReqById($id, $users)
     {
         $id = decrypt_url($id);
         $this->db->select('id,idKegiatan,tahunPekerjaan')
@@ -128,7 +150,7 @@ class Tahun_kegiatan_hspk_model extends CI_Model
 
         $data =  $this->db->get('tb_thn_kegiatan')->row();
 
-        if($data){
+        if ($data) {
             $data->id = encrypt_url($data->id);
         }
 
@@ -156,8 +178,9 @@ class Tahun_kegiatan_hspk_model extends CI_Model
         ];
     }
 
-    public function getheader(){
-        $header  = array("No" => 'reset', "Kode Item" => "kodeKelompok", "Uraian Kegiatan" => "UraianKegiatan", "Satuan" => "satuan", "Tahun" => "tahunPekerjaan",);  
+    public function getheader()
+    {
+        $header  = array("No" => 'reset', "Kode Item" => "kodeKelompok", "Bidang" => "namaBidangTeknis", "Uraian Kegiatan" => "UraianKegiatan", "Satuan" => "satuan", "Tahun" => "tahunPekerjaan");
         return $header;
     }
 }

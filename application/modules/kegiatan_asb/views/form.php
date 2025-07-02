@@ -17,35 +17,44 @@
 								<div class="col-lg-12 col-md-12 col-sm-12">
 									<div class="row p-0">
 										<div class="col-md-6 col-lg-12">
-	                                        <form>
-	                                            <div class="form-group row">
-	                                                <label for="idASB" class="col-sm-4 col-form-label text-sm">Kode Pekerjaan</label>
-	                                                <div class="col-sm-8">
-	                                                    <input type="text" class="form-control form-control-sm text-sm" id="idASB" name="idASB" ng-model="idASB" ng-maxlength="6" placeholder="Input Kode Pekerjaan">
-	                                                </div>
-	                                                <div class="col-sm-4"></div>
-	                                                <div class="col-sm-8">
-		                                                <span ng-show="addReq.idASB.$error.maxlength" style="color: red;">Kode Pekerajaan Maksimal hanya 6 Karakter!</span>
-		                                            </div>
-	                                            </div>
-	                                            <div class="form-group row">
-	                                                <label for="urKeg" class="col-sm-4 col-form-label text-sm">Uraian Kegiatan</label>
-	                                                <div class="col-sm-8">
-	                                                	<input type="text" class="form-control form-control-sm text-sm" id="urKeg" name="urKeg" ng-model="urKeg" placeholder="Input Uraian Kelompok Kegiatan">
-	                                                </div>
-	                                            </div>
-	                                            <div class="form-group row">
-	                                                <label for="satuan" class="col-sm-4 col-form-label text-sm">Satuan</label>
-	                                                <div class="col-sm-8">
-	                                                    <input type="text" class="form-control form-control-sm text-sm" id="satuan" name="satuan" ng-model="satuan" ng-maxlength="8" placeholder="Input Satuan">
-	                                                </div>
+											<form>
+												<div class="form-group row">
+													<label for="idASB" class="col-sm-4 col-form-label text-sm">Kode Pekerjaan</label>
+													<div class="col-sm-8">
+														<input type="text" class="form-control form-control-sm text-sm" id="idASB" name="idASB" ng-model="idASB" ng-maxlength="6" placeholder="Input Kode Pekerjaan">
+													</div>
 													<div class="col-sm-4"></div>
-	                                                <div class="col-sm-8">
-		                                                <span ng-show="addReq.satuan.$error.maxlength" style="color: red;">Input Satuan Maksimal hanya 8 Karakter!</span>
-		                                            </div>
-	                                            </div>
-	                                        </form>
-	                                    </div>
+													<div class="col-sm-8">
+														<span ng-show="addReq.idASB.$error.maxlength" style="color: red;">Kode Pekerajaan Maksimal hanya 6 Karakter!</span>
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="idOpd" class="col-sm-4 col-form-label text-sm">Bidang</label>
+													<div class="col-sm-8">
+														<select class="form-control" id="idOpd" ng-model="idOpd">
+															<option value="" disabled>Pilih Bidang</option>
+															<option ng-repeat="option in options" value="{{option.idOpd}}" name="{{option.idOpd}}" id="{{option.idOpd}}">{{option.namaOpd}}</option>
+														</select>
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="urKeg" class="col-sm-4 col-form-label text-sm">Uraian Kegiatan</label>
+													<div class="col-sm-8">
+														<input type="text" class="form-control form-control-sm text-sm" id="urKeg" name="urKeg" ng-model="urKeg" placeholder="Input Uraian Kelompok Kegiatan">
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="satuan" class="col-sm-4 col-form-label text-sm">Satuan</label>
+													<div class="col-sm-8">
+														<input type="text" class="form-control form-control-sm text-sm" id="satuan" name="satuan" ng-model="satuan" ng-maxlength="8" placeholder="Input Satuan">
+													</div>
+													<div class="col-sm-4"></div>
+													<div class="col-sm-8">
+														<span ng-show="addReq.satuan.$error.maxlength" style="color: red;">Input Satuan Maksimal hanya 8 Karakter!</span>
+													</div>
+												</div>
+											</form>
+										</div>
 									</div>
 								</div>
 								<div class="col-12 col-md-12 col-lg-12 text-right">

@@ -22,8 +22,7 @@ class User_role extends My_Controller
 			'assets/js/app/user_role.js?' . rand()
 		);
 
-		$this->data['css'] = array(
-		);
+		$this->data['css'] = array();
 
 		$this->template->load($this->data, null, 'index');
 	}
@@ -50,6 +49,9 @@ class User_role extends My_Controller
 		$this->data['title']   = 'Tambah Role';
 		$this->data['version']   = 'user';
 		$this->data['accessListNew'] = $this->get_all_modules();
+		$this->data['accessListNew']['kelola_usulan'] = [
+			'akses_ubah_status' => 'off'
+		];
 
 		$this->template->load($this->data, null, 'role_form');
 	}
@@ -87,6 +89,9 @@ class User_role extends My_Controller
 		$this->data['version'] = $this->uri->segment(1);
 
 		$default_access = $this->get_all_modules();
+		$default_access['kelola_usulan'] = [
+			'akses_ubah_status' => 'off'
+		];
 		$this->data['accessListNew'] = $default_access;
 		$roles = $this->db->select('*')->from('users_role')->where('id = ', $id)->get()->first_row();
 		$this->data['roles']   = $roles;
@@ -136,11 +141,11 @@ class User_role extends My_Controller
 		foreach ($map as $key => $file) {
 			$file = substr($file, 0, -1);
 			if ($file != 'login' && $file != 'backend' && $file != 'frontend' && $file != 'dashboard' && $file != 'hspk' && $file != 'ssh' && $file != 'asb' && $file != 'profile') {
-				if($file == 'manage_dashboard' || $file == 'user_log'){
+				if ($file == 'manage_dashboard' || $file == 'user_log') {
 					$modules[$file] = [
 						$file 					=> "off",
 					];
-				}else{
+				} else {
 					$modules[$file] = [
 						$file 					=> "off",
 						"accessadd_" . $file 		=> "off",

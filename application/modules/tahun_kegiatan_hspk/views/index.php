@@ -19,13 +19,13 @@
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6" style="color:white; margin-top:37px;">
 						<?php if ($users['role_access']['tahun_kegiatan_hspk']['accessadd_tahun_kegiatan_hspk'] == 'on') { ?>
-						<form class="form-inline float-right">
-							<div class="mb-2 mr-2">
-                                <a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
-                                	<i class="fas fa-plus"></i> Tambah
-                                </a>
-                            </div> 
-						</form>
+							<form class="form-inline float-right">
+								<div class="mb-2 mr-2">
+									<a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
+										<i class="fas fa-plus"></i> Tambah
+									</a>
+								</div>
+							</form>
 						<?php } ?>
 					</div>
 				</div>
@@ -33,13 +33,14 @@
 					<div class="card-stats p-4">
 						<div class="row">
 							<div class="col-lg-12 col-md-12 col-sm-12">
-								
+
 								<div class="table-responsive">
 									<table class="table table-striped table-md" style="font-size: 12px;">
 										<thead>
 											<tr>
 												<th>No</th>
 												<th class="text-center">Kode Kegiatan</th>
+												<th class="text-center">Bidang</th>
 												<th class="text-center">Uraian Kegiatan</th>
 												<th class="text-center">Satuan</th>
 												<th class="text-center">Tahun Pekerjaan</th>
@@ -57,7 +58,7 @@
 													<input ng-if="b != 'reset'" type="text" class="form-control no-margin form-filter " ng-model="search_Method.val[b]" ng-change="searchMethod(b, search_Method.val[b])" ng-model-options="{debounce: 2000}">
 												</td>
 												<td class="no-padding px-1"></td>
-											</tr> 
+											</tr>
 											<tr ng-show="message != null">
 												<td colspan="6" class="text-center" ng-bind="message"></td>
 											</tr>
@@ -70,6 +71,7 @@
 											<tr ng-hide="loading" dir-paginate="(key, value) in data|itemsPerPage:itemsPerPage" total-items="total_count" current-page="curPage" pagination-id="paginateID">
 												<td ng-bind="key+no"></td>
 												<td ng-bind="value.kodeKelompok"></td>
+												<td ng-bind="value.namaBidangTeknis"></td>
 												<td ng-bind="value.UraianKegiatan"></td>
 												<td ng-bind="value.satuan"></td>
 												<td ng-bind="value.tahunPekerjaan"></td>
@@ -79,14 +81,14 @@
 															<a href="" class="btn btn-success btn-sm p-1" title="Edit: {{value.title}}" ng-click="edit(value)">
 																<i class="fas fa-edit"></i>&nbsp;
 															</a>
-														<?php }?>
+														<?php } ?>
 														<?php if ($users['role_access']['tahun_kegiatan_hspk']['accessdelete_tahun_kegiatan_hspk'] == 'on') { ?>
 															<a href="" class="btn btn-danger btn-sm p-1" title="Delete: {{value.title}}" ng-click="delete(value)">
 																<i class="fas fa-trash"></i>&nbsp;
 															</a>
-														<?php }?>
+														<?php } ?>
 													</td>
-												<?php }?>
+												<?php } ?>
 											</tr>
 										</tbody>
 									</table>

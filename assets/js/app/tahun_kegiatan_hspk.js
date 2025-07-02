@@ -22,15 +22,18 @@ mainApp.controller('tahun_kegiatan_hspk', ['$scope', 'httpHandler', '$filter', '
 	$scope.no = 1;
 	$scope.itemsPerPage = 10;
 	$scope.keyword = {};
-	$scope.search_Method ={};
+	$scope.search_Method = {
+		val: {}
+	};
+	$scope.search_Method = {};
 	$scope.total_count = 0;
 	$scope.message = null;
 
 	$scope.getData = function (pageno) {
-		if(pageno == 0)
-            $scope.no = 1;
-        else
-            $scope.no = (pageno*$scope.itemsPerPage) - ($scope.itemsPerPage - 1);
+		if (pageno == 0)
+			$scope.no = 1;
+		else
+			$scope.no = (pageno * $scope.itemsPerPage) - ($scope.itemsPerPage - 1);
 
 		$scope.total_count = 0;
 		$scope.message = null;
@@ -61,27 +64,26 @@ mainApp.controller('tahun_kegiatan_hspk', ['$scope', 'httpHandler', '$filter', '
 
 	$scope.getData(0);
 
-	$scope.searchMethod = function(keyname, val)
-	{
+	$scope.searchMethod = function (keyname, val) {
 		$scope.keyword[keyname] = val;
 		$scope.getData(1);
-    }
+	}
 
-    $scope.reset = function(is_master)
-    {
-    	$scope.keyword = {};
-    	$scope.search_Method = {};
-    	if(is_master == "master"){
-    		$scope.getData(1);
-    	}
-    }
+	$scope.reset = function (is_master) {
+		$scope.keyword = {};
+		$scope.search_Method = { val: {} };
+		$scope.search_Method = {};
+		if (is_master == "master") {
+			$scope.getData(1);
+		}
+	}
 
 	$scope.tambah = function () {
 		window.location.replace(urls + 'tahun_kegiatan_hspk/form/tambah');
 	}
 
 	$scope.edit = function (params) {
-		window.location.replace(urls + 'tahun_kegiatan_hspk/form/edit?id='+params.id);
+		window.location.replace(urls + 'tahun_kegiatan_hspk/form/edit?id=' + params.id);
 	}
 
 	$scope.delete = function (params) {

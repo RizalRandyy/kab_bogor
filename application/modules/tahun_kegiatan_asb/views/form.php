@@ -17,30 +17,30 @@
 								<div class="col-lg-12 col-md-12 col-sm-12">
 									<div class="row p-0">
 										<div class="col-md-6 col-lg-12">
-	                                        <form>
-	                                            <div class="form-group row">
-	                                                <label for="idASB" class="col-sm-4 col-form-label text-sm">Kode Kegiatan</label>
-	                                                <div class="col-sm-8">
+											<form>
+												<div class="form-group row">
+													<label for="idASB" class="col-sm-4 col-form-label text-sm">Kode Kegiatan</label>
+													<div class="col-sm-8">
 														<select class="form-control" id="idASB" ng-model="idASB">
 															<option value="" disabled>Pilih Kode Kegiatan</option>
-															<option ng-repeat="option in options" value="{{option.id}}" name="{{option.id}}" id="{{option.id}}">{{option.idASB}} - {{option.UraianKegiatan}} - ({{option.satuan}})</option>
+															<option ng-repeat="option in options" value="{{option.id}}" name="{{option.id}}" id="{{option.id}}">{{option.namaOpd}} - {{option.idASB}} - {{option.UraianKegiatan}} - ({{option.satuan}})</option>
 														</select>
 													</div>
-	                                            </div>
-	                                            <div class="form-group row">
-	                                                <label for="idJnsBrg" class="col-sm-4 col-form-label text-sm">Tahun Kegiatan</label>
-	                                                <div class="input-group col-sm-8">
-														<input class="form-control" ng-minlength="4" ng-maxlength="4" id="tahun" name="tahun" ng-model="tahun" ng-pattern="/^\d+$/" placeholder="Input Tahun" >
-														
+												</div>
+												<div class="form-group row">
+													<label for="idJnsBrg" class="col-sm-4 col-form-label text-sm">Tahun Kegiatan</label>
+													<div class="input-group col-sm-8">
+														<input class="form-control" ng-minlength="4" ng-maxlength="4" id="tahun" name="tahun" ng-model="tahun" ng-pattern="/^\d+$/" placeholder="Input Tahun">
+
 													</div>
-	                                                <div class="col-sm-4"></div>
-	                                                <div class="col-sm-8">
-		                                                <span ng-show="addReq.tahun.$error.maxlength" style="color: red;">Input Tahun 4 Karakter!</span>
-		                                                 <span ng-show="addReq.tahun.$error.minlength" style="color: red;">Input Tahun 4 Karakter!</span>
-		                                            </div>
-	                                            </div>
-	                                        </form>
-	                                    </div>
+													<div class="col-sm-4"></div>
+													<div class="col-sm-8">
+														<span ng-show="addReq.tahun.$error.maxlength" style="color: red;">Input Tahun 4 Karakter!</span>
+														<span ng-show="addReq.tahun.$error.minlength" style="color: red;">Input Tahun 4 Karakter!</span>
+													</div>
+												</div>
+											</form>
+										</div>
 									</div>
 								</div>
 								<div class="col-12 col-md-12 col-lg-12 text-right">

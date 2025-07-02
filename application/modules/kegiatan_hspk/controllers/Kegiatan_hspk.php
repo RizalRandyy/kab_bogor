@@ -29,7 +29,7 @@ class Kegiatan_hspk extends My_Controller
 
 	public function getData_get()
 	{
-		$return = $this->Kegiatan_hspk_model->getData($this->get(NULL, TRUE),$this->data['users']);
+		$return = $this->Kegiatan_hspk_model->getData($this->get(NULL, TRUE), $this->data['users']);
 		$return['header'] = $this->Kegiatan_hspk_model->getheader();
 
 		$this->response($return, 200);
@@ -38,10 +38,10 @@ class Kegiatan_hspk extends My_Controller
 	public function form_get()
 	{
 		$segment = $this->uri->segment(3);
-		$this->data['title'] = ucfirst($segment).' Kegiatan HSPK';
+		$this->data['title'] = ucfirst($segment) . ' Kegiatan HSPK';
 		$this->data['page'] = 'tambah_kegiatan_hspk';
 		$this->data['version'] = $this->uri->segment(2);
-		$this->data['id'] = @$this->get('id')?$this->get('id', TRUE):null;
+		$this->data['id'] = @$this->get('id') ? $this->get('id', TRUE) : null;
 
 		$this->data['js'] = array(
 			'assets/js/app/tambah_kegiatan_hspk.js?' . rand(),
@@ -57,6 +57,13 @@ class Kegiatan_hspk extends My_Controller
 		];
 
 		$this->template->load($this->data, null, 'form');
+	}
+
+	public function bidang_teknis_get()
+	{
+		$return = $this->Kegiatan_hspk_model->getBidangTeknis();
+
+		$this->response($return, 200);
 	}
 
 	public function kel_spesifikasi_get()
@@ -80,7 +87,7 @@ class Kegiatan_hspk extends My_Controller
 
 	public function getById_get()
 	{
-		$return = $this->Kegiatan_hspk_model->getReqById($this->get('id', TRUE),$this->data['users']);
+		$return = $this->Kegiatan_hspk_model->getReqById($this->get('id', TRUE), $this->data['users']);
 
 		$this->response($return, $return['status'] == 500 ? false : 200);
 	}

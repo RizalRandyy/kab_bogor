@@ -1,4 +1,43 @@
 <body ng-app="kab_bogor">
+	<style>
+		.submenu-dropdown {
+			display: none;
+			position: absolute;
+			left: 100%;
+			top: 0;
+			min-width: 180px;
+			background-color: #fff;
+			z-index: 999;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		.submenu-dropdown.show {
+			display: block !important;
+		}
+
+		.nav-item.submenu {
+			position: relative;
+		}
+
+		.nav-item.submenu>a {
+			padding-left: 60px !important;
+			font-weight: normal;
+		}
+
+		.submenu-dropdown .nav-link {
+			padding-left: 96px !important;
+			font-weight: normal;
+		}
+
+		.dropdown-menu.default-open {
+			display: block !important;
+		}
+
+		.submenu-dropdown.default-open {
+			display: block !important;
+		}
+	</style>
+
 	<div id="app">
 		<div class="main-wrapper">
 			<!-- <div class="navbar-bg"></div> -->
@@ -12,7 +51,7 @@
 					<ul class="navbar-nav navbar-right">
 						<li class="dropdown">
 							<a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-								<img alt="image" style="color: black;" src="<?= $users['photo_profile'];?>" class="rounded-circle mr-1">
+								<img alt="image" style="color: black;" src="<?= $users['photo_profile']; ?>" class="rounded-circle mr-1">
 								<div class="d-sm-none d-lg-inline-block" style="color: black;">Hi, <?= ucwords($users["full_name"]) ?></div>
 							</a>
 							<div class="dropdown-menu dropdown-menu-right">
@@ -20,14 +59,14 @@
 									<h6><b><?= ucwords($users["full_name"]) ?></b></h6>
 								</div>
 								<div class="dropdown-divider"></div>
-									<a href="<?= base_url("profile"); ?>" class="dropdown-item has-icon">
-										<i class="fas fa-user"></i>  Profile
-									</a>
-									<a href="#" class="dropdown-item has-icon" data-toggle="modal" data-target="#change_password">
-										<i class="fas fa-lock"></i>  Ganti Password
-									</a>
+								<a href="<?= base_url("profile"); ?>" class="dropdown-item has-icon">
+									<i class="fas fa-user"></i> Profile
+								</a>
+								<a href="#" class="dropdown-item has-icon" data-toggle="modal" data-target="#change_password">
+									<i class="fas fa-lock"></i> Ganti Password
+								</a>
 								<a href="<?= base_url("index.php/logout"); ?>" class="dropdown-item has-icon">
-									<i class="fas fa-sign-out-alt"></i>  Keluar
+									<i class="fas fa-sign-out-alt"></i> Keluar
 								</a>
 							</div>
 						</li>
@@ -48,22 +87,36 @@
 						</li>
 
 						<?php if ((!empty($users['role_access']['kelompok_item']) && $users['role_access']['kelompok_item']['kelompok_item'] == 'on') || (!empty($users['role_access']['jenis_item']) && $users['role_access']['jenis_item']['jenis_item'] == 'on')) { ?>
-							<li class="nav-item dropdown <?= $this->uri->segment(1) == 'kelompok_item' || $this->uri->segment(1) == 'jenis_item' ? 'active' : '' ?>">
+							<li class="nav-item dropdown <?= in_array($this->uri->segment(1), ['kelompok_item', 'jenis_item', 'opd', 'bidang_teknis']) ? 'active' : '' ?>">
 								<a href="#" class="nav-link has-dropdown"><i class="fas fa-database"></i><span>Data Master</span></a>
 								<ul class="dropdown-menu">
 									<?php if (!empty($users['role_access']['kelompok_item']) && $users['role_access']['kelompok_item']['kelompok_item'] == 'on') { ?>
-									<li class="nav-item  <?= $this->uri->segment(1) == 'kelompok_item' ? 'active' : '' ?>">
-										<a class="nav-link" href="<?= base_url('kelompok_item'); ?>">
-											<span>Kelompok Item</span>
-										</a>
-									</li>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'kelompok_item' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('kelompok_item'); ?>">
+												<span>Kelompok Item</span>
+											</a>
+										</li>
 									<?php } ?>
 									<?php if (!empty($users['role_access']['jenis_item']) && $users['role_access']['jenis_item']['jenis_item'] == 'on') { ?>
-									<li class="nav-item  <?= $this->uri->segment(1) == 'jenis_item' ? 'active' : '' ?>">
-										<a class="nav-link" href="<?= base_url('jenis_item'); ?>">
-											<span>Jenis Item</span>
-										</a>
-									</li>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'jenis_item' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('jenis_item'); ?>">
+												<span>Jenis Item</span>
+											</a>
+										</li>
+									<?php } ?>
+									<?php if (!empty($users['role_access']['opd']) && $users['role_access']['opd']['opd'] == 'on') { ?>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'opd' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('opd'); ?>">
+												<span>OPD</span>
+											</a>
+										</li>
+									<?php } ?>
+									<?php if (!empty($users['role_access']['bidang_teknis']) && $users['role_access']['bidang_teknis']['bidang_teknis'] == 'on') { ?>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'bidang_teknis' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('bidang_teknis'); ?>">
+												<span>Bidang Teknis</span>
+											</a>
+										</li>
 									<?php } ?>
 								</ul>
 							</li>
@@ -74,18 +127,18 @@
 								<a href="#" class="nav-link has-dropdown"><i class="fab fa-elementor"></i><span>Isian SSH</span></a>
 								<ul class="dropdown-menu">
 									<?php if (!empty($users['role_access']['spesifikasi_item']) && $users['role_access']['spesifikasi_item']['spesifikasi_item'] == 'on') { ?>
-									<li class="nav-item  <?= $this->uri->segment(1) == 'spesifikasi_item' ? 'active' : '' ?>">
-										<a class="nav-link" href="<?= base_url('spesifikasi_item'); ?>">
-											<span>SSH</span>
-										</a>
-									</li>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'spesifikasi_item' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('spesifikasi_item'); ?>">
+												<span>SSH</span>
+											</a>
+										</li>
 									<?php } ?>
 									<?php if (!empty($users['role_access']['spesifikasi_harga']) && $users['role_access']['spesifikasi_harga']['spesifikasi_harga'] == 'on') { ?>
-									<li class="nav-item  <?= $this->uri->segment(1) == 'spesifikasi_harga' ? 'active' : '' ?>">
-										<a class="nav-link" href="<?= base_url('spesifikasi_harga'); ?>">
-											<span>Harga</span>
-										</a>
-									</li>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'spesifikasi_harga' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('spesifikasi_harga'); ?>">
+												<span>Harga</span>
+											</a>
+										</li>
 									<?php } ?>
 								</ul>
 							</li>
@@ -96,25 +149,25 @@
 								<a href="#" class="nav-link has-dropdown"><i class="fas fa-poll-h"></i><span>Isian HSPK</span></a>
 								<ul class="dropdown-menu">
 									<?php if (!empty($users['role_access']['kegiatan_hspk']) && $users['role_access']['kegiatan_hspk']['kegiatan_hspk'] == 'on') { ?>
-									<li class="nav-item  <?= $this->uri->segment(1) == 'kegiatan_hspk' ? 'active' : '' ?>">
-										<a class="nav-link" href="<?= base_url('kegiatan_hspk'); ?>">
-											<span>Kegiatan HSPK</span>
-										</a>
-									</li>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'kegiatan_hspk' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('kegiatan_hspk'); ?>">
+												<span>Kegiatan HSPK</span>
+											</a>
+										</li>
 									<?php } ?>
 									<?php if (!empty($users['role_access']['tahun_kegiatan_hspk']) && $users['role_access']['tahun_kegiatan_hspk']['tahun_kegiatan_hspk'] == 'on') { ?>
-									<li class="nav-item  <?= $this->uri->segment(1) == 'tahun_kegiatan_hspk' ? 'active' : '' ?>">
-										<a class="nav-link" href="<?= base_url('tahun_kegiatan_hspk'); ?>">
-											<span>Tahun Kegiatan HSPK</span>
-										</a>
-									</li>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'tahun_kegiatan_hspk' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('tahun_kegiatan_hspk'); ?>">
+												<span>Tahun Kegiatan HSPK</span>
+											</a>
+										</li>
 									<?php } ?>
 									<?php if (!empty($users['role_access']['kegiatan_hspk_detail']) && $users['role_access']['kegiatan_hspk_detail']['kegiatan_hspk_detail'] == 'on') { ?>
-									<li class="nav-item  <?= $this->uri->segment(1) == 'kegiatan_hspk_detail' ? 'active' : '' ?>">
-										<a class="nav-link" href="<?= base_url('kegiatan_hspk_detail'); ?>">
-											<span>Kegiatan HSPK Detail</span>
-										</a>
-									</li>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'kegiatan_hspk_detail' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('kegiatan_hspk_detail'); ?>">
+												<span>Kegiatan HSPK Detail</span>
+											</a>
+										</li>
 									<?php } ?>
 								</ul>
 							</li>
@@ -125,18 +178,18 @@
 								<a href="#" class="nav-link has-dropdown"><i class="fas fa-file-invoice"></i><span>Isian ASB</span></a>
 								<ul class="dropdown-menu">
 									<?php if (!empty($users['role_access']['kegiatan_asb']) && $users['role_access']['kegiatan_asb']['kegiatan_asb'] == 'on') { ?>
-									<li class="nav-item  <?= $this->uri->segment(1) == 'kegiatan_asb' ? 'active' : '' ?>">
-										<a class="nav-link" href="<?= base_url('kegiatan_asb'); ?>">
-											<span>Kegiatan ASB</span>
-										</a>
-									</li>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'kegiatan_asb' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('kegiatan_asb'); ?>">
+												<span>Kegiatan ASB</span>
+											</a>
+										</li>
 									<?php } ?>
 									<?php if (!empty($users['role_access']['tahun_kegiatan_asb']) && $users['role_access']['tahun_kegiatan_asb']['tahun_kegiatan_asb'] == 'on') { ?>
-									<li class="nav-item  <?= $this->uri->segment(1) == 'tahun_kegiatan_asb' ? 'active' : '' ?>">
-										<a class="nav-link" href="<?= base_url('tahun_kegiatan_asb'); ?>">
-											<span>Tahun Kegiatan ASB</span>
-										</a>
-									</li>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'tahun_kegiatan_asb' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('tahun_kegiatan_asb'); ?>">
+												<span>Tahun Kegiatan ASB</span>
+											</a>
+										</li>
 									<?php } ?>
 									<?php if (!empty($users['role_access']['kegiatan_asb_detail']) && $users['role_access']['kegiatan_asb_detail']['kegiatan_asb_detail'] == 'on') { ?>
 										<li class="nav-item  <?= $this->uri->segment(1) == 'kegiatan_asb_detail' ? 'active' : '' ?>">
@@ -148,6 +201,34 @@
 								</ul>
 							</li>
 						<?php } ?>
+
+						<li class="nav-item dropdown <?= in_array($this->uri->segment(1), ['usulan_spesifikasi_item', 'usulan_spesifikasi_harga']) ? 'active' : '' ?>">
+							<a href="#" class="nav-link has-dropdown">
+								<i class="fas fa-folder"></i><span>Usulan</span>
+							</a>
+
+							<ul class="dropdown-menu">
+								<li class="nav-item submenu position-relative <?= in_array($this->uri->segment(1), ['usulan_spesifikasi_item', 'usulan_spesifikasi_harga']) ? 'active' : '' ?>">
+									<a href="#" class="nav-link submenu-toggle">
+										<i class="fab fa-elementor"></i><span>Isian SSH</span>
+									</a>
+
+									<ul class="dropdown-menu submenu-dropdown">
+										<?php if (!empty($users['role_access']['usulan_spesifikasi_item']) && $users['role_access']['usulan_spesifikasi_item']['usulan_spesifikasi_item'] == 'on') : ?>
+											<li class="nav-item <?= $this->uri->segment(1) == 'usulan_spesifikasi_item' ? 'active' : '' ?>">
+												<a class="nav-link" href="<?= base_url('usulan_spesifikasi_item'); ?>">SSH</a>
+											</li>
+										<?php endif; ?>
+
+										<?php if (!empty($users['role_access']['usulan_spesifikasi_harga']) && $users['role_access']['usulan_spesifikasi_harga']['usulan_spesifikasi_harga'] == 'on') : ?>
+											<li class="nav-item <?= $this->uri->segment(1) == 'usulan_spesifikasi_harga' ? 'active' : '' ?>">
+												<a class="nav-link" href="<?= base_url('usulan_spesifikasi_harga'); ?>">Harga</a>
+											</li>
+										<?php endif; ?>
+									</ul>
+								</li>
+							</ul>
+						</li>
 
 						<?php if ((!empty($users['role_access']['lokasi_toko']) && $users['role_access']['lokasi_toko']['lokasi_toko'] == 'on')) { ?>
 							<li class="nav-item dropdown <?= $this->uri->segment(1) == 'lokasi_toko' ? 'active' : '' ?>">
@@ -234,4 +315,47 @@
 			</div>
 		</div>
 	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const currentSegment = window.location.pathname.split('/')[1]; 
+
+			const targetSegments = ['usulan_spesifikasi_item', 'usulan_spesifikasi_harga'];
+
+			if (targetSegments.includes(currentSegment)) {
+				document.querySelectorAll('.nav-item.dropdown').forEach(function(dropdown) {
+					const menu = dropdown.querySelector('.dropdown-menu');
+					if (menu) menu.classList.add('show');
+				});
+
+				document.querySelectorAll('.nav-item.submenu').forEach(function(submenu) {
+					const inner = submenu.querySelector('.submenu-dropdown');
+					if (inner) inner.classList.add('show');
+				});
+			}
+
+			document.querySelectorAll('.submenu-toggle').forEach(function(btn) {
+				btn.addEventListener('click', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+
+					const submenu = this.nextElementSibling;
+
+					document.querySelectorAll('.submenu-dropdown.show').forEach(function(menu) {
+						if (menu !== submenu) menu.classList.remove('show');
+					});
+
+					if (submenu) submenu.classList.toggle('show');
+				});
+			});
+
+			document.addEventListener('click', function(e) {
+				if (!e.target.closest('.nav-item.dropdown')) {
+					document.querySelectorAll('.dropdown-menu.show, .submenu-dropdown.show').forEach(function(menu) {
+						menu.classList.remove('show');
+					});
+				}
+			});
+		});
+	</script>
 </body>

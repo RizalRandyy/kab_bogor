@@ -40,6 +40,7 @@
 											<tr>
 												<th>No</th>
 												<th class="text-center">Kode Kegiatan</th>
+												<th class="text-center">Bidang</th>
 												<th class="text-center">Uraian Kegiatan</th>
 												<th class="text-center">Satuan</th>
 												<th class="text-center">Tahun ASB</th>
@@ -70,6 +71,7 @@
 											<tr ng-hide="loading" dir-paginate="(key, value) in data|itemsPerPage:itemsPerPage" total-items="total_count" current-page="curPage" pagination-id="paginateID">
 												<td ng-bind="key+no"></td>
 												<td ng-bind="value.kodeKelompok"></td>
+												<td ng-bind="value.namaOpd"></td>
 												<td ng-bind="value.UraianKegiatan"></td>
 												<td ng-bind="value.satuan"></td>
 												<td ng-bind="value.tahunASB"></td>

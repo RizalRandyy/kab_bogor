@@ -1,36 +1,54 @@
 <?php
 class Kegiatan_asb_model extends CI_Model
 {
-    public function getData($params,$users)
+    public function getData($params, $users)
     {
         $start = ($params['offset'] - 1) * $params['limit'];
         $keyresult = (array)json_decode($params['keyword']);
 
-        $this->db->select('id,idASB,UraianKegiatan,satuan');
+        $this->db->select('tb_standar_biaya.id, idASB, tb_standar_biaya.idOpd, UraianKegiatan, satuan, tb_opd.namaOpd');
+        $this->db->from('tb_standar_biaya');
+        $this->db->join('tb_opd', 'tb_standar_biaya.idOpd = tb_opd.idOpd', 'left');
 
         if (!empty($keyresult)) {
             foreach ($keyresult as $key => $value) {
-                if($value){
-                    $this->db->like($key, $value);
+                if ($value) {
+                    if ($key === 'namaOpd') {
+                        $this->db->like('tb_opd.namaOpd', $value);
+                    } else {
+                        $this->db->like('tb_standar_biaya.' . $key, $value);
+                    }
                 }
             }
         }
-        
+
         $tot = clone $this->db;
+
         $this->db->order_by('idASB ASC');
-        $get_data = $this->db->limit($params['limit'], $start)->get('tb_standar_biaya')->result_array();
-        $get_count = $tot->get('tb_standar_biaya')->num_rows();
+        $get_data = $this->db->limit($params['limit'], $start)->get()->result_array();
+
+        $get_count = $tot->get()->num_rows();
 
         if (!empty($get_data)) {
             foreach ($get_data as $key => $value) {
                 $get_data[$key]['id'] = encrypt_url($value['id']);
             }
         }
-        
+
         return [
             'count' => $get_count,
             'data' => !empty($get_data) ? $get_data : [],
             'message' => !empty($get_data) ? null : 'Data Tidak Ada!',
+        ];
+    }
+
+    public function getOpd()
+    {
+        $get_data = $this->db->select('id,idOpd,namaOpd')
+            ->order_by('idOpd')->get('tb_opd')->result_array();
+
+        return [
+            'data' => !empty($get_data) ? $get_data : []
         ];
     }
 
@@ -41,13 +59,13 @@ class Kegiatan_asb_model extends CI_Model
             unset($params['id']);
 
             $cek = $get_data = $this->db->select('*')
-                            ->where('id !=', $id)
-                            ->where('idASB', $params['idASB'])
-                            ->get('tb_standar_biaya')->first_row();
+                ->where('id !=', $id)
+                ->where('idASB', $params['idASB'])
+                ->get('tb_standar_biaya')->first_row();
 
-            if($cek){
+            if ($cek) {
                 return [
-                    'message' => 'Edit Kegiatan Gagal! Kode Kegiatan '.$params['idASB'].' sudah ada!',
+                    'message' => 'Edit Kegiatan Gagal! Kode Kegiatan ' . $params['idASB'] . ' sudah ada!',
                     'status' => 500,
                 ];
             }
@@ -65,12 +83,12 @@ class Kegiatan_asb_model extends CI_Model
             ];
         } else {
             $cek = $get_data = $this->db->select('*')
-                            ->where('idASB', $params['idASB'])
-                            ->get('tb_standar_biaya')->first_row();
+                ->where('idASB', $params['idASB'])
+                ->get('tb_standar_biaya')->first_row();
 
-            if($cek){
+            if ($cek) {
                 return [
-                    'message' => 'Tambah Kegiatan Gagal! Kode Kegiatan '.$params['idASB'].' sudah ada!',
+                    'message' => 'Tambah Kegiatan Gagal! Kode Kegiatan ' . $params['idASB'] . ' sudah ada!',
                     'status' => 500,
                 ];
             }
@@ -89,15 +107,18 @@ class Kegiatan_asb_model extends CI_Model
         }
     }
 
-    public function getReqById($id,$users)
+    public function getReqById($id, $users)
     {
         $id = decrypt_url($id);
-        $this->db->select('id,idASB,UraianKegiatan,satuan')
-            ->where('id', $id);
-            
-        $data =  $this->db->get('tb_standar_biaya')->row();
 
-        if($data){
+        $this->db->select('tb_standar_biaya.id, idASB, tb_standar_biaya.idOpd, UraianKegiatan, satuan, tb_opd.namaOpd');
+        $this->db->from('tb_standar_biaya');
+        $this->db->join('tb_opd', 'tb_standar_biaya.idOpd = tb_opd.idOpd', 'left');
+        $this->db->where('tb_standar_biaya.id', $id);
+
+        $data = $this->db->get()->row();
+
+        if ($data) {
             $data->id = encrypt_url($data->id);
         }
 
@@ -107,7 +128,6 @@ class Kegiatan_asb_model extends CI_Model
             'data' => !empty($data) ? $data : [],
         ];
     }
-
 
     public function deleteReq($id)
     {
@@ -125,8 +145,9 @@ class Kegiatan_asb_model extends CI_Model
         ];
     }
 
-    public function getheader(){
-        $header  = array("No" => 'reset', "Kode Kegiatan" => "idASB","Uraian Kegiatan" => "UraianKegiatan", "Satuan" => "satuan");  
+    public function getheader()
+    {
+        $header  = array("No" => 'reset', "Kode Kegiatan" => "idASB", "Bidang" => "namaOpd", "Uraian Kegiatan" => "UraianKegiatan", "Satuan" => "satuan");
         return $header;
     }
 }
