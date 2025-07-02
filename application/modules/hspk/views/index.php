@@ -8,8 +8,11 @@
 	}
 
 	@media (min-width: 992px) {
-	.modal-lg, .modal-xl {
-	    max-width: 1200px;
+
+		.modal-lg,
+		.modal-xl {
+			max-width: 1200px;
+		}
 	}
 </style>
 <div ng-controller="<?= $page ?>" id="<?= $page ?>">
@@ -46,7 +49,7 @@
 												</td>
 												<td class="no-padding px-1"></td>
 												<td class="no-padding px-1"></td>
-											</tr> 
+											</tr>
 											<tr ng-show="message != null">
 												<td colspan="6" class="text-center" ng-bind="message"></td>
 											</tr>
@@ -65,8 +68,8 @@
 												<td class="text-right" ng-bind="value.harga"></td>
 												<td class="text-center" style="white-space: nowrap;">
 													<a href="" class="btn btn-info btn-sm p-1" title="View: {{value.kodeKelompok}}" ng-click="show_modal(value.id)">
-															<i class="fas fa-eye"></i>&nbsp;
-														</a>
+														<i class="fas fa-eye"></i>&nbsp;
+													</a>
 												</td>
 											</tr>
 										</tbody>
@@ -98,10 +101,10 @@
 							<div class="col-lg-12 col-md-12 col-sm-12">
 								<div class="row p-0">
 									<div class="col-md-12 col-lg-12">
-                                        <form>
-                                            <div class="row">
+										<form>
+											<div class="row">
 												<div class="col-lg-12 col-md-12 col-sm-12">
-													
+
 													<div class="table-responsive">
 														<table class="table table-striped table-md">
 															<thead>
@@ -149,8 +152,8 @@
 													</div>
 												</div>
 											</div>
-                                        </form>
-                                    </div>
+										</form>
+									</div>
 								</div>
 							</div>
 							<div class="col-12 col-md-12 col-lg-12 text-right">

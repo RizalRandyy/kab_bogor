@@ -30,6 +30,12 @@
 	                                                	<input type="text" class="form-control form-control-sm text-sm" id="tautan" name="tautan" ng-model="tautan" placeholder="Input Link Tautan">
 	                                                </div>
 	                                            </div>
+	                                            <div class="form-group row">
+	                                                <label for="koordinat" class="col-sm-4 col-form-label text-sm">Koordinat</label>
+	                                                <div class="col-sm-8">
+	                                                	<input type="text" class="form-control form-control-sm text-sm" id="koordinat" name="koordinat" ng-model="koordinat" placeholder="contoh: -6.595, 106.819">
+	                                                </div>
+	                                            </div>
 	                                        </form>
 	                                    </div>
 									</div>

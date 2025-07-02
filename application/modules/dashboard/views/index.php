@@ -1,5 +1,4 @@
 <style type="text/css">
-
 	.wrap-1 {
 		margin-top: -16px;
 		padding-right: 6px;
@@ -58,53 +57,61 @@
 	}
 
 	.list-group-item {
-	    position: relative;
-	    display: block;
-	    padding: 0.75rem 1.25rem;
-	    margin-bottom: -1px;
-	    background-color: #fff;
-	    border: 0px solid rgba(0,0,0,.125);
-	    border-bottom: 1px solid rgba(0,0,0,.125);
+		position: relative;
+		display: block;
+		padding: 0.75rem 1.25rem;
+		margin-bottom: -1px;
+		background-color: #fff;
+		border: 0px solid rgba(0, 0, 0, .125);
+		border-bottom: 1px solid rgba(0, 0, 0, .125);
 	}
 
 	@media (min-width: 992px) {
-	.modal-lg, .modal-xl {
-	    max-width: 1200px;
-	}
 
-	.sticky-top {
-		z-index: 10;
-	}
+		.modal-lg,
+		.modal-xl {
+			max-width: 1200px;
+		}
 
-	.badge.badge-info {
-	    border: 2px solid;
-	    background-color: rgba(100, 153, 233, 0.8);
-	    border-color: rgba(100, 153, 233, 1);
-	}
-	.badge.badge-warning {
-	    border: 2px solid;
-	    background-color: rgba(252, 84, 4, 0.8);
-	    border-color: rgba(252, 84, 4, 1);
-	}
-	.badge.badge-success {
-	    border: 2px solid;
-	    background-color: rgba(0, 223, 162, 0.8);
-	    border-color: rgba(0, 223, 162, 1);
-	}
-	.badge.badge-secondary {
-	    border: 2px solid;
-	    background-color: rgba(101, 40, 247, 0.8);
-	    border-color: rgba(101, 40, 247, 1);
-	}
-	.badge.badge-dark {
-	    border: 2px solid;
-	    background-color: rgba(25, 29, 33, 0.8);
-	    border-color: rgba(25, 29, 33, 1);
-	}
-	.badge.badge-primary {
-	    border: 2px solid;
-	    background-color: rgba(252, 84, 64, 0.8);
-	    border-color: rgba(252, 84, 64, 1);
+		.sticky-top {
+			z-index: 10;
+		}
+
+		.badge.badge-info {
+			border: 2px solid;
+			background-color: rgba(100, 153, 233, 0.8);
+			border-color: rgba(100, 153, 233, 1);
+		}
+
+		.badge.badge-warning {
+			border: 2px solid;
+			background-color: rgba(252, 84, 4, 0.8);
+			border-color: rgba(252, 84, 4, 1);
+		}
+
+		.badge.badge-success {
+			border: 2px solid;
+			background-color: rgba(0, 223, 162, 0.8);
+			border-color: rgba(0, 223, 162, 1);
+		}
+
+		.badge.badge-secondary {
+			border: 2px solid;
+			background-color: rgba(101, 40, 247, 0.8);
+			border-color: rgba(101, 40, 247, 1);
+		}
+
+		.badge.badge-dark {
+			border: 2px solid;
+			background-color: rgba(25, 29, 33, 0.8);
+			border-color: rgba(25, 29, 33, 1);
+		}
+
+		.badge.badge-primary {
+			border: 2px solid;
+			background-color: rgba(252, 84, 64, 0.8);
+			border-color: rgba(252, 84, 64, 1);
+		}
 	}
 </style>
 <div ng-controller="<?= $page ?>" id="<?= $page ?>">
@@ -156,7 +163,7 @@
 											<input ng-if="b != 'reset'" type="text" class="form-control no-margin form-filter " ng-model="search_Method.val[b]" ng-change="searchMethod(b, search_Method.val[b])" ng-model-options="{debounce: 2000}">
 										</td>
 										<td class="no-padding px-1"></td>
-									</tr> 
+									</tr>
 									<tr ng-show="message != null">
 										<td colspan="3" class="text-center" ng-bind="message"></td>
 									</tr>

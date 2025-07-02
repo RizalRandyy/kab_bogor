@@ -1,24 +1,28 @@
 <?php
 class Lokasi_toko_model extends CI_Model
 {
-    public function getData($params,$users)
+    public function getData($params, $users)
     {
-        $start = ($params['offset'] - 1) * $params['limit'];
-        $keyresult = (array)json_decode($params['keyword']);
+        // ✅ Tambahkan pengecekan default
+        $limit  = isset($params['limit']) ? $params['limit'] : 10;
+        $offset = isset($params['offset']) ? $params['offset'] : 1;
+        $keyword = isset($params['keyword']) ? (array)json_decode($params['keyword']) : [];
 
-        $this->db->select('id,nama_toko,tautan');
+        $start = ($offset - 1) * $limit;
 
-        if (!empty($keyresult)) {
-            foreach ($keyresult as $key => $value) {
-                if($value){
+        $this->db->select('id,nama_toko,tautan,koordinat');
+
+        if (!empty($keyword)) {
+            foreach ($keyword as $key => $value) {
+                if ($value) {
                     $this->db->like($key, $value);
                 }
             }
         }
-        
+
         $tot = clone $this->db;
         $this->db->order_by('nama_toko', 'ASC');
-        $get_data = $this->db->limit($params['limit'], $start)->get('tb_lokasi')->result_array();
+        $get_data = $this->db->limit($limit, $start)->get('tb_lokasi')->result_array();
         $get_count = $tot->get('tb_lokasi')->num_rows();
 
         if (!empty($get_data)) {
@@ -26,11 +30,30 @@ class Lokasi_toko_model extends CI_Model
                 $get_data[$key]['id'] = encrypt_url($value['id']);
             }
         }
-        
+
         return [
             'count' => $get_count,
             'data' => !empty($get_data) ? $get_data : [],
             'message' => !empty($get_data) ? null : 'Data Tidak Ada!',
+        ];
+    }
+
+    public function getLocationAll()
+    {
+        $this->db->select('id, nama_toko, tautan, koordinat');
+        $this->db->order_by('nama_toko', 'ASC');
+        $data = $this->db->get('tb_lokasi')->result_array();
+
+        if (!empty($data)) {
+            foreach ($data as $key => $value) {
+                $data[$key]['id'] = encrypt_url($value['id']);
+            }
+        }
+
+        return [
+            'status' => !empty($data) ? 200 : 500,
+            'message' => !empty($data) ? null : 'Data Tidak Ada!',
+            'data' => !empty($data) ? $data : [],
         ];
     }
 
@@ -67,7 +90,7 @@ class Lokasi_toko_model extends CI_Model
         }
     }
 
-    public function getReqById($id,$users)
+    public function getReqById($id, $users)
     {
         $id = decrypt_url($id);
         $this->db->select('id,nama_toko,tautan')
@@ -75,7 +98,7 @@ class Lokasi_toko_model extends CI_Model
 
         $data =  $this->db->get('tb_lokasi')->row();
 
-        if($data){
+        if ($data) {
             $data->id = encrypt_url($data->id);
         }
 
@@ -103,9 +126,9 @@ class Lokasi_toko_model extends CI_Model
         ];
     }
 
-    public function getheader(){
-        $header  = array("No" => 'reset', "Nama Toko" => "nama_toko");  
+    public function getheader()
+    {
+        $header  = array("No" => 'reset', "Nama Toko" => "nama_toko");
         return $header;
     }
-
 }
