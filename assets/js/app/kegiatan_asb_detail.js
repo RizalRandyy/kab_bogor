@@ -22,15 +22,15 @@ mainApp.controller('kegiatan_asb_detail', ['$scope', 'httpHandler', '$filter', '
 	$scope.no = 1;
 	$scope.itemsPerPage = 10;
 	$scope.keyword = {};
-	$scope.search_Method ={};
+	$scope.search_Method = {};
 	$scope.total_count = 0;
 	$scope.message = null;
 
 	$scope.getData = function (pageno) {
-		if(pageno == 0)
-            $scope.no = 1;
-        else
-            $scope.no = (pageno*$scope.itemsPerPage) - ($scope.itemsPerPage - 1);
+		if (pageno == 0)
+			$scope.no = 1;
+		else
+			$scope.no = (pageno * $scope.itemsPerPage) - ($scope.itemsPerPage - 1);
 
 		$scope.total_count = 0;
 		$scope.message = null;
@@ -61,27 +61,25 @@ mainApp.controller('kegiatan_asb_detail', ['$scope', 'httpHandler', '$filter', '
 
 	$scope.getData(0);
 
-	$scope.searchMethod = function(keyname, val)
-	{
+	$scope.searchMethod = function (keyname, val) {
 		$scope.keyword[keyname] = val;
 		$scope.getData(1);
-    }
+	}
 
-    $scope.reset = function(is_master)
-    {
-    	$scope.keyword = {};
-    	$scope.search_Method = {};
-    	if(is_master == "master"){
-    		$scope.getData(1);
-    	}
-    }
+	$scope.reset = function (is_master) {
+		$scope.keyword = {};
+		$scope.search_Method = {};
+		if (is_master == "master") {
+			$scope.getData(1);
+		}
+	}
 
 	$scope.tambah = function () {
 		window.location.replace(urls + 'kegiatan_asb_detail/form/tambah');
 	}
 
 	$scope.edit = function (params) {
-		window.location.replace(urls + 'kegiatan_asb_detail/form/edit?id='+params.id);
+		window.location.replace(urls + 'kegiatan_asb_detail/form/edit?id=' + params.id);
 	}
 
 	$scope.delete = function (params) {
@@ -139,4 +137,79 @@ mainApp.controller('kegiatan_asb_detail', ['$scope', 'httpHandler', '$filter', '
 		});
 	}
 
+	$scope.exportExcelById = async function (encryptedId) {
+		try {
+			const response = await httpHandler.send({
+				method: 'GET',
+				url: urls + 'kegiatan_asb_detail/getById',
+				params: { id: encryptedId }
+			});
+
+			if (response.data.status !== 200) {
+				return Swal.fire({
+					icon: "error",
+					title: "Gagal",
+					text: "Data tidak ditemukan untuk export.",
+				});
+			}
+
+			const detailData = response.data.data;
+			const detailItems = detailData.detail;
+
+			const workbook = new ExcelJS.Workbook();
+			const worksheet = workbook.addWorksheet('Detail Kegiatan ASB');
+
+			worksheet.columns = [
+				{ header: 'Kode Kelompok', key: 'kodeKelompok', width: 15 },
+				{ header: 'Kegiatan HSPK', key: 'kegiatanHSPK', width: 25 },
+				{ header: 'Nama Item', key: 'namaItem', width: 25 },
+				{ header: 'Spesifikasi', key: 'spesifikasi', width: 20 },
+				{ header: 'Satuan', key: 'satuan', width: 10 },
+				{ header: 'Tahun Harga', key: 'tahunHarga', width: 15 },
+				{ header: 'Qty', key: 'qty', width: 10 },
+				{ header: 'Harga Satuan', key: 'harga', width: 15 },
+				{ header: 'Subtotal', key: 'subtotal', width: 15 },
+			];
+
+
+			worksheet.getRow(1).font = { bold: true };
+
+			let total = 0;
+
+			for (const item of detailItems) {
+				worksheet.addRow({
+					kodeKelompok: item.kodeKelompok ?? '',
+					kegiatanHSPK: item.kegiatanHSPK ?? '',
+					namaItem: item.namaItem ?? '',
+					spesifikasi: item.spesifikasi ?? '',
+					satuan: item.satuan ?? '',
+					tahunHarga: item.tahunHarga ?? '',
+					qty: item.qty ?? 0,
+					harga: item.harga ?? 0,
+					subtotal: item.subtotal ?? 0
+				});
+				total += item.subtotal ?? 0;
+			}
+
+			worksheet.addRow(['', '', '', '', '', '', '', 'TOTAL', total]);
+
+			const buffer = await workbook.xlsx.writeBuffer();
+			const blob = new Blob([buffer], {
+				type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+			});
+
+			const link = document.createElement("a");
+			link.href = URL.createObjectURL(blob);
+			link.download = "Detail-Kegiatan-asb.xlsx";
+			link.click();
+			URL.revokeObjectURL(link.href);
+		} catch (error) {
+			console.error("Export error:", error);
+			Swal.fire({
+				icon: "error",
+				title: "Export Gagal",
+				text: "Terjadi kesalahan saat mengambil data.",
+			});
+		}
+	};
 }]);

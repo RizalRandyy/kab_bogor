@@ -139,4 +139,6 @@ mainApp.controller('spesifikasi_item', ['$scope', 'httpHandler', '$filter', '$at
 		});
 	}
 
+	
+
 }]);

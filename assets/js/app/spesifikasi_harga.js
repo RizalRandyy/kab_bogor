@@ -22,15 +22,15 @@ mainApp.controller('spesifikasi_harga', ['$scope', 'httpHandler', '$filter', '$a
 	$scope.no = 1;
 	$scope.itemsPerPage = 10;
 	$scope.keyword = {};
-	$scope.search_Method ={};
+	$scope.search_Method = {};
 	$scope.total_count = 0;
 	$scope.message = null;
 
 	$scope.getData = function (pageno) {
-		if(pageno == 0)
-            $scope.no = 1;
-        else
-            $scope.no = (pageno*$scope.itemsPerPage) - ($scope.itemsPerPage - 1);
+		if (pageno == 0)
+			$scope.no = 1;
+		else
+			$scope.no = (pageno * $scope.itemsPerPage) - ($scope.itemsPerPage - 1);
 
 		$scope.total_count = 0;
 		$scope.message = null;
@@ -61,108 +61,106 @@ mainApp.controller('spesifikasi_harga', ['$scope', 'httpHandler', '$filter', '$a
 
 	$scope.getData(0);
 
-	$scope.searchMethod = function(keyname, val)
-	{
+	$scope.searchMethod = function (keyname, val) {
 		$scope.keyword[keyname] = val;
 		$scope.getData(1);
-    }
+	}
 
-    $scope.reset = function(is_master)
-    {
-    	$scope.keyword = {};
-    	$scope.search_Method = {};
-    	if(is_master == "master"){
-    		$scope.getData(1);
-    	}
-    }
+	$scope.reset = function (is_master) {
+		$scope.keyword = {};
+		$scope.search_Method = {};
+		if (is_master == "master") {
+			$scope.getData(1);
+		}
+	}
 
-    $scope.show_modal = function(){
-        $('#modal_import').modal('show');
-    }
+	$scope.show_modal = function () {
+		$('#modal_import').modal('show');
+	}
 
-    $scope.download_template = function(){
-        window.location.replace(urls + 'spesifikasi_harga/download_files');
-    }
+	$scope.download_template = function () {
+		window.location.replace(urls + 'spesifikasi_harga/download_files');
+	}
 
-    $scope.import= function () {
-        var formData = new FormData();
+	$scope.import = function () {
+		var formData = new FormData();
 
-        var template = $('#template').val();
-        var fileInput = document.getElementById('template');
-        var attachmentFiles = fileInput.files;
+		var template = $('#template').val();
+		var fileInput = document.getElementById('template');
+		var attachmentFiles = fileInput.files;
 
-        if (template == "") {
-            $('#template').focus(); 
-            return Toast.fire({
-                icon: "warning",
-                title: 'Upload file terlebih dahulu!',
-            });
-        }
+		if (template == "") {
+			$('#template').focus();
+			return Toast.fire({
+				icon: "warning",
+				title: 'Upload file terlebih dahulu!',
+			});
+		}
 
-        for (var i = 0; i < attachmentFiles.length; i++) {
-            formData.append('template', attachmentFiles[i]);
-        }
+		for (var i = 0; i < attachmentFiles.length; i++) {
+			formData.append('template', attachmentFiles[i]);
+		}
 
-        formData.append('template', fileInput);
-        
-        Swal.fire({
-            title: 'Loading...',
-            allowEscapeKey: false,
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            imageUrl: urls + "assets/img/loadertsel.gif",
-        });
+		formData.append('template', fileInput);
 
-        httpHandler.send({
-            url: urls + 'spesifikasi_harga/import',
-            data: formData,
-            method: 'POST',
-            headers: {
-                'Content-Type': undefined
-            }
-        }).then(
-            function successCallbacks(response) {
-                Swal.close();
-                Swal.fire({
-                    title: 'Success',
-                    text: response.data.message,
-                    icon: 'success',
-                    showCancelButton: false,
-                    allowEscapeKey: false,
-                    allowOutsideClick: false,
-                    confirmButtonColor: "#39edab",
-                    confirmButtonText: "Okey",
-                }).then((result) => {
-                    if (result.value) {
-                        location.reload();
-                    }
-                });
-            },
-            function errorCallback(response) {
-                Swal.close();
-                Swal.fire({
-                    title: 'Failed',
-                    text: response.data.message,
-                    icon: response.data.status == 500 ? 'error' : 'warning',
-                    showCancelButton: false,
-                    allowEscapeKey: false,
-                    allowOutsideClick: false,
-                    confirmButtonColor: "#fc544b",
-                    confirmButtonText: "Okey",
-                }).then((result) => {
-                    if (result.value) {
-                        location.reload();
-                    }
-                });
-            });
-    }
+		Swal.fire({
+			title: 'Loading...',
+			allowEscapeKey: false,
+			allowOutsideClick: false,
+			showConfirmButton: false,
+			imageUrl: urls + "assets/img/loadertsel.gif",
+		});
+
+		httpHandler.send({
+			url: urls + 'spesifikasi_harga/import',
+			data: formData,
+			method: 'POST',
+			headers: {
+				'Content-Type': undefined
+			}
+		}).then(
+			function successCallbacks(response) {
+				Swal.close();
+				Swal.fire({
+					title: 'Success',
+					text: response.data.message,
+					icon: 'success',
+					showCancelButton: false,
+					allowEscapeKey: false,
+					allowOutsideClick: false,
+					confirmButtonColor: "#39edab",
+					confirmButtonText: "Okey",
+				}).then((result) => {
+					if (result.value) {
+						location.reload();
+					}
+				});
+			},
+			function errorCallback(response) {
+				Swal.close();
+				Swal.fire({
+					title: 'Failed',
+					text: response.data.message,
+					icon: response.data.status == 500 ? 'error' : 'warning',
+					showCancelButton: false,
+					allowEscapeKey: false,
+					allowOutsideClick: false,
+					confirmButtonColor: "#fc544b",
+					confirmButtonText: "Okey",
+				}).then((result) => {
+					if (result.value) {
+						location.reload();
+					}
+				});
+			});
+	}
 
 	$scope.tambah = function () {
 		window.location.replace(urls + 'spesifikasi_harga/form/tambah');
 	}
 
 	$scope.edit = function (params) {
-		window.location.replace(urls + 'spesifikasi_harga/form/edit?id='+params.id);
+		window.location.replace(urls + 'spesifikasi_harga/form/edit?id=' + params.id);
 	}
 
 	$scope.delete = function (params) {
@@ -219,5 +217,94 @@ mainApp.controller('spesifikasi_harga', ['$scope', 'httpHandler', '$filter', '$a
 			}
 		});
 	}
+
+	$scope.export = async function () {
+		try {
+			const res = await httpHandler.send({
+				url: urls + 'spesifikasi_harga/getData',
+				method: 'GET',
+				params: {
+					offset: 1,          // jika pakai pagination, bisa diatur
+					limit: 1000,        // sesuaikan jumlah maksimum data
+					keyword: JSON.stringify({}) // kosongkan filter
+				}
+			});
+
+			// if (res.data.status !== 200) {
+			// 	Swal.fire({
+			// 		title: 'Error',
+			// 		text: res.data.message,
+			// 		icon: 'error',
+			// 		confirmButtonColor: "#fc544b",
+			// 		confirmButtonText: "Okey",
+			// 	});
+			// 	return;
+			// }
+
+			const data = res.data.data;
+			if (!data || data.length === 0) {
+				return Swal.fire({
+					icon: 'info',
+					title: 'Kosong',
+					text: 'Tidak ada data untuk diekspor.',
+				});
+			}
+
+			const workbook = new ExcelJS.Workbook();
+			const worksheet = workbook.addWorksheet('Spesifikasi Harga');
+
+			worksheet.columns = [
+				{ header: 'IdKelBrg', key: 'kodeKelompok', width: 15 },
+				{ header: 'UraianKelompok', key: 'UraianKelompok', width: 25 },
+				{ header: 'Tipe', key: 'tipe', width: 15 },
+				{ header: 'IdJenisBrg', key: 'idJenisBrg', width: 15 },
+				{ header: 'UraianJenisBrg', key: 'NamaJenis', width: 25 },
+				{ header: 'IdSpesifikasi', key: 'idSpesifikasi', width: 15 },
+				{ header: 'UraianSpesifikasi', key: 'UraianSpesifikasi', width: 25 },
+				{ header: 'Satuan', key: 'satuan', width: 10 },
+				{ header: 'Tahun Harga', key: 'TahunHarga', width: 15 },
+				{ header: 'Harga Satuan', key: 'HargaSatuan', width: 20 }
+			];
+
+
+			worksheet.getRow(1).font = { bold: true };
+
+			for (const item of data) {
+				worksheet.addRow({
+					kodeKelompok: item.kodeKelompok.split('.')[0],
+					UraianKelompok: item.UraianKelompok,
+					tipe: item.tipe,
+					idJenisBrg: item.idJenisBrg,
+					NamaJenis: item.NamaJenis,
+					idSpesifikasi: item.idSpesifikasi,
+					UraianSpesifikasi: item.UraianSpesifikasi,
+					satuan: item.satuan,
+					TahunHarga: item.TahunHarga,
+					HargaSatuan: item.HargaSatuan
+				});
+			}
+
+			const buffer = await workbook.xlsx.writeBuffer();
+			const blob = new Blob([buffer], {
+				type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+			});
+
+			const link = document.createElement("a");
+			link.href = URL.createObjectURL(blob);
+			link.download = "Spesifikasi-Harga.xlsx";
+			link.click();
+			URL.revokeObjectURL(link.href);
+		} catch (error) {
+			console.error("Export error:", error);
+			Swal.fire({
+				title: 'Error',
+				text: 'Gagal mengambil data untuk ekspor.',
+				icon: 'error',
+				confirmButtonColor: "#fc544b",
+				confirmButtonText: "Okey",
+			});
+		}
+	};
+
 
 }]);
