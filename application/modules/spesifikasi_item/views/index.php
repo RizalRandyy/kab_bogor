@@ -7,6 +7,7 @@
 		width: 25px !important;
 	}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 <div class="main-content" ng-controller="<?= $page ?>" id="<?= $page ?>">
 	<section class="section">
 		<div class="row">
@@ -19,13 +20,18 @@
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6" style="color:white; margin-top:37px;">
 						<?php if ($users['role_access']['spesifikasi_item']['accessadd_spesifikasi_item'] == 'on') { ?>
-						<form class="form-inline float-right">
-							<div class="mb-2 mr-2">
-                                <a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
-                                	<i class="fas fa-plus"></i> Tambah
-                                </a>
-                            </div> 
-						</form>
+							<form class="form-inline float-right">
+								<div class="mb-2 mr-2">
+									<a href="" class="btn btn-success btn-xl" style="float: right;" title="Import Data" ng-click="export()">
+										<i class="fas fa-file-excel"></i> Export
+									</a>
+								</div>
+								<div class="mb-2 mr-2">
+									<a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
+										<i class="fas fa-plus"></i> Tambah
+									</a>
+								</div>
+							</form>
 						<?php } ?>
 					</div>
 				</div>
@@ -57,7 +63,7 @@
 													<input ng-if="b != 'reset'" type="text" class="form-control no-margin form-filter " ng-model="search_Method.val[b]" ng-change="searchMethod(b, search_Method.val[b])" ng-model-options="{debounce: 2000}">
 												</td>
 												<td class="no-padding px-1"></td>
-											</tr> 
+											</tr>
 											<tr ng-show="message != null">
 												<td colspan="6" class="text-center" ng-bind="message"></td>
 											</tr>
@@ -80,14 +86,14 @@
 															<a href="" class="btn btn-success btn-sm p-1" title="Edit: {{value.idKelompok}}" ng-click="edit(value)">
 																<i class="fas fa-edit"></i>&nbsp;
 															</a>
-														<?php }?>
+														<?php } ?>
 														<?php if ($users['role_access']['spesifikasi_item']['accessdelete_spesifikasi_item'] == 'on') { ?>
 															<a href="" class="btn btn-danger btn-sm p-1" title="Delete: {{value.idKelompok}}" ng-click="delete(value)">
 																<i class="fas fa-trash"></i>&nbsp;
 															</a>
-														<?php }?>
+														<?php } ?>
 													</td>
-												<?php }?>
+												<?php } ?>
 											</tr>
 										</tbody>
 									</table>

@@ -224,22 +224,11 @@ mainApp.controller('spesifikasi_harga', ['$scope', 'httpHandler', '$filter', '$a
 				url: urls + 'spesifikasi_harga/getData',
 				method: 'GET',
 				params: {
-					offset: 1,          // jika pakai pagination, bisa diatur
-					limit: 1000,        // sesuaikan jumlah maksimum data
-					keyword: JSON.stringify({}) // kosongkan filter
+					offset: 1,
+					limit: 1000,
+					keyword: JSON.stringify({})
 				}
 			});
-
-			// if (res.data.status !== 200) {
-			// 	Swal.fire({
-			// 		title: 'Error',
-			// 		text: res.data.message,
-			// 		icon: 'error',
-			// 		confirmButtonColor: "#fc544b",
-			// 		confirmButtonText: "Okey",
-			// 	});
-			// 	return;
-			// }
 
 			const data = res.data.data;
 			if (!data || data.length === 0) {

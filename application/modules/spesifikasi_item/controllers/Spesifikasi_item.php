@@ -29,7 +29,7 @@ class Spesifikasi_item extends My_Controller
 
 	public function getData_get()
 	{
-		$return = $this->Spesifikasi_item_model->getData($this->get(NULL, TRUE),$this->data['users']);
+		$return = $this->Spesifikasi_item_model->getData($this->get(NULL, TRUE), $this->data['users']);
 		$return['header'] = $this->Spesifikasi_item_model->getheader();
 
 		$this->response($return, 200);
@@ -38,10 +38,10 @@ class Spesifikasi_item extends My_Controller
 	public function form_get()
 	{
 		$segment = $this->uri->segment(3);
-		$this->data['title'] = ucfirst($segment).' Spesifikasi Item';
+		$this->data['title'] = ucfirst($segment) . ' Spesifikasi Item';
 		$this->data['page'] = 'tambah_spesifikasi_item';
 		$this->data['version'] = $this->uri->segment(2);
-		$this->data['id'] = @$this->get('id')?$this->get('id', TRUE):null;
+		$this->data['id'] = @$this->get('id') ? $this->get('id', TRUE) : null;
 
 		$this->data['js'] = array(
 			'assets/js/app/tambah_spesifikasi_item.js?' . rand(),
@@ -80,7 +80,7 @@ class Spesifikasi_item extends My_Controller
 
 	public function getById_get()
 	{
-		$return = $this->Spesifikasi_item_model->getReqById($this->get('id', TRUE),$this->data['users']);
+		$return = $this->Spesifikasi_item_model->getReqById($this->get('id', TRUE), $this->data['users']);
 
 		$this->response($return, $return['status'] == 500 ? false : 200);
 	}
