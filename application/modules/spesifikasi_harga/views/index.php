@@ -7,6 +7,7 @@
 		width: 25px !important;
 	}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 <div class="main-content" ng-controller="<?= $page ?>" id="<?= $page ?>">
 	<section class="section">
 		<div class="row">
@@ -20,6 +21,11 @@
 					<div class="col-lg-6 col-md-6 col-sm-6" style="color:white; margin-top:37px;">
 						<?php if ($users['role_access']['spesifikasi_harga']['accessadd_spesifikasi_harga'] == 'on') { ?>
 						<form class="form-inline float-right">
+							<div class="mb-2 mr-2">
+                                <a href="" class="btn btn-success btn-xl" style="float: right;" title="Import Data" ng-click="export()">
+                                	<i class="fas fa-file-excel"></i> Export
+                                </a>
+                            </div> 
 							<div class="mb-2 mr-2">
                                 <a href="" class="btn btn-success btn-xl" style="float: right;" title="Import Data" ng-click="show_modal()">
                                 	<i class="fas fa-file-excel"></i> Import

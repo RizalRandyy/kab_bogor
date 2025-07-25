@@ -11,6 +11,7 @@
 	.modal-lg, .modal-xl {
 	    max-width: 1200px;
 	}
+}
 </style>
 <div ng-controller="<?= $page ?>" id="<?= $page ?>">
 	<section class="section" style="margin-bottom:125px">

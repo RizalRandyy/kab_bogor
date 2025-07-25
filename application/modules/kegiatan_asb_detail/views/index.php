@@ -7,6 +7,8 @@
 		width: 25px !important;
 	}
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 <div class="main-content" ng-controller="<?= $page ?>" id="<?= $page ?>">
 	<section class="section">
 		<div class="row">
@@ -19,6 +21,13 @@
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6" style="color:white; margin-top:37px;">
 						<?php if ($users['role_access']['kegiatan_asb_detail']['accessadd_kegiatan_asb_detail'] == 'on') { ?>
+							<form class="form-inline float-right">
+								<div class="mb-2 mr-2">
+									<a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
+										<i class="fas fa-plus"></i> Tambah
+									</a>
+								</div>
+							</form>
 							<form class="form-inline float-right">
 								<div class="mb-2 mr-2">
 									<a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
@@ -86,6 +95,12 @@
 														<a href="" class="btn btn-danger btn-sm p-1" title="Delete: {{value.kodeKelompok}}" ng-click="delete(value)">
 															<i class="fas fa-trash"></i>&nbsp;
 														</a>
+													<?php } ?>
+													<?php if ($users['role_access']['kegiatan_hspk_detail']['accessdelete_kegiatan_hspk_detail'] == 'on') { ?>
+														<button ng-click="exportExcelById(value.id)" class="btn btn-success btn-sm">
+															<i class="fa fa-file-excel"></i> Export Excel
+														</button>
+
 													<?php } ?>
 												</td>
 											</tr>

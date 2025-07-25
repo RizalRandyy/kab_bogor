@@ -27,7 +27,10 @@ class Kegiatan_hspk_detail_model extends CI_Model
             foreach ($keyresult as $key => $value) {
                 if ($value) {
                     if ($key == 'UraianKegiatan') {
+                if ($value) {
+                    if ($key == 'UraianKegiatan') {
                         $this->db->like('tb_kegiatan.UraianKegiatan', $value);
+                    } elseif ($key == 'satuan') {
                     } elseif ($key == 'satuan') {
                         $this->db->like('tb_kegiatan.satuan', $value);
                     } elseif ($key == 'namaBidangTeknis') {
@@ -60,6 +63,7 @@ class Kegiatan_hspk_detail_model extends CI_Model
                 $total = array_sum($total_satuan);
                 $get_data[$key]['harga'] = 'Rp.' . number_format($total, 0, '', '.');
 
+                $get_data[$key]['harga'] = 'Rp.' . number_format($total, 0, '', '.');
                 unset($get_data[$key]['id_thn_harga']);
                 unset($get_data[$key]['total_item']);
             }
@@ -109,6 +113,7 @@ class Kegiatan_hspk_detail_model extends CI_Model
 
         if (!empty($kel_spesifikasi)) {
             foreach ($kel_spesifikasi as $key => $value) {
+                $kel_spesifikasi[$key]['harga'] = 'Rp.' . number_format($value['harga'], 0, '', '.');
                 $kel_spesifikasi[$key]['harga'] = 'Rp.' . number_format($value['harga'], 0, '', '.');
                 $kel_spesifikasi[$key]['value_harga'] = $value['harga'];
             }
@@ -164,13 +169,36 @@ class Kegiatan_hspk_detail_model extends CI_Model
         if ($data) {
             $data->id = encrypt_url($data->id);
             $data->id_thn_harga = json_decode($data->id_thn_harga);
-            $total_item = json_decode($data->total_item);
+            $raw_total_item = json_decode($data->total_item);
+            $assoc_total_item = [];
 
-            foreach ($data->id_thn_harga as $key => $value) {
-                $total[$value] = $total_item[$key];
+            $detail = [];
+            $total = 0;
+
+            foreach ($data->id_thn_harga as $key => $id_harga) {
+                $id_harga = (string)$id_harga;
+                $qty = isset($raw_total_item[$key]) ? (int)$raw_total_item[$key] : 0;
+
+                $assoc_total_item[$id_harga] = $qty;
+
+                $harga_row = $this->db->get_where('tb_thn_harga', ['id' => $id_harga])->row();
+                $harga = $harga_row ? (int)$harga_row->harga : 0;
+
+                $subtotal = $harga * $qty;
+                $total += $subtotal;
+
+                $detail[] = [
+                    'id_harga' => (int)$id_harga,
+                    'qty' => $qty,
+                    'harga' => $harga,
+                    'subtotal' => $subtotal
+                ];
             }
-            $data->total_item = $total;
+            $data->total_item = $assoc_total_item;
+            $data->detail = $detail;
+            $data->total = $total;
         }
+
 
         return [
             'status' => empty($data) ? 500 : 200,

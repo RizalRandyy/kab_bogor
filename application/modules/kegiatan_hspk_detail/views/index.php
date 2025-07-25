@@ -7,6 +7,8 @@
 		width: 25px !important;
 	}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+
 <div class="main-content" ng-controller="<?= $page ?>" id="<?= $page ?>">
 	<section class="section">
 		<div class="row">
@@ -74,7 +76,6 @@
 												<td ng-bind="value.namaBidangTeknis"></td>
 												<td ng-bind="value.UraianKegiatan"></td>
 												<td ng-bind="value.satuan"></td>
-												<td ng-bind="value.tahunPekerjaan"></td>
 												<td class="text-right" ng-bind="value.harga"></td>
 												<td class="text-center" style="white-space: nowrap;">
 													<!-- <a href="" class="btn btn-info btn-sm p-1" title="Detail: {{value.kodeKelompok}}" ng-click="edit(value)">
@@ -89,6 +90,12 @@
 														<a href="" class="btn btn-danger btn-sm p-1" title="Delete: {{value.kodeKelompok}}" ng-click="delete(value)">
 															<i class="fas fa-trash"></i>&nbsp;
 														</a>
+													<?php } ?>
+													<?php if ($users['role_access']['kegiatan_hspk_detail']['accessdelete_kegiatan_hspk_detail'] == 'on') { ?>
+														<button ng-click="exportExcelById(value.id)" class="btn btn-success btn-sm">
+															<i class="fa fa-file-excel"></i> Export Excel
+														</button>
+
 													<?php } ?>
 												</td>
 											</tr>
