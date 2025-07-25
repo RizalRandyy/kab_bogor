@@ -132,6 +132,35 @@ class Kegiatan_asb_model extends CI_Model
     public function deleteReq($id)
     {
         $id = decrypt_url($id);
+
+        $asb = $this->db->get_where('tb_standar_biaya', ['id' => $id])->row();
+
+        if (!$asb) {
+            return [
+                'message' => 'ASB tidak ditemukan.',
+                'status' => 404
+            ];
+        }
+
+        $idAsb = $asb->idASB;
+
+        $usulanAsbList = $this->db->get_where('tb_usulan_standar_biaya', ['idASB' => $idAsb])->result();
+
+        if (!empty($usulanAsbList)) {
+            $idUsulanList = array_map(function ($item) {
+                return $item->id;
+            }, $usulanAsbList);
+
+            $this->db->where_in('id', $idUsulanList);
+            $this->db->where('status', 'disetujui');
+            $this->db->update('tb_usulan_standar_biaya', ['status' => 'usulan']);
+
+            // $this->db->where_in('id_thn_kegiatan', $idUsulanList);
+            // $this->db->update('tb_usulan_thn_pekerjaan_detail', ['status' => 'usulan']);
+        }
+
+        $this->db->delete('tb_standar_biaya_thn', ['idASB' => $id]);
+
         if ($this->db->delete('tb_standar_biaya', ['id' => $id])) {
             return [
                 'message' => 'Delete success',

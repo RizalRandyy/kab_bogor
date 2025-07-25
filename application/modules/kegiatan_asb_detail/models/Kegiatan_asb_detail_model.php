@@ -40,7 +40,7 @@ class Kegiatan_asb_detail_model extends CI_Model
         }
 
         $tot = clone $this->db;
-        $this->db->order_by('tb_standar_biaya_thn.kodeKelompok ASC, tb_standar_biaya_thn.tahunASB DESC');
+        $this->db->order_by('tb_standar_biaya_thn.tahunASB DESC, tb_standar_biaya_thn.kodeKelompok ASC');
         $get_data = $this->db->limit($params['limit'], $start)->get()->result_array();
         $get_count = $tot->get()->num_rows();
 
@@ -199,6 +199,52 @@ class Kegiatan_asb_detail_model extends CI_Model
     public function deleteReq($id)
     {
         $id = decrypt_url($id);
+
+        // 1. Ambil data detail
+        $asbDetail = $this->db->get_where('tb_standar_biaya_thn_detail', ['id' => $id])->row();
+
+        if (!$asbDetail) {
+            return [
+                'message' => 'ASB tidak ditemukan.',
+                'status' => 404
+            ];
+        }
+
+        // 2. Ambil dari tb_standar_biaya_thn
+        $asbThn = $this->db->get_where('tb_standar_biaya_thn', ['id' => $asbDetail->id_standar_biaya_thn])->row();
+        if (!$asbThn) {
+            return [
+                'message' => 'Data standar biaya tahun tidak ditemukan.',
+                'status' => 404
+            ];
+        }
+
+        // 3. Ambil idASB dari tb_standar_biaya
+        $standarBiaya = $this->db->get_where('tb_standar_biaya', ['id' => $asbThn->idASB])->row();
+        if (!$standarBiaya) {
+            return [
+                'message' => 'Data standar biaya tidak ditemukan.',
+                'status' => 404
+            ];
+        }
+
+        $idAsb = $standarBiaya->idASB;
+
+        // 4. Cari semua usulan yang memiliki idASB ini
+        $usulanList = $this->db->get_where('tb_usulan_standar_biaya', ['idASB' => $idAsb])->result();
+
+        if (!empty($usulanList)) {
+            $idUsulanList = array_map(function ($item) {
+                return $item->id;
+            }, $usulanList);
+
+            // 5. Update status di tb_usulan_standar_biaya_thn_detail
+            $this->db->where_in('id_standar_biaya_thn', $idUsulanList);
+            $this->db->where('status', 'disetujui');
+            $this->db->update('tb_usulan_standar_biaya_thn_detail', ['status' => 'usulan']);
+        }
+
+        // 6. Hapus data detail
         if ($this->db->delete('tb_standar_biaya_thn_detail', ['id' => $id])) {
             return [
                 'message' => 'Delete success',
@@ -211,6 +257,7 @@ class Kegiatan_asb_detail_model extends CI_Model
             'status' => 400
         ];
     }
+
 
     public function getheader()
     {

@@ -1,14 +1,25 @@
 <?php
-class Kegiatan_hspk_model extends CI_Model
+class Usulan_kegiatan_hspk_model extends CI_Model
 {
     public function getData($params, $users)
     {
         $start = ($params['offset'] - 1) * $params['limit'];
         $keyresult = (array)json_decode($params['keyword']);
 
-        $this->db->select('tb_kegiatan.id, tb_kegiatan.idKegiatan, tb_kegiatan.idBidangTeknis, tb_kegiatan.UraianKegiatan, tb_kegiatan.satuan, tb_bidang_teknis.namaBidangTeknis');
-        $this->db->from('tb_kegiatan');
-        $this->db->join('tb_bidang_teknis', 'tb_kegiatan.idBidangTeknis = tb_bidang_teknis.idBidangTeknis', 'left');
+        $this->db->select('
+        tb_usulan_kegiatan.id,
+        tb_usulan_kegiatan.idKegiatan,
+        tb_usulan_kegiatan.idBidangTeknis,
+        tb_usulan_kegiatan.UraianKegiatan,
+        tb_usulan_kegiatan.satuan,
+        tb_usulan_kegiatan.tahunPekerjaan,
+        tb_usulan_kegiatan.idOpd,
+        tb_bidang_teknis.namaBidangTeknis,
+        tb_opd.namaOpd
+    ');
+        $this->db->from('tb_usulan_kegiatan');
+        $this->db->join('tb_bidang_teknis', 'tb_usulan_kegiatan.idBidangTeknis = tb_bidang_teknis.idBidangTeknis', 'left');
+        $this->db->join('tb_opd', 'tb_usulan_kegiatan.idOpd = tb_opd.idOpd', 'left');
 
         if (!empty($keyresult)) {
             foreach ($keyresult as $key => $value) {
@@ -20,7 +31,7 @@ class Kegiatan_hspk_model extends CI_Model
 
         $tot = clone $this->db;
 
-        $this->db->order_by('tb_kegiatan.idKegiatan', 'ASC');
+        $this->db->order_by('tb_usulan_kegiatan.idKegiatan', 'ASC');
         $get_data = $this->db->limit($params['limit'], $start)->get()->result_array();
         $get_count = $tot->get()->num_rows();
 
@@ -47,16 +58,36 @@ class Kegiatan_hspk_model extends CI_Model
         ];
     }
 
+    public function getOpd()
+    {
+        $get_data = $this->db->select('id,idOpd,namaOpd')
+            ->order_by('idOpd')->get('tb_opd')->result_array();
+
+        return [
+            'data' => !empty($get_data) ? $get_data : []
+        ];
+    }
+
     public function saveData($params)
     {
+        $cek_kegiatan_tetap = $this->db->where('idKegiatan', $params['idKegiatan'])
+            ->get('tb_kegiatan')->first_row();
+
+        if ($cek_kegiatan_tetap) {
+            return [
+                'message' => 'Gagal! Kode Kegiatan ' . $params['idKegiatan'] . ' sudah menjadi kegiatan tetap dan tidak bisa diubah/usulkan kembali!',
+                'status' => 500,
+            ];
+        }
+
         if (!empty($params['id'])) {
             $id = decrypt_url($params['id']);
             unset($params['id']);
 
-            $cek = $get_data = $this->db->select('*')
+            $cek = $this->db->select('*')
                 ->where('id !=', $id)
                 ->where('idKegiatan', $params['idKegiatan'])
-                ->get('tb_kegiatan')->first_row();
+                ->get('tb_usulan_kegiatan')->first_row();
 
             if ($cek) {
                 return [
@@ -65,7 +96,7 @@ class Kegiatan_hspk_model extends CI_Model
                 ];
             }
 
-            if ($this->db->where('id', $id)->update('tb_kegiatan', $params)) {
+            if ($this->db->where('id', $id)->update('tb_usulan_kegiatan', $params)) {
                 return [
                     'message' => 'Edit Kegiatan Berhasil',
                     'status' => 200,
@@ -77,9 +108,9 @@ class Kegiatan_hspk_model extends CI_Model
                 'status' => 400,
             ];
         } else {
-            $cek = $get_data = $this->db->select('*')
+            $cek = $this->db->select('*')
                 ->where('idKegiatan', $params['idKegiatan'])
-                ->get('tb_kegiatan')->first_row();
+                ->get('tb_usulan_kegiatan')->first_row();
 
             if ($cek) {
                 return [
@@ -88,7 +119,7 @@ class Kegiatan_hspk_model extends CI_Model
                 ];
             }
 
-            if ($this->db->insert('tb_kegiatan', $params)) {
+            if ($this->db->insert('tb_usulan_kegiatan', $params)) {
                 return [
                     'message' => 'Tambah Kegiatan Berhasil',
                     'status' => 200,
@@ -106,10 +137,21 @@ class Kegiatan_hspk_model extends CI_Model
     {
         $id = decrypt_url($id);
 
-        $this->db->select('tb_kegiatan.id, tb_kegiatan.idKegiatan, tb_kegiatan.idBidangTeknis, tb_bidang_teknis.namaBidangTeknis, tb_kegiatan.UraianKegiatan, tb_kegiatan.satuan');
-        $this->db->from('tb_kegiatan');
-        $this->db->join('tb_bidang_teknis', 'tb_kegiatan.idBidangTeknis = tb_bidang_teknis.idBidangTeknis', 'left');
-        $this->db->where('tb_kegiatan.id', $id);
+        $this->db->select('
+        tb_usulan_kegiatan.id, 
+        tb_usulan_kegiatan.idKegiatan, 
+        tb_usulan_kegiatan.idBidangTeknis, 
+        tb_bidang_teknis.namaBidangTeknis, 
+        tb_usulan_kegiatan.UraianKegiatan, 
+        tb_usulan_kegiatan.satuan,
+        tb_usulan_kegiatan.tahunPekerjaan,
+        tb_usulan_kegiatan.idOpd,
+        tb_opd.namaOpd
+    ');
+        $this->db->from('tb_usulan_kegiatan');
+        $this->db->join('tb_bidang_teknis', 'tb_usulan_kegiatan.idBidangTeknis = tb_bidang_teknis.idBidangTeknis', 'left');
+        $this->db->join('tb_opd', 'tb_usulan_kegiatan.idOpd = tb_opd.idOpd', 'left');
+        $this->db->where('tb_usulan_kegiatan.id', $id);
 
         $data = $this->db->get()->row();
 
@@ -127,34 +169,7 @@ class Kegiatan_hspk_model extends CI_Model
     public function deleteReq($id)
     {
         $id = decrypt_url($id);
-
-        $kegiatan = $this->db->get_where('tb_kegiatan', ['id' => $id])->row();
-
-        if (!$kegiatan) {
-            return [
-                'message' => 'Kegiatan tidak ditemukan.',
-                'status' => 404
-            ];
-        }
-
-        $idKegiatan = $kegiatan->idKegiatan;
-
-        $usulanKegiatanList = $this->db->get_where('tb_usulan_kegiatan', ['idKegiatan' => $idKegiatan])->result();
-
-        if (!empty($usulanKegiatanList)) {
-            $idUsulanList = array_map(function ($item) {
-                return $item->id;
-            }, $usulanKegiatanList);
-
-            $this->db->where_in('id', $idUsulanList);
-            $this->db->where('status', 'disetujui');
-            $this->db->update('tb_usulan_kegiatan', ['status' => 'usulan']);
-
-            $this->db->where_in('id_thn_kegiatan', $idUsulanList);
-            $this->db->update('tb_usulan_thn_pekerjaan_detail', ['status' => 'usulan']);
-        }
-
-        if ($this->db->delete('tb_kegiatan', ['id' => $id])) {
+        if ($this->db->delete('tb_usulan_kegiatan', ['id' => $id])) {
             return [
                 'message' => 'Delete success',
                 'status' => 200,
@@ -169,7 +184,7 @@ class Kegiatan_hspk_model extends CI_Model
 
     public function getheader()
     {
-        $header  = array("No" => 'reset', "Kode Kegiatan" => "idKegiatan", "Bidang" => "namaBidangTeknis", "Uraian Kegiatan" => "UraianKegiatan", "Satuan" => "satuan");
+        $header  = array("No" => 'reset', "Kode Kegiatan" => "idKegiatan", "Bidang" => "namaBidangTeknis", "Uraian Kegiatan" => "UraianKegiatan", "Satuan" => "satuan", "TahunPekerjaan" => "tahunPekerjaan", "OPD / Dinas Pengusul" => "namaOpd");
         return $header;
     }
 }

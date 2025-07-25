@@ -1,23 +1,23 @@
 <?php
 class Spesifikasi_item_model extends CI_Model
 {
-    public function getData($params,$users)
+    public function getData($params, $users)
     {
         $start = ($params['offset'] - 1) * $params['limit'];
         $keyresult = (array)json_decode($params['keyword']);
 
         $this->db->select('tb_spesifikasi_item.id,tb_spesifikasi_item.kodeKelompok,UraianSpesifikasi,satuan,tb_kelompok_item.UraianKelompok,tb_jenis_item.NamaJenis')
-                ->join('tb_jenis_item', 'tb_spesifikasi_item.idJenisItem = tb_jenis_item.id')
-                ->join('tb_kelompok_item', 'tb_jenis_item.idKelompokItem = tb_kelompok_item.id');
+            ->join('tb_jenis_item', 'tb_spesifikasi_item.idJenisItem = tb_jenis_item.id')
+            ->join('tb_kelompok_item', 'tb_jenis_item.idKelompokItem = tb_kelompok_item.id');
 
         if (!empty($keyresult)) {
             foreach ($keyresult as $key => $value) {
-                if($value){
-                    if($key == "kodeKelompok"){
+                if ($value) {
+                    if ($key == "kodeKelompok") {
                         $this->db->like('tb_spesifikasi_item.kodeKelompok', $value);
-                    }elseif($key == "UraianKelompok"){
+                    } elseif ($key == "UraianKelompok") {
                         $this->db->like('tb_kelompok_item.UraianKelompok', $value);
-                    }elseif($key == "NamaJenis"){
+                    } elseif ($key == "NamaJenis") {
                         $this->db->like('tb_jenis_item.NamaJenis', $value);
                     } else {
                         $this->db->like($key, $value);
@@ -25,7 +25,7 @@ class Spesifikasi_item_model extends CI_Model
                 }
             }
         }
-        
+
         $tot = clone $this->db;
         $this->db->order_by('id', 'ASC');
         $get_data = $this->db->limit($params['limit'], $start)->get('tb_spesifikasi_item')->result_array();
@@ -37,7 +37,7 @@ class Spesifikasi_item_model extends CI_Model
                 $get_data[$key]['idKelompok'] = $value['kodeKelompok'];
             }
         }
-        
+
         return [
             'count' => $get_count,
             'data' => !empty($get_data) ? $get_data : [],
@@ -48,12 +48,11 @@ class Spesifikasi_item_model extends CI_Model
     public function getkel_item()
     {
         $get_data = $this->db->select('tb_jenis_item.id,tb_kelompok_item.IdKelItem,tb_kelompok_item.UraianKelompok,idJenisBarang,NamaJenis,tipe')
-                            ->join('tb_kelompok_item', 'tb_jenis_item.idKelompokItem = tb_kelompok_item.id')
-                            ->order_by('idJenisBarang')->get('tb_jenis_item')->result_array();
+            ->join('tb_kelompok_item', 'tb_jenis_item.idKelompokItem = tb_kelompok_item.id')
+            ->order_by('idJenisBarang')->get('tb_jenis_item')->result_array();
 
         foreach ($get_data as $key => $value) {
-            $get_data[$key]['IdKelItem'] = $value['IdKelItem'].'.'.$value['idJenisBarang'];
-
+            $get_data[$key]['IdKelItem'] = $value['IdKelItem'] . '.' . $value['idJenisBarang'];
         }
 
         return [
@@ -64,22 +63,22 @@ class Spesifikasi_item_model extends CI_Model
     public function saveData($params)
     {
         $jenis_item = $this->db->where('id', $params['idJenisItem'])
-                                    ->get('tb_jenis_item')->first_row();
+            ->get('tb_jenis_item')->first_row();
 
-        $kodeKelompok = $jenis_item->kodeKelompok.'.'.$params['idSpesifikasi'];
+        $kodeKelompok = $jenis_item->kodeKelompok . '.' . $params['idSpesifikasi'];
 
         if (!empty($params['id'])) {
             $id = decrypt_url($params['id']);
             unset($params['id']);
 
             $cek = $this->db->select('*')
-                            ->where('tb_spesifikasi_item.id !=', $id)
-                            ->where('kodeKelompok', $kodeKelompok)
-                            ->get('tb_spesifikasi_item')->first_row();
+                ->where('tb_spesifikasi_item.id !=', $id)
+                ->where('kodeKelompok', $kodeKelompok)
+                ->get('tb_spesifikasi_item')->first_row();
 
-            if($cek){
+            if ($cek) {
                 return [
-                    'message' => 'Edit SSH Gagal! Kode Item '.$kodeKelompok.' & Kode Spesifikasi '.$params['idSpesifikasi'].' sudah ada!',
+                    'message' => 'Edit SSH Gagal! Kode Item ' . $kodeKelompok . ' & Kode Spesifikasi ' . $params['idSpesifikasi'] . ' sudah ada!',
                     'status' => 500,
                 ];
             }
@@ -99,12 +98,12 @@ class Spesifikasi_item_model extends CI_Model
             ];
         } else {
             $cek = $this->db->select('*')
-                            ->where('kodeKelompok', $kodeKelompok)
-                            ->get('tb_spesifikasi_item')->first_row();
+                ->where('kodeKelompok', $kodeKelompok)
+                ->get('tb_spesifikasi_item')->first_row();
 
-            if($cek){
+            if ($cek) {
                 return [
-                    'message' => 'Tambah SSH Gagal! Kode Item '.$jenis_item->kodeKelompok.' & Kode Spesifikasi '.$params['idSpesifikasi'].' sudah ada!',
+                    'message' => 'Tambah SSH Gagal! Kode Item ' . $jenis_item->kodeKelompok . ' & Kode Spesifikasi ' . $params['idSpesifikasi'] . ' sudah ada!',
                     'status' => 500,
                 ];
             }
@@ -125,7 +124,7 @@ class Spesifikasi_item_model extends CI_Model
         }
     }
 
-    public function getReqById($id,$users)
+    public function getReqById($id, $users)
     {
         $id = decrypt_url($id);
         $this->db->select('id,idJenisItem,idSpesifikasi,UraianSpesifikasi,satuan')
@@ -133,7 +132,7 @@ class Spesifikasi_item_model extends CI_Model
 
         $data =  $this->db->get('tb_spesifikasi_item')->row();
 
-        if($data){
+        if ($data) {
             $data->id = encrypt_url($data->id);
         }
 
@@ -148,6 +147,24 @@ class Spesifikasi_item_model extends CI_Model
     public function deleteReq($id)
     {
         $id = decrypt_url($id);
+
+        // Ambil data dari tb_spesifikasi_item
+        $spesifikasi = $this->db->get_where('tb_spesifikasi_item', ['id' => $id])->row();
+
+        if (!$spesifikasi) {
+            return [
+                'message' => 'Data spesifikasi item tidak ditemukan.',
+                'status' => 404
+            ];
+        }
+
+        $kodeKelompok = $spesifikasi->kodeKelompok;
+
+        // Update status di tb_usulan_spesifikasi_item jika ada yang cocok
+        $this->db->where('kodeKelompok', $kodeKelompok);
+        $this->db->update('tb_usulan_spesifikasi_item', ['status' => 'usulan']);
+
+        // Hapus data dari tb_spesifikasi_item
         if ($this->db->delete('tb_spesifikasi_item', ['id' => $id])) {
             return [
                 'message' => 'Delete success',
@@ -161,8 +178,9 @@ class Spesifikasi_item_model extends CI_Model
         ];
     }
 
-    public function getheader(){
-        $header  = array("No" => 'reset', "Kode Item" => "kodeKelompok","Nama Kelompok" => "UraianKelompok", "Nama Jenis" => "NamaJenis", "Usaraian Spesifikasi" => "UraianSpesifikasi", "Satuan" => "satuan");  
+    public function getheader()
+    {
+        $header  = array("No" => 'reset', "Kode Item" => "kodeKelompok", "Nama Kelompok" => "UraianKelompok", "Nama Jenis" => "NamaJenis", "Usaraian Spesifikasi" => "UraianSpesifikasi", "Satuan" => "satuan");
         return $header;
     }
 }

@@ -202,27 +202,60 @@
 							</li>
 						<?php } ?>
 
-						<li class="nav-item dropdown <?= in_array($this->uri->segment(1), ['usulan_spesifikasi_item', 'usulan_spesifikasi_harga']) ? 'active' : '' ?>">
+						<li class="nav-item dropdown <?= in_array($this->uri->segment(1), ['usulan_spesifikasi_item', 'usulan_kegiatan_hspk', 'usulan_kegiatan_hspk_detail', 'usulan_kegiatan_asb', 'usulan_kegiatan_asb_detail']) ? 'active' : '' ?>">
 							<a href="#" class="nav-link has-dropdown">
 								<i class="fas fa-folder"></i><span>Usulan</span>
 							</a>
 
 							<ul class="dropdown-menu">
-								<li class="nav-item submenu position-relative <?= in_array($this->uri->segment(1), ['usulan_spesifikasi_item', 'usulan_spesifikasi_harga']) ? 'active' : '' ?>">
+
+								<!-- SSH Submenu -->
+								<li class="nav-item submenu position-relative <?= in_array($this->uri->segment(1), ['usulan_spesifikasi_item']) ? 'active' : '' ?>">
 									<a href="#" class="nav-link submenu-toggle">
 										<i class="fab fa-elementor"></i><span>Isian SSH</span>
 									</a>
-
 									<ul class="dropdown-menu submenu-dropdown">
 										<?php if (!empty($users['role_access']['usulan_spesifikasi_item']) && $users['role_access']['usulan_spesifikasi_item']['usulan_spesifikasi_item'] == 'on') : ?>
 											<li class="nav-item <?= $this->uri->segment(1) == 'usulan_spesifikasi_item' ? 'active' : '' ?>">
 												<a class="nav-link" href="<?= base_url('usulan_spesifikasi_item'); ?>">SSH</a>
 											</li>
 										<?php endif; ?>
+									</ul>
+								</li>
 
-										<?php if (!empty($users['role_access']['usulan_spesifikasi_harga']) && $users['role_access']['usulan_spesifikasi_harga']['usulan_spesifikasi_harga'] == 'on') : ?>
-											<li class="nav-item <?= $this->uri->segment(1) == 'usulan_spesifikasi_harga' ? 'active' : '' ?>">
-												<a class="nav-link" href="<?= base_url('usulan_spesifikasi_harga'); ?>">Harga</a>
+								<!-- HSPK Submenu -->
+								<li class="nav-item submenu position-relative <?= in_array($this->uri->segment(1), ['usulan_kegiatan_hspk', 'usulan_kegiatan_hspk_detail']) ? 'active' : '' ?>">
+									<a href="#" class="nav-link submenu-toggle">
+										<i class="fas fa-poll-h"></i><span>Isian HSPK</span>
+									</a>
+									<ul class="dropdown-menu submenu-dropdown">
+										<?php if (!empty($users['role_access']['usulan_kegiatan_hspk']) && $users['role_access']['usulan_kegiatan_hspk']['usulan_kegiatan_hspk'] == 'on') : ?>
+											<li class="nav-item <?= $this->uri->segment(1) == 'usulan_kegiatan_hspk' ? 'active' : '' ?>">
+												<a class="nav-link" href="<?= base_url('usulan_kegiatan_hspk'); ?>">HSPK</a>
+											</li>
+										<?php endif; ?>
+										<?php if (!empty($users['role_access']['usulan_kegiatan_hspk_detail']) && $users['role_access']['usulan_kegiatan_hspk_detail']['usulan_kegiatan_hspk_detail'] == 'on') : ?>
+											<li class="nav-item <?= $this->uri->segment(1) == 'usulan_kegiatan_hspk_detail' ? 'active' : '' ?>">
+												<a class="nav-link" href="<?= base_url('usulan_kegiatan_hspk_detail'); ?>">HSPK Detail</a>
+											</li>
+										<?php endif; ?>
+									</ul>
+								</li>
+
+								<!-- ASB Submenu -->
+								<li class="nav-item submenu position-relative <?= in_array($this->uri->segment(1), ['usulan_kegiatan_asb', 'usulan_kegiatan_asb_detail']) ? 'active' : '' ?>">
+									<a href="#" class="nav-link submenu-toggle">
+										<i class="fas fa-poll-h"></i><span>Isian ASB</span>
+									</a>
+									<ul class="dropdown-menu submenu-dropdown">
+										<?php if (!empty($users['role_access']['usulan_kegiatan_asb']) && $users['role_access']['usulan_kegiatan_asb']['usulan_kegiatan_asb'] == 'on') : ?>
+											<li class="nav-item <?= $this->uri->segment(1) == 'usulan_kegiatan_asb' ? 'active' : '' ?>">
+												<a class="nav-link" href="<?= base_url('usulan_kegiatan_asb'); ?>">ASB</a>
+											</li>
+										<?php endif; ?>
+										<?php if (!empty($users['role_access']['usulan_kegiatan_asb_detail']) && $users['role_access']['usulan_kegiatan_asb_detail']['usulan_kegiatan_asb_detail'] == 'on') : ?>
+											<li class="nav-item <?= $this->uri->segment(1) == 'usulan_kegiatan_asb_detail' ? 'active' : '' ?>">
+												<a class="nav-link" href="<?= base_url('usulan_kegiatan_asb_detail'); ?>">ASB Detail</a>
 											</li>
 										<?php endif; ?>
 									</ul>
@@ -318,7 +351,7 @@
 
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
-			const currentSegment = window.location.pathname.split('/')[1]; 
+			const currentSegment = window.location.pathname.split('/')[1];
 
 			const targetSegments = ['usulan_spesifikasi_item', 'usulan_spesifikasi_harga'];
 

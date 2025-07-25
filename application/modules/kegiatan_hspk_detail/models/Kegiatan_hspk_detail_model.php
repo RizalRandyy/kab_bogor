@@ -40,7 +40,7 @@ class Kegiatan_hspk_detail_model extends CI_Model
         }
 
         $tot = clone $this->db;
-        $this->db->order_by('tb_thn_kegiatan.kodeKelompok ASC, tb_thn_kegiatan.tahunPekerjaan DESC');
+        $this->db->order_by('tb_thn_kegiatan.tahunPekerjaan DESC, tb_thn_kegiatan.kodeKelompok ASC');
         $get_data = $this->db->limit($params['limit'], $start)->get('tb_thn_pekerjaan_detail')->result_array();
         $get_count = $tot->get('tb_thn_pekerjaan_detail')->num_rows();
 
@@ -183,7 +183,8 @@ class Kegiatan_hspk_detail_model extends CI_Model
     public function deleteReq($id)
     {
         $id = decrypt_url($id);
-        if ($this->db->delete('tb_standar_biaya_thn_detail', ['id' => $id])) {
+        if ($this->db->delete('tb_thn_pekerjaan_detail', ['id' => $id])) {
+
             $cek = $this->db->select('id,id_thn_pekerjaan_detail')
                 ->like('id_thn_pekerjaan_detail', '"' . $id . '"')
                 ->get('tb_standar_biaya_thn_detail')

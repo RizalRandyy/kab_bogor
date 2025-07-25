@@ -1,4 +1,4 @@
-mainApp.controller('usulan_spesifikasi_item', ['$scope', 'httpHandler', '$filter', '$attrs', function ($scope, httpHandler, $filter, $attrs) {
+mainApp.controller('usulan_kegiatan_asb_detail', ['$scope', 'httpHandler', '$filter', '$attrs', function ($scope, httpHandler, $filter, $attrs) {
 	const Toast = Swal.mixin({
 		toast: true,
 		position: "top-end",
@@ -45,7 +45,7 @@ mainApp.controller('usulan_spesifikasi_item', ['$scope', 'httpHandler', '$filter
 
 		httpHandler.send({
 			method: 'GET',
-			url: urls + 'usulan_spesifikasi_item/getData',
+			url: urls + 'usulan_kegiatan_asb_detail/getData',
 			params: params
 		}).then(
 			function successCallbacks(response) {
@@ -75,11 +75,11 @@ mainApp.controller('usulan_spesifikasi_item', ['$scope', 'httpHandler', '$filter
 	}
 
 	$scope.tambah = function () {
-		window.location.replace(urls + 'usulan_spesifikasi_item/form/tambah');
+		window.location.replace(urls + 'usulan_kegiatan_asb_detail/form/tambah');
 	}
 
 	$scope.edit = function (params) {
-		window.location.replace(urls + 'usulan_spesifikasi_item/form/edit?id=' + params.id);
+		window.location.replace(urls + 'usulan_kegiatan_asb_detail/form/edit?id=' + params.id);
 	}
 
 	$scope.delete = function (params) {
@@ -101,7 +101,7 @@ mainApp.controller('usulan_spesifikasi_item', ['$scope', 'httpHandler', '$filter
 				formData.append("id", params.id);
 
 				httpHandler.send({
-					url: urls + 'usulan_spesifikasi_item/deleteData',
+					url: urls + 'usulan_kegiatan_asb_detail/deleteData',
 					data: formData,
 					method: 'POST',
 					headers: {
@@ -138,6 +138,8 @@ mainApp.controller('usulan_spesifikasi_item', ['$scope', 'httpHandler', '$filter
 	}
 
 	$scope.setujuiUsulan = function (params) {
+		console.log(params);
+
 		Swal.fire({
 			title: "Setujui Usulan?",
 			text: "Anda yakin ingin menyetujui usulan ini? Setelah disetujui, data tidak bisa diubah.",
@@ -155,7 +157,7 @@ mainApp.controller('usulan_spesifikasi_item', ['$scope', 'httpHandler', '$filter
 				formData.append("id", params.id);
 
 				httpHandler.send({
-					url: urls + 'usulan_spesifikasi_item/setujuiUsulan',
+					url: urls + 'usulan_kegiatan_asb_detail/setujuiUsulan',
 					data: formData,
 					method: 'POST',
 					headers: { 'Content-Type': undefined }
