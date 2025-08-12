@@ -18,7 +18,7 @@
 						<span>Usulan > Isian SSH > SSH</span>
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6" style="color:white; margin-top:37px;">
-						<?php if ($users['role_access']['spesifikasi_item']['accessadd_spesifikasi_item'] == 'on') { ?>
+						<?php if ($users['role_access']['usulan_spesifikasi_item']['accessadd_usulan_spesifikasi_item'] == 'on') { ?>
 							<form class="form-inline float-right">
 								<div class="mb-2 mr-2">
 									<a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">

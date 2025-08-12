@@ -76,6 +76,7 @@
 												<td ng-bind="value.namaBidangTeknis"></td>
 												<td ng-bind="value.UraianKegiatan"></td>
 												<td ng-bind="value.satuan"></td>
+												<td ng-bind="value.tahunPekerjaan"></td>
 												<td class="text-right" ng-bind="value.harga"></td>
 												<td class="text-center" style="white-space: nowrap;">
 													<!-- <a href="" class="btn btn-info btn-sm p-1" title="Detail: {{value.kodeKelompok}}" ng-click="edit(value)">

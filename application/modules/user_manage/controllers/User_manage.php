@@ -28,7 +28,7 @@ class User_manage extends My_Controller
 
 	public function getUsers_get()
 	{
-		$return = $this->manage_model->getUsers($this->get(NULL, TRUE),$this->data['users']);
+		$return = $this->manage_model->getUsers($this->get(NULL, TRUE), $this->data['users']);
 
 		$header =  $this->manage_model->getheader();
 
@@ -64,46 +64,65 @@ class User_manage extends My_Controller
 	}
 
 	public function save_user_post()
-	{	
+	{
 		$data = $this->post();
 
 		$id_user = !empty($this->post('id')) ? $this->post('id', TRUE) : false;
 
 		$return = $this->manage_model->saveUser($data, $id_user);
 
-        if($return['status'] && $return['email_kode']){
-            $to = $data['email'];
+		// if($return['status'] && $return['email_kode']){
+		//     $to = $data['email'];
 
-            $url = base_url('api/users/aktivasi?id='.$return['email_kode']);
-            $subject = "Aktivasi User";
-            $body = '<div style="text-align: center;">
-                        <p><h1><b>AKTIVASI</b></h1></p>
-                        <h2><button class="btn">
-                            <a href="'.$url.'">Klik Disini</a>
-                            </button>
-                        </h2><br>
-                        <span>untuk Aktivasi user Anda.</span>
-                    </div>';
+		//     $url = base_url('api/users/aktivasi?id='.$return['email_kode']);
+		//     $subject = "Aktivasi User";
+		//     $body = '<div style="text-align: center;">
+		//                 <p><h1><b>AKTIVASI</b></h1></p>
+		//                 <h2><button class="btn">
+		//                     <a href="'.$url.'">Klik Disini</a>
+		//                     </button>
+		//                 </h2><br>
+		//                 <span>untuk Aktivasi user Anda.</span>
+		//             </div>';
 
-            $header = file_get_contents(FCPATH.'email-header.html');
-            $header .= '<div class="image-logo"><img src="'.base_url('assets/img/Kabupaten-bogor.png').'"></div>';
-            $footer = file_get_contents(FCPATH.'email-footer.html');
+		//     $header = file_get_contents(FCPATH.'email-header.html');
+		//     $header .= '<div class="image-logo"><img src="'.base_url('assets/img/Kabupaten-bogor.png').'"></div>';
+		//     $footer = file_get_contents(FCPATH.'email-footer.html');
 
-            $body = $header.$body.$footer;
+		//     $body = $header.$body.$footer;
 
-            $send_email = sendEmail($to, $subject, $body);
-        }
+		//     $send_email = sendEmail($to, $subject, $body);
+		// }
 
-        unset($return['email_kode']);
+		// unset($return['email_kode']);
 		$this->response($return);
 	}
 
 	public function delete_user_post()
 	{
-		$id_user = !empty($this->post('id')) ? $this->post('id', TRUE) : false;
+		$id_user = $this->post('id', TRUE);
 
-		$return = $this->manage_model->deleteUser($id_user);
-		$this->response($return);
+		if (!$id_user) {
+			$this->response([
+				'status' => false,
+				'message' => 'ID user tidak ditemukan'
+			]);
+			return;
+		}
+
+		$deleted = $this->manage_model->deleteUser($id_user);
+
+		if ($deleted) {
+			$this->response([
+				'status' => true,
+				'message' => 'User berhasil dihapus'
+			]);
+		} else {
+			$this->response([
+				'status' => false,
+				'message' => 'Gagal menghapus user'
+			]);
+		}
 	}
 
 	public function saveChangeRole_post()
@@ -129,19 +148,19 @@ class User_manage extends My_Controller
 		$password = $this->input->post('password', TRUE);
 		$confirm_pass = $this->input->post('confirm_pass', TRUE);
 
-		if($password != $confirm_pass){
+		if ($password != $confirm_pass) {
 			$this->set_response(array(
 				'status'    => false,
 				'message'   => 'Password are not the same'
 			));
-		}else{
+		} else {
 			$source = $this->manage_model->update_password($password, $id);
-			if($source){
+			if ($source) {
 				$this->set_response(array(
 					'status'    => true,
 					'message'   => 'password changed successfully'
 				));
-			}else{
+			} else {
 				$this->set_response(array(
 					'status'    => false,
 					'message'   => 'password failed to change'

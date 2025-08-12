@@ -27,16 +27,17 @@ class Kegiatan_hspk_detail_model extends CI_Model
             foreach ($keyresult as $key => $value) {
                 if ($value) {
                     if ($key == 'UraianKegiatan') {
-                if ($value) {
-                    if ($key == 'UraianKegiatan') {
-                        $this->db->like('tb_kegiatan.UraianKegiatan', $value);
-                    } elseif ($key == 'satuan') {
-                    } elseif ($key == 'satuan') {
-                        $this->db->like('tb_kegiatan.satuan', $value);
-                    } elseif ($key == 'namaBidangTeknis') {
-                        $this->db->like('tb_bidang_teknis.namaBidangTeknis', $value);
-                    } else {
-                        $this->db->like($key, $value);
+                        if ($value) {
+                            if ($key == 'UraianKegiatan') {
+                                $this->db->like('tb_kegiatan.UraianKegiatan', $value);
+                            } elseif ($key == 'satuan') {
+                                $this->db->like('tb_kegiatan.satuan', $value);
+                            } elseif ($key == 'namaBidangTeknis') {
+                                $this->db->like('tb_bidang_teknis.namaBidangTeknis', $value);
+                            } else {
+                                $this->db->like($key, $value);
+                            }
+                        }
                     }
                 }
             }
@@ -113,7 +114,6 @@ class Kegiatan_hspk_detail_model extends CI_Model
 
         if (!empty($kel_spesifikasi)) {
             foreach ($kel_spesifikasi as $key => $value) {
-                $kel_spesifikasi[$key]['harga'] = 'Rp.' . number_format($value['harga'], 0, '', '.');
                 $kel_spesifikasi[$key]['harga'] = 'Rp.' . number_format($value['harga'], 0, '', '.');
                 $kel_spesifikasi[$key]['value_harga'] = $value['harga'];
             }

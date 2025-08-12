@@ -18,7 +18,7 @@
 						<span>Usulan > Isian HSPK > Kegiatan HSPK Detail</span>
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6" style="color:white; margin-top:37px;">
-						<?php if ($users['role_access']['kegiatan_hspk_detail']['accessadd_kegiatan_hspk_detail'] == 'on') { ?>
+						<?php if ($users['role_access']['usulan_kegiatan_hspk_detail']['accessadd_usulan_kegiatan_hspk_detail'] == 'on') { ?>
 							<form class="form-inline float-right">
 								<div class="mb-2 mr-2">
 									<a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">

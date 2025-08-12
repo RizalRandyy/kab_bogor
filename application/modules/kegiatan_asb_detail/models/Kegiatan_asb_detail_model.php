@@ -2,7 +2,6 @@
 class Kegiatan_asb_detail_model extends CI_Model
 {
     public function getData($params, $users)
-    public function getData($params, $users)
     {
         $start = ($params['offset'] - 1) * $params['limit'];
         $keyresult = (array)json_decode($params['keyword']);
@@ -28,16 +27,18 @@ class Kegiatan_asb_detail_model extends CI_Model
             foreach ($keyresult as $key => $value) {
                 if ($value) {
                     if ($key == 'UraianKegiatan') {
-                if ($value) {
-                    if ($key == 'UraianKegiatan') {
-                        $this->db->like('tb_standar_biaya.UraianKegiatan', $value);
-                    } elseif ($key == 'satuan') {
-                    } elseif ($key == 'satuan') {
-                        $this->db->like('tb_standar_biaya.satuan', $value);
-                    } elseif ($key == 'namaOpd') {
-                        $this->db->like('tb_opd.namaOpd', $value);
-                    } else {
-                        $this->db->like($key, $value);
+                        if ($value) {
+                            if ($key == 'UraianKegiatan') {
+                                $this->db->like('tb_standar_biaya.UraianKegiatan', $value);
+                            } elseif ($key == 'satuan') {
+                            } elseif ($key == 'satuan') {
+                                $this->db->like('tb_standar_biaya.satuan', $value);
+                            } elseif ($key == 'namaOpd') {
+                                $this->db->like('tb_opd.namaOpd', $value);
+                            } else {
+                                $this->db->like($key, $value);
+                            }
+                        }
                     }
                 }
             }
@@ -82,6 +83,7 @@ class Kegiatan_asb_detail_model extends CI_Model
             'message' => !empty($get_data) ? null : 'Data Tidak Ada!',
         ];
     }
+
 
     public function getkegiatan()
     {

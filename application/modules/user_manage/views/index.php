@@ -271,7 +271,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Kemabali</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
 					<button type="button" class="btn btn-primary" ng-click="update_password()">Simpan</button>
 				</div>
 			</div>

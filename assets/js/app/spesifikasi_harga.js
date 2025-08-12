@@ -273,6 +273,17 @@ mainApp.controller('spesifikasi_harga', ['$scope', 'httpHandler', '$filter', '$a
 				});
 			}
 
+			worksheet.eachRow({ includeEmpty: false }, (row) => {
+				row.eachCell({ includeEmpty: false }, (cell) => {
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+				});
+			});
+
 			const buffer = await workbook.xlsx.writeBuffer();
 			const blob = new Blob([buffer], {
 				type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

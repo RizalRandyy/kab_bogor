@@ -18,7 +18,7 @@
 						<span>Usulan > Isian ASB > Kegiatan ASB</span>
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6" style="color:white; margin-top:37px;">
-						<?php if ($users['role_access']['kegiatan_asb']['accessadd_kegiatan_asb'] == 'on') { ?>
+						<?php if ($users['role_access']['usulan_kegiatan_asb']['accessadd_usulan_kegiatan_asb'] == 'on') { ?>
 							<form class="form-inline float-right">
 								<div class="mb-2 mr-2">
 									<a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
