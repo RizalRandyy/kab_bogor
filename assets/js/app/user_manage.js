@@ -299,6 +299,10 @@ mainApp.controller('user_manage', ['$scope', 'httpHandler', '$filter', '$attrs',
                     $scope.phone = '62' + $scope.phone;
                 }
 
+                console.log('Full Name:', $scope.full_name);
+console.log('ID User:', $scope.id_user);
+console.log('Password:', $scope.password);
+
                 var formData = new FormData();
 
                 formData.append('full_name', $scope.full_name);
@@ -307,7 +311,9 @@ mainApp.controller('user_manage', ['$scope', 'httpHandler', '$filter', '$attrs',
                 formData.append('phone', $scope.phone);
                 formData.append('role_id', $scope.role_user);
                 formData.append('status', $scope.status);
-                formData.append('password', $scope.password);
+                if ($scope.password && $scope.password.trim() !== "") {
+                    formData.append('password', $scope.password);
+                }
                 formData.append('id', $scope.id_user);
                 formData.append("photo", $scope.photos.photoUsers);
 

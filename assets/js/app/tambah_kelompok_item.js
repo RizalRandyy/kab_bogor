@@ -82,11 +82,11 @@ mainApp
 				icon: "warning",
 				title: 'Masukan Kode Item!',
 			});
-		} else if (idKelItem.length > 6) {
+		} else if (idKelItem.length > 255) {
 			$('#idKelItem').focus(); 
 			return Toast.fire({
 				icon: "warning",
-				title: 'Kode Item Maksimal hanya 6 Karakter!',
+				title: 'Kode Item Maksimal hanya 255 Karakter!',
 			});
 		} else if (urKel == "") {
 			$('#urKel').focus();

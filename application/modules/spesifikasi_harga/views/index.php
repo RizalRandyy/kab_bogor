@@ -20,23 +20,23 @@
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6" style="color:white; margin-top:37px;">
 						<?php if ($users['role_access']['spesifikasi_harga']['accessadd_spesifikasi_harga'] == 'on') { ?>
-						<form class="form-inline float-right">
-							<div class="mb-2 mr-2">
-                                <a href="" class="btn btn-success btn-xl" style="float: right;" title="Import Data" ng-click="export()">
-                                	<i class="fas fa-file-excel"></i> Export
-                                </a>
-                            </div> 
-							<div class="mb-2 mr-2">
-                                <a href="" class="btn btn-success btn-xl" style="float: right;" title="Import Data" ng-click="show_modal()">
-                                	<i class="fas fa-file-excel"></i> Import
-                                </a>
-                            </div> 
-                            <div class="mb-2 mr-2">
-                                <a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
-                                	<i class="fas fa-plus"></i> Tambah
-                                </a>
-                            </div> 
-						</form>
+							<form class="form-inline float-right">
+								<div class="mb-2 mr-2">
+									<a href="" class="btn btn-success btn-xl" style="float: right;" title="Import Data" ng-click="export()">
+										<i class="fas fa-file-excel"></i> Export
+									</a>
+								</div>
+								<div class="mb-2 mr-2">
+									<a href="" class="btn btn-success btn-xl" style="float: right;" title="Import Data" ng-click="show_modal()">
+										<i class="fas fa-file-excel"></i> Import
+									</a>
+								</div>
+								<div class="mb-2 mr-2">
+									<a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
+										<i class="fas fa-plus"></i> Tambah
+									</a>
+								</div>
+							</form>
 						<?php } ?>
 					</div>
 				</div>
@@ -70,12 +70,12 @@
 													<input ng-if="b != 'reset'" type="text" class="form-control no-margin form-filter " ng-model="search_Method.val[b]" ng-change="searchMethod(b, search_Method.val[b])" ng-model-options="{debounce: 2000}">
 												</td>
 												<td class="no-padding px-1"></td>
-											</tr> 
+											</tr>
 											<tr ng-show="message != null">
-												<td colspan="6" class="text-center" ng-bind="message"></td>
+												<td colspan="7" class="text-center" ng-bind="message"></td>
 											</tr>
 											<tr>
-												<td colspan="6" ng-show="loading">
+												<td colspan="7" ng-show="loading">
 													<img class="loader-img" src="<?= base_url('assets/img/loadertsel.gif') ?>" alt="loader">
 													Loading...
 												</td>
@@ -95,14 +95,14 @@
 															<a href="" class="btn btn-success btn-sm p-1" title="Edit: {{value.kodeKelompok}}" ng-click="edit(value)">
 																<i class="fas fa-edit"></i>&nbsp;
 															</a>
-														<?php }?>
+														<?php } ?>
 														<?php if ($users['role_access']['spesifikasi_harga']['accessdelete_spesifikasi_harga'] == 'on') { ?>
 															<a href="" class="btn btn-danger btn-sm p-1" title="Delete: {{value.kodeKelompok}}" ng-click="delete(value)">
 																<i class="fas fa-trash"></i>&nbsp;
 															</a>
-														<?php }?>
+														<?php } ?>
 													</td>
-												<?php }?>
+												<?php } ?>
 											</tr>
 										</tbody>
 									</table>
@@ -132,24 +132,24 @@
 							<div class="col-lg-12 col-md-12 col-sm-12">
 								<div class="row p-0">
 									<div class="col-md-6 col-lg-12">
-                                        <form>
-                                            <div class="form-group row">
-                                                <label for="idSpesifikasi" class="col-sm-4 col-form-label text-sm">Template</label>
-                                                <div class="col-sm-8">
+										<form>
+											<div class="form-group row">
+												<label for="idSpesifikasi" class="col-sm-4 col-form-label text-sm">Template</label>
+												<div class="col-sm-8">
 													<div class="input-group-append">
 														<button class="btn btn-danger" style="cursor: pointer;" type="button" ng-click="download_template()">Download Template Data Isian SSH</button>
 													</div>
 												</div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="harga" class="col-sm-4 col-form-label text-sm">Upload File</label>
-                                                <div class="input-group col-sm-8">
+											</div>
+											<div class="form-group row">
+												<label for="harga" class="col-sm-4 col-form-label text-sm">Upload File</label>
+												<div class="input-group col-sm-8">
 													<input type="file" class="form-control" name="template" id="template" rows="8" ng-model="template" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-													<div><span>Max Row 1000 data (jika data lebih dari 1000 row silahkan dibagi menjadi beberapa bagian)</span></div>								
+													<div><span>Max Row 1000 data (jika data lebih dari 1000 row silahkan dibagi menjadi beberapa bagian)</span></div>
 												</div>
-                                            </div>
-                                        </form>
-                                    </div>
+											</div>
+										</form>
+									</div>
 								</div>
 							</div>
 							<div class="col-12 col-md-12 col-lg-12 text-right">

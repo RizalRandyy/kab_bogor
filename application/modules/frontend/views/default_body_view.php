@@ -76,7 +76,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-12 text-center">
-								<span class="text-white">Copyright @2023</span>
+								<span class="text-white">Copyright @2025</span>
 							</div>
 						</div>
 					</div>

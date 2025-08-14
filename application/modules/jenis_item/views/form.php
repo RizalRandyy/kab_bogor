@@ -17,34 +17,34 @@
 								<div class="col-lg-12 col-md-12 col-sm-12">
 									<div class="row p-0">
 										<div class="col-md-6 col-lg-12">
-	                                        <form>
-	                                            <div class="form-group row">
-	                                                <label for="idKelompokItem" class="col-sm-4 col-form-label text-sm">Kode Kelompok Item</label>
-	                                                <div class="col-sm-8">
+											<form>
+												<div class="form-group row">
+													<label for="idKelompokItem" class="col-sm-4 col-form-label text-sm">Kode Kelompok Item</label>
+													<div class="col-sm-8">
 														<select class="form-control" id="idKelompokItem" ng-model="idKelompokItem">
 															<option value="" disabled>Pilih Kelompok Item</option>
 															<option ng-repeat="option in options" value="{{option.id}}" name="{{option.id}}" id="{{option.id}}">{{option.IdKelItem}} - {{option.UraianKelompok}} - ({{option.tipe}})</option>
 														</select>
 													</div>
-	                                            </div>
-	                                            <div class="form-group row">
-	                                                <label for="idJnsBrg" class="col-sm-4 col-form-label text-sm">Kode Jenis Barang</label>
-	                                                <div class="col-sm-8">
-	                                                    <input type="text" class="form-control form-control-sm text-sm" id="idJnsBrg" name="idJnsBrg" ng-model="idJnsBrg" ng-maxlength="6" placeholder="Input Kode Jenis Barang">
-	                                                </div>
-	                                                <div class="col-sm-4"></div>
-	                                                <div class="col-sm-8">
-		                                                <span ng-show="addReq.idJnsBrg.$error.maxlength" style="color: red;">Kode Item Maksimal hanya 6 Karakter!</span>
-		                                            </div>
-	                                            </div>
-	                                            <div class="form-group row">
-	                                                <label for="nama_jns" class="col-sm-4 col-form-label text-sm">Nama Jenis Item</label>
-	                                                <div class="col-sm-8">
-	                                                	<input type="text" class="form-control form-control-sm text-sm" id="nama_jns" name="nama_jns" ng-model="nama_jns" placeholder="Input Uraian Kelompok Item">
-	                                                </div>
-	                                            </div>
-	                                        </form>
-	                                    </div>
+												</div>
+												<div class="form-group row">
+													<label for="idJnsBrg" class="col-sm-4 col-form-label text-sm">Kode Jenis Barang</label>
+													<div class="col-sm-8">
+														<input type="text" class="form-control form-control-sm text-sm" id="idJnsBrg" name="idJnsBrg" ng-model="idJnsBrg" ng-maxlength="255" placeholder="Input Kode Jenis Barang">
+													</div>
+													<div class="col-sm-4"></div>
+													<div class="col-sm-8">
+														<span ng-show="addReq.idJnsBrg.$error.maxlength" style="color: red;">Kode Item Maksimal hanya 255 Karakter!</span>
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="nama_jns" class="col-sm-4 col-form-label text-sm">Nama Jenis Item</label>
+													<div class="col-sm-8">
+														<input type="text" class="form-control form-control-sm text-sm" id="nama_jns" name="nama_jns" ng-model="nama_jns" placeholder="Input Uraian Kelompok Item">
+													</div>
+												</div>
+											</form>
+										</div>
 									</div>
 								</div>
 								<div class="col-12 col-md-12 col-lg-12 text-right">

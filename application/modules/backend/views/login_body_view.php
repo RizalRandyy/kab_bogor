@@ -5,6 +5,6 @@
 		</div>
 	</div>
 	<footer class="footer">
-		<h5 class="text-white">Copyright @2023</h5>
+		<h5 class="text-white">Copyright @2025</h5>
 	</footer>
 </body>

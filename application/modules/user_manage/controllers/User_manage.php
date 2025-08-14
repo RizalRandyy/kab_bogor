@@ -67,7 +67,7 @@ class User_manage extends My_Controller
 	{
 		$data = $this->post();
 
-		$id_user = !empty($this->post('id')) ? $this->post('id', TRUE) : false;
+		$id_user = !empty($_POST['id']) ? $_POST['id'] : false;
 
 		$return = $this->manage_model->saveUser($data, $id_user);
 
