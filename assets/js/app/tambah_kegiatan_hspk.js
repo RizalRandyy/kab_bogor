@@ -97,11 +97,11 @@ mainApp
 					icon: "warning",
 					title: 'Masukan Kode Kegiatan!',
 				});
-			} else if (idKeg.length > 6) {
+			} else if (idKeg.length > 255) {
 				$('#idKeg').focus();
 				return Toast.fire({
 					icon: "warning",
-					title: 'Kode Kegiatan Maksimal hanya 6 Karakter!',
+					title: 'Kode Kegiatan Maksimal hanya 255 Karakter!',
 				});
 			} else if (urKeg == "") {
 				$('#urKeg').focus();

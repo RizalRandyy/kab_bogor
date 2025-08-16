@@ -23,6 +23,11 @@
 						<?php if ($users['role_access']['kegiatan_hspk_detail']['accessadd_kegiatan_hspk_detail'] == 'on') { ?>
 							<form class="form-inline float-right">
 								<div class="mb-2 mr-2">
+									<a href="" class="btn btn-success btn-xl" style="float: right;" title="Import Data" ng-click="show_modal()">
+										<i class="fas fa-file-excel"></i> Import
+									</a>
+								</div>
+								<div class="mb-2 mr-2">
 									<a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
 										<i class="fas fa-plus"></i> Tambah
 									</a>
@@ -113,4 +118,56 @@
 			</div>
 		</div>
 	</section>
+	<div class="modal fade" id="modal_import" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="mdlInviteLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="mdlInviteLabel">Import Data HSPK Detail</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="close_modal_fleet()">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body mt-2">
+					<form ng-submit="import()" class="mt-4">
+						<div class="row">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+								<div class="row p-0">
+									<div class="col-md-6 col-lg-12">
+										<form>
+											<div class="form-group row">
+												<label for="idSpesifikasi" class="col-sm-4 col-form-label text-sm">Template</label>
+												<div class="col-sm-8">
+													<div class="input-group-append">
+														<button class="btn btn-danger" style="cursor: pointer;" type="button" ng-click="download_template()">Download Template Data Isian HSPK</button>
+													</div>
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="harga" class="col-sm-4 col-form-label text-sm">Upload File</label>
+												<div class="input-group col-sm-8">
+													<input type="file" class="form-control" name="template" id="template" rows="8" ng-model="template" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+													<div><span>Max Row 1000 data (jika data lebih dari 1000 row silahkan dibagi menjadi beberapa bagian)</span></div>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-md-12 col-lg-12 text-right">
+								<div class="form-group">
+									<button class="btn btn-info" type="submit"> Simpan <i class="fas fa-save"></i>
+									</button>&nbsp;&nbsp;
+									<button class="btn btn-dark" data-dismiss="modal" type="button"> Kembali <i class="fas fa-undo-alt"></i>
+									</button>&nbsp;&nbsp;
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!-- <div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+				</div> -->
+			</div>
+		</div>
+	</div>
 </div>

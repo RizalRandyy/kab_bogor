@@ -38,6 +38,12 @@
 														<div><span>Silahkan pilih beberapa item</span></div>
 													</div>
 												</div>
+												<!-- <div class="form-group row">
+													<label for="keuntungan" class="col-sm-4 col-form-label text-sm">Biaya Umum dan Keuntungan 10%-15%</label>
+													<div class="col-sm-8">
+														<input type="number" class="form-control form-control-sm text-sm" id="keuntungan" name="keuntungan" ng-model="keuntungan" placeholder="Input Biaya Umum dan Keuntungan 10%-15%">
+													</div>
+												</div> -->
 												<div class="row">
 													<div class="col-lg-12 col-md-12 col-sm-12">
 
@@ -63,7 +69,7 @@
 																			Loading...
 																		</td>
 																	</tr>
-																	<tr ng-hide="loading" ng-repeat="(key,id) in tableKelompok">
+																	<tr ng-hide="loading" ng-repeat="(key,id) in tableKelompok track by $index">
 																		<td style="width: 60%;">
 																			<input type="text" name="kelItem[]" class="form-control" style="font-size: 12px;" ng-value="getKelompokById(id)" disabled>
 																		</td>

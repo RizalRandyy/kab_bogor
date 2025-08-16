@@ -245,4 +245,85 @@ mainApp.controller('kegiatan_hspk_detail', ['$scope', 'httpHandler', '$filter', 
 		}
 	};
 
+	$scope.show_modal = function () {
+		$('#modal_import').modal('show');
+	}
+
+	$scope.download_template = function () {
+		window.location.replace(urls + 'kegiatan_hspk_detail/download_files');
+	}
+
+	$scope.import = function () {
+		var formData = new FormData();
+
+		var template = $('#template').val();
+		var fileInput = document.getElementById('template');
+		var attachmentFiles = fileInput.files;
+
+		if (template == "") {
+			$('#template').focus();
+			return Toast.fire({
+				icon: "warning",
+				title: 'Upload file terlebih dahulu!',
+			});
+		}
+
+		for (var i = 0; i < attachmentFiles.length; i++) {
+			formData.append('template', attachmentFiles[i]);
+		}
+
+		formData.append('template', fileInput);
+
+		Swal.fire({
+			title: 'Loading...',
+			allowEscapeKey: false,
+			allowOutsideClick: false,
+			showConfirmButton: false,
+			imageUrl: urls + "assets/img/loadertsel.gif",
+		});
+
+		httpHandler.send({
+			url: urls + 'kegiatan_hspk_detail/import',
+			data: formData,
+			method: 'POST',
+			headers: {
+				'Content-Type': undefined
+			}
+		}).then(
+			function successCallbacks(response) {
+				Swal.close();
+				Swal.fire({
+					title: 'Success',
+					text: response.data.message,
+					icon: 'success',
+					showCancelButton: false,
+					allowEscapeKey: false,
+					allowOutsideClick: false,
+					confirmButtonColor: "#39edab",
+					confirmButtonText: "Okey",
+				}).then((result) => {
+					if (result.value) {
+						location.reload();
+					}
+				});
+			},
+			function errorCallback(response) {
+				Swal.close();
+				Swal.fire({
+					title: 'Failed',
+					text: response.data.message,
+					icon: response.data.status == 500 ? 'error' : 'warning',
+					showCancelButton: false,
+					allowEscapeKey: false,
+					allowOutsideClick: false,
+					confirmButtonColor: "#fc544b",
+					confirmButtonText: "Okey",
+				}).then((result) => {
+					if (result.value) {
+						location.reload();
+					}
+				});
+			});
+	}
+
 }]);

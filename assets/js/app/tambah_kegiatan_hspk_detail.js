@@ -159,7 +159,7 @@ mainApp
 
         $scope.getKelompokById = function (id) {
             setInputFilter(document.getElementById('banyak_' + id), function (value) {
-                return /^-?\d*[.]?\d{0,3}$/.test(value);
+                return /^-?\d*[.]?\d{0,10}$/.test(value);
             });
             for (var i = 0; i < $scope.options_kel_spesifikasi.length; i++) {
                 if ($scope.options_kel_spesifikasi[i].id === id) {
@@ -181,38 +181,20 @@ mainApp
             return "";
         };
         $scope.getTotal = function (id, val = '1') {
-            var angka = 0;
-
+            let angka = 0;
             const inputField = document.getElementById("banyak_" + id);
 
-            inputField.addEventListener("input", function () {
-                const value = inputField.value;
-
-                if (value.length === 1 && (value[0] === ".")) {
-                    inputField.value = "0.";
-                } else if (value.length === 2 && (value[0] === "0" && value[1] != ".")) {
-                    inputField.value = value[1];
-                } else if (value.length > 5 && (value[1].slice(-1) === ".")) {
-                    inputField.value = value.slice(0, -1);
-                }
-            });
-
-
-            if (inputField.value) {
-                angka = inputField.value;
-                if (angka.length > 5) {
-                    angka = inputField.value.slice(0, -1);
-                }
+            if (inputField && inputField.value) {
+                angka = parseFloat(inputField.value); // pastikan angka, bukan string
             }
 
-            for (var k = 0; k < $scope.options_kel_spesifikasi.length; k++) {
+            for (let k = 0; k < $scope.options_kel_spesifikasi.length; k++) {
                 if ($scope.options_kel_spesifikasi[k].id === id) {
-                    data = $scope.options_kel_spesifikasi[k];
-                    total = angka > 0 ? (angka * data.value_harga) : data.value_harga;
-                    $scope.total[id] = parseInt(total);
+                    let data = $scope.options_kel_spesifikasi[k];
+                    let total = angka > 0 ? (angka * data.value_harga) : data.value_harga;
+                    $scope.total[id] = total;
                     $scope.totalHarga();
-                    return total;
-                    break;
+                    return parseFloat(total.toFixed(2)); // bulatkan 2 desimal
                 }
             }
 
@@ -233,13 +215,14 @@ mainApp
                 return accumulator + currentValue;
             }, 0);
 
-            return total;
+            return $scope.total_all;
         }
 
         $scope.save = function () {
             const input_banyak = [];
             const idKegiatan = $('#idKegiatan').val();
             const tahun = $scope.tableKelompok;
+            // let keuntungan = parseFloat($('#keuntungan').val()) / 100;
 
             if (!idKegiatan) {
                 $('#idKegiatan').focus();
@@ -290,6 +273,7 @@ mainApp
 
             formData.append("id_thn_harga", $scope.tableKelompok);
             formData.append("total_item", input_banyak);
+            // formData.append("keuntungan", keuntungan);
 
 
             Swal.fire({

@@ -177,7 +177,7 @@ class Kegiatan_hspk_detail_model extends CI_Model
 
             foreach ($data->id_thn_harga as $key => $id_harga) {
                 $id_harga = (string)$id_harga;
-                $qty = isset($raw_total_item[$key]) ? (int)$raw_total_item[$key] : 0;
+                $qty = isset($raw_total_item[$key]) ? (float)$raw_total_item[$key] : 0;
 
                 $assoc_total_item[$id_harga] = $qty;
 
@@ -248,6 +248,24 @@ class Kegiatan_hspk_detail_model extends CI_Model
             'message' => 'Delete failed, please refresh page!',
             'status' => 400
         ];
+    }
+
+    public function insert_import($params, $table)
+    {
+        if ($this->db->insert($table, $params)) {
+            $id = $this->db->insert_id();
+        } else {
+            $id = '';
+        }
+
+        return $id;
+    }
+
+    public function cek($where, $table = '')
+    {
+        $data =  $this->db->where($where)->get($table)->first_row();
+
+        return $data;
     }
 
     public function getheader()
