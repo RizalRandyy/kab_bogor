@@ -1,17 +1,13 @@
-mainApp
-
-.directive('customOnChange', function() {
-  return {
-    restrict: 'A',
-    link: function (scope, element, attrs) {
-      var onChangeFunc = scope.$eval(attrs.customOnChange);
-      element.bind('change', onChangeFunc);
-    }
-  };
-})
-
-.controller('tambah_lokasi_toko', ['$scope', 'httpHandler', '$filter', '$attrs', '$timeout', function ($scope, httpHandler, $filter, $attrs, $timeout) {
-    const Toast = Swal.mixin({
+mainApp.directive('customOnChange', function () {
+	return {
+		restrict: 'A',
+		link: function (scope, element, attrs) {
+			var onChangeFunc = scope.$eval(attrs.customOnChange);
+			element.bind('change', onChangeFunc);
+		}
+	};
+}).controller('tambah_lokasi_toko', ['$scope', 'httpHandler', '$filter', '$attrs', '$timeout', function ($scope, httpHandler, $filter, $attrs, $timeout) {
+	const Toast = Swal.mixin({
 		toast: true,
 		position: "top-end",
 		showConfirmButton: false,
@@ -30,44 +26,58 @@ mainApp
 			toast.addEventListener("mouseleave", Swal.resumeTimer);
 		},
 	});
+	$scope.currentYear = new Date().getFullYear();
+	$scope.tahunOptions = {
+		minMode: 'year',
+		maxDate: new Date($scope.currentYear, 11, 31)
+	};
+
+	$scope.popupTahun = {
+		opened: false
+	};
+
+	$scope.openTahun = function () {
+		$scope.popupTahun.opened = true;
+	};
+
 
 	$scope.id = !$("#id").val() ? null : $("#id").val();
 
 	if ($scope.id) {
 
 		$scope.loading = true;
-        $timeout(function() {
-    		httpHandler.send({
-    			method: 'GET',
-    			url: urls + 'lokasi_toko/getById',
-    			params: {'id': $scope.id}
-    		}).then(
-    			function successCallbacks(response) {
-    				if(response.data.status == 200){
-    					$scope.loading = false;
-    					$scope.nama_toko = response.data.data.nama_toko;
-    					$scope.tautan = response.data.data.tautan;
-    				}else{
-    					Swal.close();
-    					Swal.fire({
-    						title: 'Failed',
-    						text: response.data.message,
-    						icon: response.data.status == 500 ? 'error' : 'warning',
-    						showCancelButton: false,
-    						allowEscapeKey: false,
-    						allowOutsideClick: false,
-    						confirmButtonColor: "#fc544b",
-    						confirmButtonText: "Oke",
-    					}).then((result) => {
-    						if (result.value) {
-    							window.location.replace(urls + 'lokasi_toko');
-    						}
-    					});
-    				}
-    				
-    			}
-    		);
-        }, 1000);
+		$timeout(function () {
+			httpHandler.send({
+				method: 'GET',
+				url: urls + 'lokasi_toko/getById',
+				params: { 'id': $scope.id }
+			}).then(
+				function successCallbacks(response) {
+					if (response.data.status == 200) {
+						$scope.loading = false;
+						$scope.nama_toko = response.data.data.nama_toko;
+						$scope.tautan = response.data.data.tautan;
+					} else {
+						Swal.close();
+						Swal.fire({
+							title: 'Failed',
+							text: response.data.message,
+							icon: response.data.status == 500 ? 'error' : 'warning',
+							showCancelButton: false,
+							allowEscapeKey: false,
+							allowOutsideClick: false,
+							confirmButtonColor: "#fc544b",
+							confirmButtonText: "Oke",
+						}).then((result) => {
+							if (result.value) {
+								window.location.replace(urls + 'lokasi_toko');
+							}
+						});
+					}
+
+				}
+			);
+		}, 1000);
 	}
 
 	$scope.save = function () {
@@ -75,6 +85,7 @@ mainApp
 		var tautan = $('#tautan').val();
 		var tipe = $('#tipe').val();
 		var koordinat = $('#koordinat').val();
+		var tahun = $('#tahun').val();
 
 		if (nama_toko == "") {
 			$('#nama_toko').focus();
@@ -104,6 +115,7 @@ mainApp
 		formData.append("nama_toko", nama_toko);
 		formData.append("tautan", tautan)
 		formData.append("koordinat", koordinat);
+		formData.append("tahun", tahun);
 
 		Swal.fire({
 			title: 'Loading...',

@@ -50,8 +50,9 @@
 										<thead>
 											<tr>
 												<th>No</th>
-												<th class="text-center">Nama Toko</th>
-												<th class="text-center">Tautan</th>
+												<th class="">Nama Toko</th>
+												<th class="">Tahun</th>
+												<th class="">Tautan</th>
 												<?php if ($users['role_access']['lokasi_toko']['accessedit_lokasi_toko'] == 'on' || $users['role_access']['lokasi_toko']['accessdelete_lokasi_toko'] == 'on') { ?>
 													<th class="text-center"></th>
 												<?php } ?>
@@ -66,6 +67,8 @@
 													<input ng-if="b != 'reset'" type="text" class="form-control no-margin form-filter " ng-model="search_Method.val[b]" ng-change="searchMethod(b, search_Method.val[b])" ng-model-options="{debounce: 2000}">
 												</td>
 												<td class="no-padding px-1"></td>
+												<td class="no-padding px-1"></td>
+												<td class="no-padding px-1"></td>
 											</tr>
 											<tr ng-show="message != null">
 												<td colspan="6" class="text-center" ng-bind="message"></td>
@@ -79,6 +82,7 @@
 											<tr ng-hide="loading" dir-paginate="(key, value) in data|itemsPerPage:itemsPerPage" total-items="total_count" current-page="curPage" pagination-id="paginateID">
 												<td ng-bind="key+no"></td>
 												<td ng-bind="value.nama_toko"></td>
+												<td ng-bind="value.tahun"></td>
 												<td><a href="{{value.tautan}}" target="_blank" ng-bind="'Link Tautan'"></a></td>
 												<?php if ($users['role_access']['lokasi_toko']['accessedit_lokasi_toko'] == 'on' || $users['role_access']['lokasi_toko']['accessdelete_lokasi_toko'] == 'on') { ?>
 													<td class="text-center" style="white-space: nowrap;">

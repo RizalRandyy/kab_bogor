@@ -6,17 +6,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="<?= base_url() ?>assets/js/stisla.js"></script>
 
-    <!-- Template JS File -->
+    <!-- Datepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(function() {
+            var currentYear = new Date().getFullYear();
+            $('#tahun').datepicker({
+                format: "yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                endDate: currentYear.toString()
+            });
+        });
+    </script>
+
+    <!-- Template JS File-->
     <script src="<?= base_url() ?>assets/js/scripts.js"></script>
     <script src="<?= base_url() ?>assets/js/custom.js"></script>
     <script type="text/javascript" src="<?= base_url('assets/js/app.js?') . rand() ?>"></script>
     <script type="text/javascript" src="<?= base_url('assets/js/main.js') ?>"></script>
-    <script type="text/javascript" src="<?= base_url('assets/plugins/sweetalert2/dist/sweetalert2.all.min.js')?>"></script>
+    <script type="text/javascript" src="<?= base_url('assets/plugins/sweetalert2/dist/sweetalert2.all.min.js') ?>"></script>
     <script type="text/javascript">
-        $( document ).ready(function() {
+        $(document).ready(function() {
             $(".warning").hide();
         });
-        $("#btn_change_password").click(function(){
+        $("#btn_change_password").click(function() {
             const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -38,32 +53,32 @@
             });
             var chg_password = $('#chg_password').val();
             var confirm_password = $('#confirm_password').val();
-            if(!chg_password){
+            if (!chg_password) {
                 $('#chg_password').focus();
                 return Toast.fire({
                     title: "Peringatan",
-                    text:  "Password Baru tidak boleh kosong!",
+                    text: "Password Baru tidak boleh kosong!",
                     icon: 'warning'
                 });
-            } else if(!confirm_password){
+            } else if (!confirm_password) {
                 $('#confirm_password').focus();
                 return Toast.fire({
                     title: "Peringatan",
-                    text:  "Konfirmasi Password tidak boleh kosong!",
+                    text: "Konfirmasi Password tidak boleh kosong!",
                     icon: 'warning'
                 });
-            } else if(chg_password != confirm_password){
+            } else if (chg_password != confirm_password) {
                 $('#confirm_password').focus();
                 return Toast.fire({
                     title: "Peringatan",
-                    text:  "Password tidak sama!",
+                    text: "Password tidak sama!",
                     icon: 'warning'
                 });
             }
 
             var formData = new FormData();
             formData.append("id", "<?= $users['id'] ?>");
-            formData.append("password", $('#chg_password').val()); 
+            formData.append("password", $('#chg_password').val());
 
             Swal.fire({
                 title: 'Do you want to change password?',
@@ -71,17 +86,17 @@
                 confirmButtonText: 'yes',
                 icon: 'warning',
             }).then((result) => {
-                if(result.isConfirmed){
+                if (result.isConfirmed) {
                     $.ajax({
                         url: mainUrl + "profile/update_password",
                         dataType: "JSON",
                         cache: false,
                         contentType: false,
                         processData: false,
-                        data: formData,                         
+                        data: formData,
                         type: 'post',
                         success: function(resp) {
-                            if(resp.status){
+                            if (resp.status) {
                                 Swal.fire({
                                     title: 'Success',
                                     text: 'Password Changed Successfully, Please sign in again!',
@@ -90,7 +105,7 @@
                                     location.reload('index.php/logout');
                                 });
                                 location.reload('index.php/logout');
-                            }else{
+                            } else {
                                 Swal.fire({
                                     title: 'Fail',
                                     text: 'Password Failed to change',
@@ -98,22 +113,22 @@
                                 });
                             }
                         }
-                    }) 
+                    })
                 }
 
-           })
+            })
         });
 
-            // $("#confirm_password").change(function(){
-            //     if($('#chg_password').val() != $('#confirm_password').val()){
-            //         $(".warning").show();
-            //         $("#btn_change_password").prop('disabled', true);
-            //     }else{
-            //         $(".warning").hide();
-            //         $("#btn_change_password").prop('disabled', false);
-            //     }
-            // });
-        </script>
+        // $("#confirm_password").change(function(){
+        //     if($('#chg_password').val() != $('#confirm_password').val()){
+        //         $(".warning").show();
+        //         $("#btn_change_password").prop('disabled', true);
+        //     }else{
+        //         $(".warning").hide();
+        //         $("#btn_change_password").prop('disabled', false);
+        //     }
+        // });
+    </script>
 
     <script type="text/javascript">
         <?php if ($this->session->flashdata('alert-success')) : ?>

@@ -10,7 +10,7 @@ class Lokasi_toko_model extends CI_Model
 
         $start = ($offset - 1) * $limit;
 
-        $this->db->select('id,nama_toko,tautan,koordinat');
+        $this->db->select('id,nama_toko,tautan,koordinat,tahun');
 
         if (!empty($keyword)) {
             foreach ($keyword as $key => $value) {
@@ -40,7 +40,7 @@ class Lokasi_toko_model extends CI_Model
 
     public function getLocationAll()
     {
-        $this->db->select('id, nama_toko, tautan, koordinat');
+        $this->db->select('id, nama_toko, tautan, koordinat,tahun');
         $this->db->order_by('nama_toko', 'ASC');
         $data = $this->db->get('tb_lokasi')->result_array();
 
@@ -93,7 +93,7 @@ class Lokasi_toko_model extends CI_Model
     public function getReqById($id, $users)
     {
         $id = decrypt_url($id);
-        $this->db->select('id,nama_toko,tautan')
+        $this->db->select('id,nama_toko,tautan,tahun,koordinat')
             ->where('id', $id);
 
         $data =  $this->db->get('tb_lokasi')->row();

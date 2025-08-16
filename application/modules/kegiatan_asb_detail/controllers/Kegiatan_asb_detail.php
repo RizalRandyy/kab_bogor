@@ -1,5 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+require('././assets/plugins/SpreadsheetExcel/vendor/autoload.php');
+
 class Kegiatan_asb_detail extends My_Controller
 {
 	function __construct()
@@ -29,7 +31,7 @@ class Kegiatan_asb_detail extends My_Controller
 
 	public function getData_get()
 	{
-		$return = $this->Kegiatan_asb_detail_model->getData($this->get(NULL, TRUE),$this->data['users']);
+		$return = $this->Kegiatan_asb_detail_model->getData($this->get(NULL, TRUE), $this->data['users']);
 		$return['header'] = $this->Kegiatan_asb_detail_model->getheader();
 
 		$this->response($return, 200);
@@ -38,10 +40,10 @@ class Kegiatan_asb_detail extends My_Controller
 	public function form_get()
 	{
 		$segment = $this->uri->segment(3);
-		$this->data['title'] = ucfirst($segment).' Kegiatan ASB Detail';
+		$this->data['title'] = ucfirst($segment) . ' Kegiatan ASB Detail';
 		$this->data['page'] = 'tambah_kegiatan_asb_detail';
 		$this->data['version'] = $this->uri->segment(2);
-		$this->data['id'] = @$this->get('id')?$this->get('id', TRUE):null;
+		$this->data['id'] = @$this->get('id') ? $this->get('id', TRUE) : null;
 
 		$this->data['js'] = array(
 			'assets/js/app/tambah_kegiatan_asb_detail.js?' . rand(),
@@ -70,7 +72,7 @@ class Kegiatan_asb_detail extends My_Controller
 	{
 		$params = $this->post(NULL, TRUE);
 
-		$tahunPekerjaan = explode(",",$params['id_thn_pekerjaan_detail']);
+		$tahunPekerjaan = explode(",", $params['id_thn_pekerjaan_detail']);
 
 		$params['id_thn_pekerjaan_detail'] = json_encode($tahunPekerjaan);
 
@@ -84,7 +86,7 @@ class Kegiatan_asb_detail extends My_Controller
 
 	public function getById_get()
 	{
-		$return = $this->Kegiatan_asb_detail_model->getReqById($this->get('id', TRUE),$this->data['users']);
+		$return = $this->Kegiatan_asb_detail_model->getReqById($this->get('id', TRUE), $this->data['users']);
 
 		$this->response($return, $return['status'] == 500 ? false : 200);
 	}
@@ -93,5 +95,76 @@ class Kegiatan_asb_detail extends My_Controller
 	{
 		$return = $this->Kegiatan_asb_detail_model->deleteReq($this->post('id', TRUE));
 		$this->response($return, $return['status']);
+	}
+
+	public function import_post()
+	{
+		try {
+			if (empty($_FILES['template']['name'])) {
+				http_response_code(500);
+				echo json_encode(['status' => 500, 'message' => 'File belum dipilih!']);
+				return;
+			}
+
+			$file = $_FILES['template'];
+			$tmp_name = $file['tmp_name'];
+
+			if (!file_exists($tmp_name)) {
+				http_response_code(500);
+				echo json_encode(['status' => 500, 'message' => 'File upload gagal di server.']);
+				return;
+			}
+
+			$finfo = new finfo(FILEINFO_MIME_TYPE);
+			$mime = $finfo->file($tmp_name);
+			if ($mime !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+				http_response_code(500);
+				echo json_encode(['status' => 500, 'message' => 'Tipe file tidak sesuai! Harus .xlsx']);
+				return;
+			}
+
+			try {
+				$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+				$reader->setReadDataOnly(true);
+				$spreadsheet = $reader->load($tmp_name);
+				$sheetData = array_filter(array_map('array_filter', $spreadsheet->getActiveSheet()->toArray()));
+			} catch (\Throwable $th) {
+				http_response_code(500);
+				header('Content-Type: application/json');
+				echo json_encode([
+					'status' => 500,
+					'message' => 'Gagal membaca file Excel: ' . $th->getMessage(),
+					'file' => $th->getFile(),
+					'line' => $th->getLine()
+				]);
+				exit;
+			}
+
+			if (count($sheetData) < 2) {
+				http_response_code(500);
+				echo json_encode(['status' => 500, 'message' => 'File harus berisi minimal header + 1 baris data.']);
+				return;
+			}
+
+			$trueFormat = ['kodeASB','uraianASB', 'satuan', 'tahunASB', 'kodeHSPK', 'uraianHSPK', 'tahunHSPK', 'kodeSSH', 'uraianSSH', 'qty', 'harga_satuan', 'subtotal', 'idOpd', 'jenisItem', 'idSpesifikasi', 'tipe'];
+			if (count($sheetData[0]) != count($trueFormat) || count(array_diff($trueFormat, $sheetData[0])) > 0) {
+				http_response_code(500);
+				echo json_encode(['status' => 500, 'message' => 'Format header tidak sesuai! Harus: ' . implode(", ", $trueFormat)]);
+				return;
+			}
+
+			$inserted = $this->Kegiatan_asb_detail_model->importData($sheetData);
+
+			echo json_encode(['status' => 200, 'message' => 'Import berhasil! ' . $inserted . ' baris dimasukkan.']);
+		} catch (Exception $e) {
+			http_response_code(500);
+			header('Content-Type: application/json');
+			echo json_encode([
+				'status' => 500,
+				'message' => 'Terjadi Kesalahan: ' . $e->getMessage(),
+				'file' => $e->getFile(),
+				'line' => $e->getLine()
+			]);
+		}
 	}
 }
