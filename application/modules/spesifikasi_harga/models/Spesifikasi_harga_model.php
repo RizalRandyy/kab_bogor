@@ -50,7 +50,7 @@ class Spesifikasi_harga_model extends CI_Model
         if (!empty($get_data)) {
             foreach ($get_data as $key => $value) {
                 $get_data[$key]['id'] = encrypt_url($value['id']);
-                $get_data[$key]['kodeKelompok'] = explode('.', $value['kodeKelompok'])[0];
+                $get_data[$key]['kodeKelompok'] = $value['kodeKelompok'];
                 $get_data[$key]['kelompok_item'] = $value['kodeKelompok'];
                 $get_data[$key]['HargaSatuan'] = (int)$value['harga'];
                 $get_data[$key]['harga'] = 'Rp.' . number_format($value['harga'], 0, '', '.');

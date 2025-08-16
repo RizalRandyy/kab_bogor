@@ -211,16 +211,16 @@
 
 								<!-- SSH Submenu -->
 								<li class="nav-item submenu position-relative <?= in_array($this->uri->segment(1), ['usulan_spesifikasi_item']) ? 'active' : '' ?>">
-									<a href="#" class="nav-link submenu-toggle">
+									<a href="<?= base_url('usulan_spesifikasi_item'); ?>" class="nav-link">
 										<i class="fab fa-elementor"></i><span>Isian SSH</span>
 									</a>
-									<ul class="dropdown-menu submenu-dropdown">
+									<!-- <ul class="dropdown-menu submenu-dropdown">
 										<?php if (!empty($users['role_access']['usulan_spesifikasi_item']) && $users['role_access']['usulan_spesifikasi_item']['usulan_spesifikasi_item'] == 'on') : ?>
 											<li class="nav-item <?= $this->uri->segment(1) == 'usulan_spesifikasi_item' ? 'active' : '' ?>">
 												<a class="nav-link" href="<?= base_url('usulan_spesifikasi_item'); ?>">SSH</a>
 											</li>
 										<?php endif; ?>
-									</ul>
+									</ul> -->
 								</li>
 
 								<!-- HSPK Submenu -->

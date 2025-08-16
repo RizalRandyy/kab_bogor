@@ -21,11 +21,11 @@
 												<div class="form-group row">
 													<label for="idKelItem" class="col-sm-4 col-form-label text-sm">Kode Item</label>
 													<div class="col-sm-8">
-														<input type="text" class="form-control form-control-sm text-sm" id="idKelItem" name="idKelItem" ng-model="idKelItem" ng-maxlength="6" placeholder="Input Kode Item">
+														<input type="text" class="form-control form-control-sm text-sm" id="idKelItem" name="idKelItem" ng-model="idKelItem" ng-maxlength="255" placeholder="Input Kode Item">
 													</div>
 													<div class="col-sm-4"></div>
 													<div class="col-sm-8">
-														<span ng-show="addReq.idKelItem.$error.maxlength" style="color: red;">Kode Item Maksimal hanya 6 Karakter!</span>
+														<span ng-show="addReq.idKelItem.$error.maxlength" style="color: red;">Kode Item Maksimal hanya 255 Karakter!</span>
 													</div>
 												</div>
 												<div class="form-group row">

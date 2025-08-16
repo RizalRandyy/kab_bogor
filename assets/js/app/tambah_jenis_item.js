@@ -99,11 +99,11 @@ mainApp
 				icon: "warning",
 				title: 'Masukan Kode Jenis Item!',
 			});
-		} else if (idJnsBrg.length > 6) {
+		} else if (idJnsBrg.length > 255) {
 			$('#idJnsBrg').focus(); 
 			return Toast.fire({
 				icon: "warning",
-				title: 'Tipe Item Maksimal hanya 6 Karakter!',
+				title: 'Tipe Item Maksimal hanya 255 Karakter!',
 			});
 		} else if (nama_jns == "") {
 			$('#nama_jns').focus();

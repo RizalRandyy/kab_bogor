@@ -108,7 +108,7 @@ class User_manage_model extends CI_Model
 		date_default_timezone_set('Asia/Jakarta');
 		$data['created_at'] = date('Y-m-d H:i:s');
 
-		if (isset($data['password'])) {
+		if (!empty($data['password'])) {
 			$data['password'] = setEncrypt($data['password']);
 		} else {
 			unset($data['password']); // jangan update password jika kosong
@@ -117,6 +117,7 @@ class User_manage_model extends CI_Model
 		$data['phone'] = (int) $data['phone'];
 
 		if ($id_users) {
+			$id_users = decrypt_url($id_users);
 			// update user
 			$this->db->where('id', $id_users);
 			if ($this->db->update('users', $data)) {

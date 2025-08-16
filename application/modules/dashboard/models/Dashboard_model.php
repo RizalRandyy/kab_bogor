@@ -1,7 +1,7 @@
 <?php
 class Dashboard_model extends CI_Model
 {
-	public function getData($year = '2023')
+	public function getData($year = '2025')
 	{	
 		// $qry = $this->db->query("SELECT MIN(harga) AS min_harga, MAX(harga) AS max_harga FROM tb_thn_harga")->result_array();
 
