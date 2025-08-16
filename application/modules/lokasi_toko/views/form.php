@@ -17,27 +17,36 @@
 								<div class="col-lg-12 col-md-12 col-sm-12">
 									<div class="row p-0">
 										<div class="col-md-6 col-lg-12">
-	                                        <form>
-	                                            <div class="form-group row">
-	                                                <label for="nama_toko" class="col-sm-4 col-form-label text-sm">Nama Toko</label>
-	                                                <div class="col-sm-8">
-	                                                    <input type="text" class="form-control form-control-sm text-sm" id="nama_toko" name="nama_toko" ng-model="nama_toko" ng-maxlength="6" placeholder="Input Nama Toko">
-	                                                </div>
-	                                            </div>
-	                                            <div class="form-group row">
-	                                                <label for="tautan" class="col-sm-4 col-form-label text-sm">Tautan</label>
-	                                                <div class="col-sm-8">
-	                                                	<input type="text" class="form-control form-control-sm text-sm" id="tautan" name="tautan" ng-model="tautan" placeholder="Input Link Tautan">
-	                                                </div>
-	                                            </div>
-	                                            <div class="form-group row">
-	                                                <label for="koordinat" class="col-sm-4 col-form-label text-sm">Koordinat</label>
-	                                                <div class="col-sm-8">
-	                                                	<input type="text" class="form-control form-control-sm text-sm" id="koordinat" name="koordinat" ng-model="koordinat" placeholder="contoh: -6.595, 106.819">
-	                                                </div>
-	                                            </div>
-	                                        </form>
-	                                    </div>
+											<div class="form-group row">
+												<label for="nama_toko" class="col-sm-4 col-form-label text-sm">Nama Toko</label>
+												<div class="col-sm-8">
+													<input type="text" class="form-control form-control-sm text-sm" id="nama_toko" name="nama_toko" ng-model="nama_toko" ng-maxlength="6" placeholder="Input Nama Toko">
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="tautan" class="col-sm-4 col-form-label text-sm">Tautan</label>
+												<div class="col-sm-8">
+													<input type="text" class="form-control form-control-sm text-sm" id="tautan" name="tautan" ng-model="tautan" placeholder="Input Link Tautan">
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="tahun" class="col-sm-4 col-form-label text-sm">Tahun</label>
+												<div class="col-sm-8">
+													<input type="text"
+														class="form-control form-control-sm text-sm"
+														id="tahun"
+														name="tahun"
+														ng-model="tahun"
+														placeholder="Pilih Tahun">
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="koordinat" class="col-sm-4 col-form-label text-sm">Koordinat</label>
+												<div class="col-sm-8">
+													<input type="text" class="form-control form-control-sm text-sm" id="koordinat" name="koordinat" ng-model="koordinat" placeholder="contoh: -6.595, 106.819">
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 								<div class="col-12 col-md-12 col-lg-12 text-right">

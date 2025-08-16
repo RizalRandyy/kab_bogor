@@ -325,4 +325,248 @@ class Kegiatan_asb_detail_model extends CI_Model
         $header  = array("No" => 'reset', "Kode Item" => "kodeKelompok", "Bidang" => "namaOpd", "Uraian Kegiatan" => "UraianKegiatan", "Satuan" => "satuan", "Tahun" => "tahunASB",);
         return $header;
     }
+
+    public function cek($where, $table)
+    {
+        return $this->db->get_where($table, $where)->row();
+    }
+
+    public function insert_import($params, $table)
+    {
+        if ($this->db->insert($table, $params)) {
+            return $this->db->insert_id();
+        }
+        return '';
+    }
+
+    public function importData($sheetData)
+    {
+        $inserted   = 0;
+        $updated_by = decrypt_url($this->data['users']['id']);
+        $updated_at = date('Y-m-d H:i:s');
+        $pekerjaanBuffer = [];
+
+        for ($i = 1; $i < count($sheetData); $i++) {
+            $row = $sheetData[$i];
+
+            // --------------
+            $cek_asb = $this->db->get_where('tb_standar_biaya', [
+                'idASB' => $row[0],
+            ])->row();
+
+            if (!$cek_asb) {
+                $this->db->insert('tb_standar_biaya', [
+                    'idASB'          => $row[0],
+                    'idOpd'          => $row[12],
+                    'UraianKegiatan' => $row[1],
+                    'satuan'         => $row[2],
+                    'updated_by'     => $updated_by,
+                    'updated_at'     => $updated_at
+                ]);
+                $id_asb = $this->db->insert_id();
+            } else {
+                $id_asb = $cek_asb->id;
+            }
+
+            // ---------------
+            $cek_asb_thn = $this->db->get_where('tb_standar_biaya_thn', [
+                'idASB'        => $id_asb,
+                'tahunASB'     => $row[3],
+                'kodeKelompok' => $row[0]
+            ])->row();
+
+            if (!$cek_asb_thn) {
+                $this->db->insert('tb_standar_biaya_thn', [
+                    'idASB'        => $id_asb,
+                    'tahunASB'     => $row[3],
+                    'kodeKelompok' => $row[0],
+                    'updated_by'   => $updated_by,
+                    'updated_at'   => $updated_at
+                ]);
+                $id_asb_thn = $this->db->insert_id();
+            } else {
+                $id_asb_thn = $cek_asb_thn->id;
+            }
+
+            // -------------
+            $kegiatan = $this->db->get_where('tb_kegiatan', [
+                'idKegiatan' => $row[4]
+            ])->row();
+
+            if (!$kegiatan) {
+                $this->db->insert('tb_kegiatan', [
+                    'idKegiatan' => $row[4],
+                    'idBidangTeknis' => 'BT0001',
+                    'UraianKegiatan' => $row[5],
+                    'satuan'        => $row[2],
+                    'updated_by'    => $updated_by,
+                    'updated_at'    => $updated_at
+                ]);
+                $idKegiatan = $this->db->insert_id();
+            } else {
+                $idKegiatan = $kegiatan->id;
+            }
+
+            // ----------------
+            $thn_kegiatan = $this->db->get_where('tb_thn_kegiatan', [
+                'kodeKelompok'   => $row[4],
+                'tahunPekerjaan' => $row[6],
+            ])->row();
+
+            if (!$thn_kegiatan) {
+                $this->db->insert('tb_thn_kegiatan', [
+                    'idKegiatan'     => $idKegiatan,
+                    'kodeKelompok'   => $row[4],
+                    'tahunPekerjaan' => $row[6],
+                    'updated_by'     => $updated_by,
+                    'updated_at'     => $updated_at
+                ]);
+                $id_thn_kegiatan = $this->db->insert_id();
+            } else {
+                $id_thn_kegiatan = $thn_kegiatan->id;
+            }
+
+            // ------------------
+            $kelompok = $this->db->get_where('tb_kelompok_item', [
+                'idKelItem' => $row[7]
+            ])->row();
+
+            if ($kelompok) {
+                $idKelompokItem = $kelompok->id;
+            } else {
+                $this->db->insert('tb_kelompok_item', [
+                    'idKelItem'      => $row[7],
+                    'UraianKelompok' => $row[8],
+                    'tipe'           => $row[14],
+                    'updated_by'     => $updated_by,
+                    'updated_at'     => $updated_at
+                ]);
+                $idKelompokItem = $this->db->insert_id();
+            }
+
+            // -----------------
+            $namaJenis   = trim($row[13]);
+            $idJenisBarang = $row[13];
+
+            $jenisItem = $this->db->get_where('tb_jenis_item', [
+                'NamaJenis'      => $namaJenis,
+                'idKelompokItem' => $idKelompokItem
+            ])->row();
+
+            if ($jenisItem) {
+                $idJenisItem = $jenisItem->id;
+            } else {
+                $this->db->insert('tb_jenis_item', [
+                    'idKelompokItem' => $idKelompokItem,
+                    'kodeKelompok'   => $row[7],
+                    'idJenisBarang'  => $idJenisBarang,
+                    'NamaJenis'      => $namaJenis,
+                    'updated_by'     => $updated_by,
+                    'updated_at'     => $updated_at
+                ]);
+                $idJenisItem = $this->db->insert_id();
+            }
+
+            // ----------------
+            $spesifikasi = $this->db->get_where('tb_spesifikasi_item', [
+                'kodeKelompok'      => $row[7],
+                'UraianSpesifikasi' => $row[8],
+                'idJenisItem'       => $idJenisItem
+            ])->row();
+
+            if ($spesifikasi) {
+                $idSpesifikasi = $spesifikasi->id;
+            } else {
+                $this->db->insert('tb_spesifikasi_item', [
+                    'kodeKelompok'      => $row[7],
+                    'UraianSpesifikasi' => $row[8],
+                    'idJenisItem'       => $idJenisItem,
+                    'idSpesifikasi'     => $row[14],
+                    'satuan'            => $row[2],
+                    'updated_by'        => $updated_by,
+                    'updated_at'        => $updated_at
+                ]);
+                $idSpesifikasi = $this->db->insert_id();
+            }
+
+
+
+
+            // ----------
+            $hargaRow = $this->db->get_where('tb_thn_harga', [
+                'kodeKelompok' => $row[7],
+                'tahunHarga'   => $row[3]
+            ])->row();
+
+            if (!$hargaRow) {
+                $this->db->insert('tb_thn_harga', [
+                    'idSpesifikasi' => $idSpesifikasi,
+                    'kodeKelompok'  => $row[7],
+                    'tahunHarga'    => $row[3],
+                    'harga'         => $row[10],
+                    'updated_by'    => $updated_by,
+                    'updated_at'    => $updated_at
+                ]);
+                $id_harga = $this->db->insert_id();
+            } else {
+                $id_harga = $hargaRow->id;
+            }
+
+            $qty = (float) $row[9];
+
+            // -------------- 
+            $hspkKey = $row[4] . '|' . $row[6] . '|' . $id_asb_thn;
+
+            if (!isset($pekerjaanBuffer[$hspkKey])) {
+                $pekerjaanBuffer[$hspkKey] = [
+                    'id_asb_thn'      => $id_asb_thn,
+                    'id_thn_kegiatan' => $id_thn_kegiatan,
+                    'id_harga'        => [],
+                    'qty'             => []
+                ];
+            }
+
+            $pekerjaanBuffer[$hspkKey]['id_harga'][] = $id_harga;
+            $pekerjaanBuffer[$hspkKey]['qty'][]      = $qty;
+        }
+
+        //---------------
+        foreach ($pekerjaanBuffer as $hspk) {
+            $this->db->insert('tb_thn_pekerjaan_detail', [
+                'id_thn_kegiatan' => $hspk['id_thn_kegiatan'],
+                'id_thn_harga'    => json_encode(array_map('strval', $hspk['id_harga'])),
+                'total_item'      => json_encode(array_map('strval', $hspk['qty'])),
+                'updated_by'      => $updated_by,
+                'updated_at'      => $updated_at
+            ]);
+            $id_pekerjaan_detail = $this->db->insert_id();
+
+            $cek_detail = $this->db->get_where('tb_standar_biaya_thn_detail', [
+                'id_standar_biaya_thn' => $hspk['id_asb_thn']
+            ])->row();
+
+            if ($cek_detail) {
+                $existing = json_decode($cek_detail->id_thn_pekerjaan_detail, true);
+                $existing[] = $id_pekerjaan_detail;
+
+                $this->db->where('id', $cek_detail->id)
+                    ->update('tb_standar_biaya_thn_detail', [
+                        'id_thn_pekerjaan_detail' => json_encode(array_map('strval', $existing)),
+                        'updated_by' => $updated_by,
+                        'updated_at' => $updated_at
+                    ]);
+            } else {
+                $this->db->insert('tb_standar_biaya_thn_detail', [
+                    'id_standar_biaya_thn'    => $hspk['id_asb_thn'],
+                    'id_thn_pekerjaan_detail' => json_encode([strval($id_pekerjaan_detail)]),
+                    'updated_by'              => $updated_by,
+                    'updated_at'              => $updated_at
+                ]);
+            }
+
+            $inserted++;
+        }
+
+        return $inserted;
+    }
 }

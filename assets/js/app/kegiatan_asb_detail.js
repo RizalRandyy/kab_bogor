@@ -223,4 +223,59 @@ mainApp.controller('kegiatan_asb_detail', ['$scope', 'httpHandler', '$filter', '
 			});
 		}
 	};
+
+	$scope.show_modal = function () {
+		$('#modal_import').modal('show');
+	}
+
+	$scope.import = function () {
+		var fileInput = document.getElementById('template');
+		var attachmentFiles = fileInput.files;
+
+		if (!attachmentFiles.length) {
+			return Swal.fire({
+				icon: "warning",
+				title: 'Upload file terlebih dahulu!',
+			});
+		}
+
+		var formData = new FormData();
+		formData.append('template', attachmentFiles[0]); // ✅ kirim File object, bukan elemen DOM
+
+		Swal.fire({
+			title: 'Loading...',
+			allowEscapeKey: false,
+			allowOutsideClick: false,
+			showConfirmButton: false,
+			imageUrl: urls + "assets/img/loadertsel.gif",
+		});
+
+		httpHandler.send({
+			url: urls + 'kegiatan_asb_detail/import', // sesuaikan endpoint
+			data: formData,
+			method: 'POST',
+			headers: { 'Content-Type': undefined }
+		}).then(
+			function successCallback(response) {
+				Swal.close();
+				Swal.fire({
+					title: 'Success',
+					text: response.data.message,
+					icon: 'success'
+				}).then(() => location.reload());
+			},
+			function errorCallback(response) {
+				console.error("FULL ERROR RESPONSE:", response.data); 
+				Swal.close();
+				Swal.fire({
+					title: 'Failed',
+					text: response.data?.message || 'Terjadi kesalahan saat memproses file.',
+					icon: 'error'
+				});
+			}
+		);
+	};
+
+
+
 }]);
