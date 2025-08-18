@@ -97,6 +97,13 @@ class Kegiatan_asb_detail extends My_Controller
 		$this->response($return, $return['status']);
 	}
 
+	public function download_files_get()
+	{
+		$this->load->helper('download');
+		// Contents will be automatically read & exported
+		force_download(FCPATH . "resources/template/Template Isian ASB Detail.xlsx", NULL);
+	}
+
 	public function import_post()
 	{
 		try {
@@ -146,16 +153,31 @@ class Kegiatan_asb_detail extends My_Controller
 				return;
 			}
 
-			$trueFormat = ['kodeASB','uraianASB', 'satuan', 'tahunASB', 'kodeHSPK', 'uraianHSPK', 'tahunHSPK', 'kodeSSH', 'uraianSSH', 'qty', 'harga_satuan', 'subtotal', 'idOpd', 'jenisItem', 'idSpesifikasi', 'tipe'];
+			$trueFormat = ['kodeASB', 'uraianASB', 'satuan', 'tahunASB', 'kodeHSPK', 'uraianHSPK', 'tahunHSPK', 'kodeSSH', 'uraianSSH', 'qty', 'harga_satuan', 'subtotal', 'idOpd', 'jenisItem', 'idSpesifikasi', 'tipe'];
 			if (count($sheetData[0]) != count($trueFormat) || count(array_diff($trueFormat, $sheetData[0])) > 0) {
 				http_response_code(500);
 				echo json_encode(['status' => 500, 'message' => 'Format header tidak sesuai! Harus: ' . implode(", ", $trueFormat)]);
 				return;
 			}
 
-			$inserted = $this->Kegiatan_asb_detail_model->importData($sheetData);
+			$importResult = $this->Kegiatan_asb_detail_model->importData($sheetData, decrypt_url($this->data['users']['id']));
 
-			echo json_encode(['status' => 200, 'message' => 'Import berhasil! ' . $inserted . ' baris dimasukkan.']);
+			$status   = $importResult['status']   ?? 500;
+			$message  = $importResult['message']  ?? 'Tidak ada pesan dari server';
+			$inserted = $importResult['inserted'] ?? 0;
+
+			if ($status == 200) {
+				echo json_encode([
+					'status'   => 200,
+					'message'  => $message,
+					'inserted' => $inserted
+				]);
+			} else {
+				echo json_encode([
+					'status'  => 400,
+					'message' => $message
+				]);
+			}
 		} catch (Exception $e) {
 			http_response_code(500);
 			header('Content-Type: application/json');

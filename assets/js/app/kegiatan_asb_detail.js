@@ -228,6 +228,10 @@ mainApp.controller('kegiatan_asb_detail', ['$scope', 'httpHandler', '$filter', '
 		$('#modal_import').modal('show');
 	}
 
+	$scope.download_template = function () {
+		window.location.replace(urls + 'kegiatan_asb_detail/download_files');
+	}
+
 	$scope.import = function () {
 		var fileInput = document.getElementById('template');
 		var attachmentFiles = fileInput.files;
@@ -240,7 +244,7 @@ mainApp.controller('kegiatan_asb_detail', ['$scope', 'httpHandler', '$filter', '
 		}
 
 		var formData = new FormData();
-		formData.append('template', attachmentFiles[0]); // ✅ kirim File object, bukan elemen DOM
+		formData.append('template', attachmentFiles[0]);
 
 		Swal.fire({
 			title: 'Loading...',
@@ -251,31 +255,27 @@ mainApp.controller('kegiatan_asb_detail', ['$scope', 'httpHandler', '$filter', '
 		});
 
 		httpHandler.send({
-			url: urls + 'kegiatan_asb_detail/import', // sesuaikan endpoint
+			url: urls + 'kegiatan_asb_detail/import',
 			data: formData,
 			method: 'POST',
 			headers: { 'Content-Type': undefined }
-		}).then(
-			function successCallback(response) {
-				Swal.close();
+		}).then(function successCallback(response) {
+			Swal.close();
+
+			if (response.data.status === 200) {
 				Swal.fire({
 					title: 'Success',
 					text: response.data.message,
 					icon: 'success'
 				}).then(() => location.reload());
-			},
-			function errorCallback(response) {
-				console.error("FULL ERROR RESPONSE:", response.data); 
-				Swal.close();
+			} else {
 				Swal.fire({
 					title: 'Failed',
-					text: response.data?.message || 'Terjadi kesalahan saat memproses file.',
+					text: response.data.message,
 					icon: 'error'
 				});
 			}
-		);
+		});
 	};
-
-
 
 }]);

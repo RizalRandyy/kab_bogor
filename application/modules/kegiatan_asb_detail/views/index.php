@@ -29,18 +29,13 @@
 								</div>
 							</form>
 
-							<div class=" mb-2 mr-2">
-								<a href="" class="btn btn-success btn-xl" style="float: right;" title="Import Data" ng-click="show_modal()">
-									<i class="fas fa-file-excel"></i> Import
-								</a>
-							</div>
-							<!-- <form class="form-inline float-right">
-								<div class="mb-2 mr-2">
-									<a href="" class="btn btn-light btn-xl" style="float: right;" title="Tambah Data" ng-click="tambah()">
-										<i class="fas fa-plus"></i> Tambah
+							<form class="form-inline float-right">
+								<div class=" mb-2 mr-2">
+									<a href="" class="btn btn-success btn-xl" style="float: right;" title="Import Data" ng-click="show_modal()">
+										<i class="fas fa-file-excel"></i> Import
 									</a>
 								</div>
-							</form> -->
+							</form>
 						<?php } ?>
 					</div>
 				</div>
@@ -106,7 +101,6 @@
 														<button ng-click="exportExcelById(value.id)" class="btn btn-success btn-sm">
 															<i class="fa fa-file-excel"></i> Export Excel
 														</button>
-
 													<?php } ?>
 												</td>
 											</tr>
@@ -127,7 +121,7 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="mdlInviteLabel">Import Data SSH & SBU</h5>
+					<h5 class="modal-title" id="mdlInviteLabel">Import Data ASB</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="close_modal_fleet()">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -143,7 +137,7 @@
 												<label for="idSpesifikasi" class="col-sm-4 col-form-label text-sm">Template</label>
 												<div class="col-sm-8">
 													<div class="input-group-append">
-														<button class="btn btn-danger" style="cursor: pointer;" type="button" ng-click="download_template()">Download Template Data Isian SSH</button>
+														<button class="btn btn-danger" style="cursor: pointer;" type="button" ng-click="download_template()">Download Template Data Isian ASB Detail</button>
 													</div>
 												</div>
 											</div>
@@ -163,11 +157,9 @@
 							</div>
 							<div class="col-12 col-md-12 col-lg-12 text-right">
 								<div class="form-group">
-									 <button type="button" class="btn btn-primary" ng-click="import()">Import</button>
-									<button class="btn btn-info" type="submit"> Simpan <i class="fas fa-save"></i>
-									</button>&nbsp;&nbsp;
-									<button class="btn btn-dark" data-dismiss="modal" type="button"> Kembali <i class="fas fa-undo-alt"></i>
-									</button>&nbsp;&nbsp;
+									<button type="button" class="btn btn-info" ng-click="import()"> Simpan <i class="fas fa-save"></i></button>&nbsp;&nbsp;
+									<!-- <button class="btn btn-info" type="submit"> Simpan <i class="fas fa-save"></i></button>&nbsp;&nbsp; -->
+									<button class="btn btn-dark" data-dismiss="modal" type="button"> Kembali <i class="fas fa-undo-alt"></i></button>&nbsp;&nbsp;
 								</div>
 							</div>
 						</div>

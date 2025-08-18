@@ -217,7 +217,7 @@ class Kegiatan_asb_detail_model extends CI_Model
                     foreach ($id_thn_harga_list as $i => $id_harga) {
                         $harga_row = $this->db
                             ->select('tb_thn_harga.*, tb_kelompok_item.UraianKelompok AS namaItem, tb_kelompok_item.tipe')
-                            ->join('tb_kelompok_item', 'LEFT(tb_thn_harga.kodeKelompok, 4) = tb_kelompok_item.idKelItem', 'left')
+                            ->join('tb_kelompok_item', 'tb_thn_harga.kodeKelompok = tb_kelompok_item.idKelItem', 'left')
                             ->where('tb_thn_harga.id', $id_harga)
                             ->get('tb_thn_harga')->row();
 
@@ -232,8 +232,8 @@ class Kegiatan_asb_detail_model extends CI_Model
                         $detail[] = [
                             'kodeKelompok' => $harga_row->kodeKelompok ?? '',
                             'kegiatanHSPK' => $pekerjaan_detail->kegiatanHSPK,
-                            'namaItem' => $harga_row->namaItem ?? 'N/A',
-                            'spesifikasi' => $harga_row->tipe ?? '',
+                            'namaItem' => $harga_row->namaItem,
+                            'spesifikasi' => $harga_row->tipe,
                             'satuan' => $pekerjaan_detail->satuanHSPK,
                             'tahunHarga' => $pekerjaan_detail->tahunPekerjaan,
                             'qty' => $qty,
@@ -339,11 +339,51 @@ class Kegiatan_asb_detail_model extends CI_Model
         return '';
     }
 
-    public function importData($sheetData)
+    public function importData($sheetData, $updated_by)
     {
-        $inserted   = 0;
-        $updated_by = decrypt_url($this->data['users']['id']);
         $updated_at = date('Y-m-d H:i:s');
+
+        $excelIdSSH      = [];
+        $excelIdKegiatan = [];
+        for ($i = 1; $i < count($sheetData); $i++) {
+            $excelIdSSH[]      = $sheetData[$i][7];
+            $excelIdKegiatan[] = $sheetData[$i][4];
+        }
+
+        // ------------------------- Cek SSH
+        if (!empty($excelIdSSH)) {
+            $this->db->where_in('kodeKelompok', $excelIdSSH);
+            $cekAsb = $this->db->get('tb_spesifikasi_item')->result();
+            if (!empty($cekAsb)) {
+                $ada = array_map(function ($row) {
+                    return $row->kodeKelompok;
+                }, $cekAsb);
+                return [
+                    'status'  => 400,
+                    'message' => 'Import dibatalkan! kode SHH berikut sudah ada di gunakan: ' . implode(", ", $ada)
+                ];
+            }
+        }
+
+        // ------------------------- Cek HSPK
+        if (!empty($excelIdKegiatan)) {
+            $this->db->where_in('kodeKelompok', $excelIdKegiatan);
+            $cekKegiatan = $this->db->get('tb_thn_kegiatan')->result();
+            if (!empty($cekKegiatan)) {
+                $ada = array_map(function ($row) {
+                    return $row->idKegiatan;
+                }, $cekKegiatan);
+                return [
+                    'status'  => false,
+                    'message' => 'Import dibatalkan! idKegiatan berikut sudah ada di database: ' . implode(", ", $ada)
+                ];
+            }
+        }
+
+        // -------------------------
+        $this->db->trans_begin();
+
+        $inserted   = 0;
         $pekerjaanBuffer = [];
 
         for ($i = 1; $i < count($sheetData); $i++) {
@@ -437,7 +477,7 @@ class Kegiatan_asb_detail_model extends CI_Model
                 $this->db->insert('tb_kelompok_item', [
                     'idKelItem'      => $row[7],
                     'UraianKelompok' => $row[8],
-                    'tipe'           => $row[14],
+                    'tipe'           => $row[15],
                     'updated_by'     => $updated_by,
                     'updated_at'     => $updated_at
                 ]);
@@ -488,9 +528,6 @@ class Kegiatan_asb_detail_model extends CI_Model
                 ]);
                 $idSpesifikasi = $this->db->insert_id();
             }
-
-
-
 
             // ----------
             $hargaRow = $this->db->get_where('tb_thn_harga', [
@@ -567,6 +604,12 @@ class Kegiatan_asb_detail_model extends CI_Model
             $inserted++;
         }
 
-        return $inserted;
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return ['status' => false, 'message' => 'Terjadi error saat simpan data!'];
+        } else {
+            $this->db->trans_commit();
+            return ['status' => true, 'inserted' => $inserted];
+        }
     }
 }
