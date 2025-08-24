@@ -12,11 +12,14 @@
     <script>
         $(function() {
             var currentYear = new Date().getFullYear();
+            var nextYear = currentYear + 1;
+
             $('#tahun').datepicker({
                 format: "yyyy",
                 viewMode: "years",
                 minViewMode: "years",
-                endDate: currentYear.toString()
+                endDate: nextYear.toString(),
+                autoclose: true
             });
         });
     </script>

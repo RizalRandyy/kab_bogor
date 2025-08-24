@@ -18,7 +18,7 @@ mainApp.controller('ssh', ['$scope', 'httpHandler', '$filter', '$attrs', '$timeo
 			toast.addEventListener("mouseleave", Swal.resumeTimer);
 		},
 	});
-
+    
     function setInputFilter(textbox, inputFilter) {
         ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
             if (textbox != null) {
@@ -97,7 +97,7 @@ mainApp.controller('ssh', ['$scope', 'httpHandler', '$filter', '$attrs', '$timeo
         if (tab == 'ssh'){
             $scope.tab_ssh = true;
             $scope.tab_sbu = false;
-            $scope.tab_type = "SBU";
+            $scope.tab_type = "SSH";
         }else if (tab == 'sbu'){
             $scope.phone = null;
             $scope.tab_ssh = false;
