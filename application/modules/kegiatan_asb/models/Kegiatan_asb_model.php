@@ -133,45 +133,62 @@ class Kegiatan_asb_model extends CI_Model
     {
         $id = decrypt_url($id);
 
-        $asb = $this->db->get_where('tb_standar_biaya', ['id' => $id])->row();
+$asb = $this->db->get_where('tb_standar_biaya', ['id' => $id])->row();
 
-        if (!$asb) {
-            return [
-                'message' => 'ASB tidak ditemukan.',
-                'status' => 404
-            ];
-        }
+if (!$asb) {
+    return [
+        'message' => 'ASB tidak ditemukan.',
+        'status' => 404
+    ];
+}
 
-        $idAsb = $asb->idASB;
+$idAsb = $asb->idASB;
 
-        $usulanAsbList = $this->db->get_where('tb_usulan_standar_biaya', ['idASB' => $idAsb])->result();
+// Ambil semua usulan
+$usulanAsbList = $this->db->get_where('tb_usulan_standar_biaya', ['idASB' => $idAsb])->result();
 
-        if (!empty($usulanAsbList)) {
-            $idUsulanList = array_map(function ($item) {
+if (!empty($usulanAsbList)) {
+    $idUsulanList = array_map(function ($item) {
+        return $item->id;
+    }, $usulanAsbList);
+
+    $this->db->where_in('id', $idUsulanList);
+    $this->db->where('status', 'disetujui');
+    $this->db->update('tb_usulan_standar_biaya', ['status' => 'usulan']);
+
+    // Loop untuk update detail per id_usulan
+    foreach ($idUsulanList as $idUsulan) {
+        $usulanAsbDetailList = $this->db
+            ->get_where('tb_usulan_standar_biaya_thn_detail', ['id_standar_biaya_thn' => $idUsulan])
+            ->result();
+
+        if (!empty($usulanAsbDetailList)) {
+            $idDetailList = array_map(function ($item) {
                 return $item->id;
-            }, $usulanAsbList);
+            }, $usulanAsbDetailList);
 
-            $this->db->where_in('id', $idUsulanList);
+            $this->db->where_in('id', $idDetailList);
             $this->db->where('status', 'disetujui');
-            $this->db->update('tb_usulan_standar_biaya', ['status' => 'usulan']);
-
-            // $this->db->where_in('id_thn_kegiatan', $idUsulanList);
-            // $this->db->update('tb_usulan_thn_pekerjaan_detail', ['status' => 'usulan']);
+            $this->db->update('tb_usulan_standar_biaya_thn_detail', ['status' => 'usulan']);
         }
+    }
+}
 
-        $this->db->delete('tb_standar_biaya_thn', ['idASB' => $id]);
+// Hapus asb dan turunannya
+$this->db->delete('tb_standar_biaya_thn', ['idASB' => $id]);
 
-        if ($this->db->delete('tb_standar_biaya', ['id' => $id])) {
-            return [
-                'message' => 'Delete success',
-                'status' => 200,
-            ];
-        }
+if ($this->db->delete('tb_standar_biaya', ['id' => $id])) {
+    return [
+        'message' => 'Delete success',
+        'status' => 200,
+    ];
+}
 
-        return [
-            'message' => 'Delete failed, please refresh page!',
-            'status' => 400
-        ];
+return [
+    'message' => 'Delete failed, please refresh page!',
+    'status' => 400
+];
+
     }
 
     public function getheader()

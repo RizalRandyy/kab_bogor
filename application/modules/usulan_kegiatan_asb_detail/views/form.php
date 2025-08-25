@@ -44,29 +44,42 @@
 															<table class="table table-striped table-md">
 																<thead>
 																	<tr>
-																		<th class="text-center" style="background-color: #AFEEEE;" colspan="2" ng-bind="viewKegiatan"></th>
+																		<th class="text-center" style="background-color: #AFEEEE;" colspan="6" ng-bind="viewKegiatan"></th>
 																	</tr>
 																	<tr>
 																		<th class="text-center">Kelompok HSPK</th>
 																		<th class="text-center">Harga</th>
+																		<th class="text-center"></th>
+																		<th class="text-center">Koefisien</th>
+																		<th class="text-center" style="width: 30%;">Total</th>
 																		<th class="text-center">Action</th>
 																	</tr>
 																</thead>
 																<tbody id="table-body">
 																	<tr>
-																		<td class="text-center" colspan="2" ng-show="loading">
+																		<td class="text-center" colspan="6" ng-show="loading">
 																			<img class="loader-img" src="<?= base_url('assets/img/loadertsel.gif') ?>" alt="loader">
 																			Loading...
 																		</td>
 																	</tr>
-																	<tr ng-hide="loading" ng-repeat="(key,id) in tableKelompok">
-																		<td style="width: 80%;">
+																	<tr ng-hide="loading" ng-repeat="(key,id) in tableKelompok track by $index">
+																		<td style="width: 60%;">
 																			<input type="text" name="kelItem[]" class="form-control" ng-value="getKelompokById(id)" disabled>
 																		</td>
-																		<td style="width: 20%;">
-																			<input type="text" name="total[]" class="form-control text-right" ng-value="getTotal(id, total_item[id])| currency:'Rp. '" disabled>
-																			<input type="hidden" name="total_hide[]" ng-value="getTotal(id, total_item[id])" disabled>
+
+																		
+																		<td class="text-right" style="width: 15%;">
+																			<input type="text" name="harga[]" class="form-control text-right" style="font-size: 12px;" ng-value="getHarga(id)" disabled>
 																		</td>
+																		<td class="text-wrap" style="width: 1%;">X</td>
+																		<td style="width: 10%;">
+																			<input name="koefisien[]" id="koefisien_{{id}}" class="form-control" style="font-size: 12px;" ng-model="inputKoefisien.val[id]">
+																		</td>
+																		<td style="width: 30%;">
+																			<input type="text" name="total[]" class="form-control text-right" style="font-size: 12px;" ng-value="getTotal(id, koefisien[id])| currency:'Rp. '" disabled>
+																			<input type="hidden" name="total_hide[]" ng-value="getTotal(id, koefisien[id])" disabled>
+																		</td>
+
 																		<td style="width: 5%;">
 																			<button type="button" class="btn btn-danger btn-sm" ng-click="removeItem(id)">Hapus</button>
 																		</td>

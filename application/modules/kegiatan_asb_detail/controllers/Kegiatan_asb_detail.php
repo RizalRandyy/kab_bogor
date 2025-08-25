@@ -73,9 +73,10 @@ class Kegiatan_asb_detail extends My_Controller
 		$params = $this->post(NULL, TRUE);
 
 		$tahunPekerjaan = explode(",", $params['id_thn_pekerjaan_detail']);
+		$koefisien = explode(",", $params['koefisien']);
 
 		$params['id_thn_pekerjaan_detail'] = json_encode($tahunPekerjaan);
-
+		$params['koefisien'] = json_encode($koefisien);
 		$params['updated_by'] = decrypt_url($this->data['users']['id']);
 		$params['updated_at'] = date('Y-m-d H:i:s');
 

@@ -185,7 +185,7 @@ mainApp
             const inputField = document.getElementById("banyak_" + id);
 
             if (inputField && inputField.value) {
-                angka = parseFloat(inputField.value); // pastikan angka, bukan string
+                angka = parseFloat(inputField.value); 
             }
 
             for (let k = 0; k < $scope.options_kel_spesifikasi.length; k++) {
@@ -194,7 +194,7 @@ mainApp
                     let total = angka > 0 ? (angka * data.value_harga) : data.value_harga;
                     $scope.total[id] = total;
                     $scope.totalHarga();
-                    return parseFloat(total.toFixed(2)); // bulatkan 2 desimal
+                    return parseFloat(total.toFixed(2));
                 }
             }
 
@@ -268,8 +268,6 @@ mainApp
             }
 
             formData.append("id_thn_kegiatan", idKegiatan);
-            console.log("id_thn_harga:", $scope.tableKelompok);
-            console.log("total_item:", input_banyak);
 
             formData.append("id_thn_harga", $scope.tableKelompok);
             formData.append("total_item", input_banyak);

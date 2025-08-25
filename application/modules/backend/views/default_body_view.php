@@ -263,6 +263,28 @@
 							</ul>
 						</li>
 
+						<?php if ((!empty($users['role_access']['jenis_dokumen']) && $users['role_access']['jenis_dokumen']['jenis_dokumen'] == 'on') || (!empty($users['role_access']['daftar_dokumen']) && $users['role_access']['daftar_dokumen']['daftar_dokumen'] == 'on')) { ?>
+							<li class="nav-item dropdown <?= in_array($this->uri->segment(1), ['jenis_dokumen', 'daftar_dokumen']) ? 'active' : '' ?>">
+								<a href="#" class="nav-link has-dropdown"><i class="fas fa-file"></i><span>Dokumen</span></a>
+								<ul class="dropdown-menu">
+									<?php if (!empty($users['role_access']['jenis_dokumen']) && $users['role_access']['jenis_dokumen']['jenis_dokumen'] == 'on') { ?>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'jenis_dokumen' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('jenis_dokumen'); ?>">
+												<span>Jenis Dokumen</span>
+											</a>
+										</li>
+									<?php } ?>
+									<?php if (!empty($users['role_access']['daftar_dokumen']) && $users['role_access']['daftar_dokumen']['daftar_dokumen'] == 'on') { ?>
+										<li class="nav-item  <?= $this->uri->segment(1) == 'daftar_dokumen' ? 'active' : '' ?>">
+											<a class="nav-link" href="<?= base_url('daftar_dokumen'); ?>">
+												<span>Daftar Dokumen</span>
+											</a>
+										</li>
+									<?php } ?>
+								</ul>
+							</li>
+						<?php } ?>
+
 						<?php if ((!empty($users['role_access']['lokasi_toko']) && $users['role_access']['lokasi_toko']['lokasi_toko'] == 'on')) { ?>
 							<li class="nav-item dropdown <?= $this->uri->segment(1) == 'lokasi_toko' ? 'active' : '' ?>">
 								<a href="<?= base_url('lokasi_toko'); ?>" class="nav-link"><i class="fas fa-map-marked-alt"></i><span>Lokasi Survey</span></a>

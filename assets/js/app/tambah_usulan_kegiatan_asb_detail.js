@@ -54,8 +54,9 @@ mainApp
 		$scope.total = [];
 		$scope.total_item = [];
 		$scope.idKelItem = [];
+		$scope.koefisien = [];
 		$scope.total_all = 0;
-		$scope.inputTotal = {};
+		$scope.inputKoefisien = {};
 		$scope.keyword = '';
 		$scope.viewKegiatan = '';
 
@@ -90,6 +91,11 @@ mainApp
 							$scope.tableKelompok = $scope.idKelItem;
 							var result = $scope.options_kegiatan.find(function (item) {
 								return item.id === $scope.idKegiatan;
+							});
+							$scope.koefisien = response.data.data.koefisien;
+							$scope.inputKoefisien['val'] = {};
+							$scope.idKelItem.forEach((id, index) => {
+								$scope.inputKoefisien['val'][id] = $scope.koefisien[index] || "";
 							});
 							$scope.viewKegiatan = result.idASB + ' - ' + result.UraianKegiatan + ' - (' + result.satuan + ') - ' + result.tahunASB;
 
@@ -177,17 +183,38 @@ mainApp
 			}
 			return "";
 		};
-		$scope.getTotal = function (id, val = '1') {
-			var angka = 0;
+		// $scope.getTotal = function (id, val = '1') {
+		// 	var angka = 0;
 
-			for (var k = 0; k < $scope.options_kel_spesifikasi.length; k++) {
+		// 	for (var k = 0; k < $scope.options_kel_spesifikasi.length; k++) {
+		// 		if ($scope.options_kel_spesifikasi[k].id === id) {
+		// 			data = $scope.options_kel_spesifikasi[k];
+		// 			total = angka > 0 ? (angka * data.value_harga) : data.value_harga;
+		// 			$scope.total[id] = parseInt(total);
+		// 			$scope.totalHarga();
+		// 			return total;
+		// 			break;
+		// 		}
+		// 	}
+
+		// 	return "";
+		// };
+
+		$scope.getTotal = function (id, val = '1') {
+			let angka = 0;
+			const inputField = document.getElementById("koefisien_" + id);
+
+			if (inputField && inputField.value) {
+				angka = parseFloat(inputField.value);
+			}
+
+			for (let k = 0; k < $scope.options_kel_spesifikasi.length; k++) {
 				if ($scope.options_kel_spesifikasi[k].id === id) {
-					data = $scope.options_kel_spesifikasi[k];
-					total = angka > 0 ? (angka * data.value_harga) : data.value_harga;
-					$scope.total[id] = parseInt(total);
+					let data = $scope.options_kel_spesifikasi[k];
+					let total = angka > 0 ? (angka * data.value_harga) : data.value_harga;
+					$scope.total[id] = total;
 					$scope.totalHarga();
-					return total;
-					break;
+					return parseFloat(total.toFixed(2));
 				}
 			}
 
@@ -208,12 +235,13 @@ mainApp
 				return accumulator + currentValue;
 			}, 0);
 
-			return total;
+			return $scope.total_all;
 		}
 
 		$scope.save = function () {
 			const idKegiatan = $('#idKegiatan').val();
 			const kelompokItem = $scope.tableKelompok;
+			const input_koefisien = [];
 
 			if (!idKegiatan) {
 				$('#idKegiatan').focus();
@@ -231,6 +259,27 @@ mainApp
 				});
 			}
 
+			for (let i = 0; i < $scope.tableKelompok.length; i++) {
+				const id = $scope.tableKelompok[i];
+				const koefisien = $scope.inputKoefisien.val?.[id];
+
+				if (koefisien == null || koefisien === "") {
+					document.getElementById(`koefisien_${id}`).focus();
+					return Toast.fire({
+						icon: "warning",
+						title: `Masukkan koefisien untuk item ke-${i + 1}!`,
+					});
+				} else if (koefisien === "0" || parseFloat(koefisien) === 0) {
+					document.getElementById(`koefisien_${id}`).focus();
+					return Toast.fire({
+						icon: "warning",
+						title: `Koefisien item ke-${i + 1} tidak boleh 0!`,
+					});
+				}
+
+				input_koefisien.push(koefisien);
+			}
+
 			// Siapkan FormData
 			const formData = new FormData();
 
@@ -240,6 +289,7 @@ mainApp
 
 			formData.append("id_standar_biaya_thn", idKegiatan);
 			formData.append("id_thn_pekerjaan_detail", kelompokItem);
+			formData.append("koefisien", input_koefisien);
 
 			// Tampilkan loading
 			Swal.fire({

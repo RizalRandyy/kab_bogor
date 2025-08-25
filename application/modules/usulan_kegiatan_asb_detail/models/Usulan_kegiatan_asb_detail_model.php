@@ -17,7 +17,8 @@ class Usulan_kegiatan_asb_detail_model extends CI_Model
     tb_usulan_standar_biaya.satuan,
     tb_usulan_standar_biaya.idOpdPengusul,
     opd_pengusul.namaOpd AS namaOpdPengusul,
-    tb_usulan_standar_biaya_thn_detail.id_thn_pekerjaan_detail
+    tb_usulan_standar_biaya_thn_detail.id_thn_pekerjaan_detail,
+    tb_usulan_standar_biaya_thn_detail.koefisien
 ');
 
         $this->db->from('tb_usulan_standar_biaya_thn_detail');
@@ -65,6 +66,7 @@ class Usulan_kegiatan_asb_detail_model extends CI_Model
                 $get_data[$key]['id'] = encrypt_url($value['id']);
 
                 $id_thn_pekerjaan_detail = json_decode($value['id_thn_pekerjaan_detail']);
+                $koefisien = json_decode($value['koefisien']);
                 $total_satuan = [];
 
                 foreach ($id_thn_pekerjaan_detail as $ky => $val) {
@@ -73,10 +75,22 @@ class Usulan_kegiatan_asb_detail_model extends CI_Model
                     $id_harga = json_decode($hspk_detail->id_thn_harga);
                     $total_item = json_decode($hspk_detail->total_item);
 
+                    $subtotal_detail = 0;
+
                     foreach ($id_harga as $ky2 => $val2) {
-                        $data_harga = $this->db->query("SELECT SUM(harga * ?) as total FROM tb_thn_harga WHERE id = ?", [$total_item[$ky2], $val2])->first_row();
-                        $total_satuan[] = $data_harga->total;
+                        $data_harga = $this->db->query(
+                            "SELECT harga FROM tb_thn_harga WHERE id = ?",
+                            [$val2]
+                        )->first_row();
+
+                        if ($data_harga) {
+                            $subtotal_detail += ($data_harga->harga * $total_item[$ky2]);
+                        }
                     }
+
+                    // kalikan subtotal_detail dengan koefisien sesuai index pekerjaan
+                    $koef = isset($koefisien[$ky]) ? (float)$koefisien[$ky] : 1;
+                    $total_satuan[] = $subtotal_detail * $koef;
                 }
 
                 $total = array_sum($total_satuan);
@@ -194,7 +208,7 @@ class Usulan_kegiatan_asb_detail_model extends CI_Model
     public function getReqById($id, $users)
     {
         $id = decrypt_url($id);
-        $this->db->select('id,id_standar_biaya_thn,id_thn_pekerjaan_detail')
+        $this->db->select('id,id_standar_biaya_thn,id_thn_pekerjaan_detail, koefisien')
             ->where('id', $id);
 
         $data =  $this->db->get('tb_usulan_standar_biaya_thn_detail')->row();
@@ -202,6 +216,63 @@ class Usulan_kegiatan_asb_detail_model extends CI_Model
         if ($data) {
             $data->id = encrypt_url($data->id);
             $data->id_thn_pekerjaan_detail = json_decode($data->id_thn_pekerjaan_detail);
+
+            $data->koefisien = $data->koefisien
+                ? array_map('floatval', json_decode($data->koefisien, true))
+                : [];
+
+            $detail = [];
+            $total = 0;
+            $assoc_total_item = [];
+
+            foreach ($data->id_thn_pekerjaan_detail as $id_pekerjaan_detail) {
+                $pekerjaan_detail = $this->db
+                    ->select('tb_thn_pekerjaan_detail.*, tb_thn_kegiatan.kodeKelompok, tb_thn_kegiatan.tahunPekerjaan, tb_kegiatan.UraianKegiatan AS kegiatanHSPK, tb_kegiatan.satuan AS satuanHSPK')
+                    ->join('tb_thn_kegiatan', 'tb_thn_pekerjaan_detail.id_thn_kegiatan = tb_thn_kegiatan.id', 'left')
+                    ->join('tb_kegiatan', 'tb_thn_kegiatan.idKegiatan = tb_kegiatan.id', 'left')
+                    ->where('tb_thn_pekerjaan_detail.id', $id_pekerjaan_detail)
+                    ->get('tb_thn_pekerjaan_detail')->row();
+
+                if (!$pekerjaan_detail) continue;
+
+                $id_thn_harga_list = json_decode($pekerjaan_detail->id_thn_harga);
+                $total_item_list   = json_decode($pekerjaan_detail->total_item);
+
+                if (is_array($id_thn_harga_list)) {
+                    foreach ($id_thn_harga_list as $i => $id_harga) {
+                        $harga_row = $this->db
+                            ->select('tb_thn_harga.*, tb_kelompok_item.UraianKelompok AS namaItem, tb_kelompok_item.tipe')
+                            ->join('tb_kelompok_item', 'tb_thn_harga.kodeKelompok = tb_kelompok_item.idKelItem', 'left')
+                            ->where('tb_thn_harga.id', $id_harga)
+                            ->get('tb_thn_harga')->row();
+
+                        if (!$harga_row) continue;
+
+                        $qty = isset($total_item_list[$i]) ? (int)$total_item_list[$i] : 1;
+                        $subtotal = $harga_row->harga * $qty;
+                        $total += $subtotal;
+
+                        $assoc_total_item[$id_harga] = $qty;
+
+                        $detail[] = [
+                            'kodeKelompok' => $harga_row->kodeKelompok ?? '',
+                            'kegiatanHSPK' => $pekerjaan_detail->kegiatanHSPK,
+                            'namaItem' => $harga_row->namaItem,
+                            'spesifikasi' => $harga_row->tipe,
+                            'satuan' => $pekerjaan_detail->satuanHSPK,
+                            'tahunHarga' => $pekerjaan_detail->tahunPekerjaan,
+                            'qty' => $qty,
+                            'harga' => (int)$harga_row->harga,
+                            'subtotal' => $subtotal
+                        ];
+                    }
+                }
+            }
+
+            $data->total_item = $assoc_total_item;
+            $data->detail     = $detail;
+            $data->total      = $total;
+            $data->id_thn_harga = array_keys($assoc_total_item);
         }
 
         return [
@@ -273,6 +344,7 @@ class Usulan_kegiatan_asb_detail_model extends CI_Model
             'id'                              => $newThnAsbDetailId,
             'id_standar_biaya_thn'            => $newThnAsbId,
             'id_thn_pekerjaan_detail'         => $usulan->id_thn_pekerjaan_detail, // Cek
+            'koefisien'                       => $usulan->koefisien, // Cek
             'updated_by'                      => $user['id'],
             'updated_at'                      => $now,
         ];

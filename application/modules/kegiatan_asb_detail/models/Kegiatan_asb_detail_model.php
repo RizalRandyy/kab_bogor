@@ -14,7 +14,8 @@ class Kegiatan_asb_detail_model extends CI_Model
         tb_standar_biaya.idOpd,
         tb_opd.namaOpd,
         tb_standar_biaya.satuan,
-        id_thn_pekerjaan_detail
+        id_thn_pekerjaan_detail,
+        koefisien
     ')
             ->from('tb_standar_biaya_thn_detail')
             ->join('tb_standar_biaya_thn', 'tb_standar_biaya_thn_detail.id_standar_biaya_thn = tb_standar_biaya_thn.id')
@@ -55,23 +56,40 @@ class Kegiatan_asb_detail_model extends CI_Model
                 $get_data[$key]['id'] = encrypt_url($value['id']);
 
                 $id_thn_pekerjaan_detail = json_decode($value['id_thn_pekerjaan_detail']);
+                $koefisien = json_decode($value['koefisien']);
                 $total_satuan = [];
 
                 foreach ($id_thn_pekerjaan_detail as $ky => $val) {
-                    $hspk_detail = $this->db->query("SELECT * FROM tb_thn_pekerjaan_detail WHERE id = ?", [$val])->first_row();
+                    $hspk_detail = $this->db->query(
+                        "SELECT * FROM tb_thn_pekerjaan_detail WHERE id = ?",
+                        [$val]
+                    )->first_row();
 
-                    $id_harga = json_decode($hspk_detail->id_thn_harga);
+                    $id_harga   = json_decode($hspk_detail->id_thn_harga);
                     $total_item = json_decode($hspk_detail->total_item);
 
+                    $subtotal_detail = 0;
 
+                    // hitung harga * total_item untuk pekerjaan detail ini
                     foreach ($id_harga as $ky2 => $val2) {
-                        $data_harga = $this->db->query("SELECT SUM(harga * ?) as total FROM tb_thn_harga WHERE id = ?", [$total_item[$ky2], $val2])->first_row();
-                        $total_satuan[] = $data_harga->total;
+                        $data_harga = $this->db->query(
+                            "SELECT harga FROM tb_thn_harga WHERE id = ?",
+                            [$val2]
+                        )->first_row();
+
+                        if ($data_harga) {
+                            $subtotal_detail += ($data_harga->harga * $total_item[$ky2]);
+                        }
                     }
+
+                    // kalikan subtotal_detail dengan koefisien sesuai index pekerjaan
+                    $koef = isset($koefisien[$ky]) ? (float)$koefisien[$ky] : 1;
+                    $total_satuan[] = $subtotal_detail * $koef;
                 }
 
                 $total = array_sum($total_satuan);
                 $get_data[$key]['harga'] = 'Rp.' . number_format($total, 0, '', '.');
+
                 unset($get_data[$key]['id_thn_pekerjaan_detail']);
             }
         }
@@ -187,13 +205,18 @@ class Kegiatan_asb_detail_model extends CI_Model
     public function getReqById($id, $users)
     {
         $id = decrypt_url($id);
-        $this->db->select('id, id_standar_biaya_thn, id_thn_pekerjaan_detail');
+        $this->db->select('id, id_standar_biaya_thn, id_thn_pekerjaan_detail, koefisien');
         $this->db->where('id', $id);
         $data = $this->db->get('tb_standar_biaya_thn_detail')->row();
 
         if ($data) {
             $data->id = encrypt_url($data->id);
             $data->id_thn_pekerjaan_detail = json_decode($data->id_thn_pekerjaan_detail);
+
+            // decode koefisien jadi array angka
+            $data->koefisien = $data->koefisien
+                ? array_map('floatval', json_decode($data->koefisien, true))
+                : [];
 
             $detail = [];
             $total = 0;
@@ -207,11 +230,10 @@ class Kegiatan_asb_detail_model extends CI_Model
                     ->where('tb_thn_pekerjaan_detail.id', $id_pekerjaan_detail)
                     ->get('tb_thn_pekerjaan_detail')->row();
 
-
                 if (!$pekerjaan_detail) continue;
 
                 $id_thn_harga_list = json_decode($pekerjaan_detail->id_thn_harga);
-                $total_item_list = json_decode($pekerjaan_detail->total_item);
+                $total_item_list   = json_decode($pekerjaan_detail->total_item);
 
                 if (is_array($id_thn_harga_list)) {
                     foreach ($id_thn_harga_list as $i => $id_harga) {
@@ -245,8 +267,8 @@ class Kegiatan_asb_detail_model extends CI_Model
             }
 
             $data->total_item = $assoc_total_item;
-            $data->detail = $detail;
-            $data->total = $total;
+            $data->detail     = $detail;
+            $data->total      = $total;
             $data->id_thn_harga = array_keys($assoc_total_item);
         }
 
@@ -256,6 +278,7 @@ class Kegiatan_asb_detail_model extends CI_Model
             'data' => !empty($data) ? $data : [],
         ];
     }
+
 
     public function deleteReq($id)
     {

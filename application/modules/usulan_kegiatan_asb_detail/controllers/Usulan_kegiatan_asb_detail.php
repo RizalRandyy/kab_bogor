@@ -29,7 +29,7 @@ class Usulan_kegiatan_asb_detail extends My_Controller
 
 	public function getData_get()
 	{
-		$return = $this->Usulan_kegiatan_asb_detail_model->getData($this->get(NULL, TRUE),$this->data['users']);
+		$return = $this->Usulan_kegiatan_asb_detail_model->getData($this->get(NULL, TRUE), $this->data['users']);
 		$return['header'] = $this->Usulan_kegiatan_asb_detail_model->getheader();
 
 		$this->response($return, 200);
@@ -38,10 +38,10 @@ class Usulan_kegiatan_asb_detail extends My_Controller
 	public function form_get()
 	{
 		$segment = $this->uri->segment(3);
-		$this->data['title'] = ucfirst($segment).' Usulan Kegiatan ASB Detail';
+		$this->data['title'] = ucfirst($segment) . ' Usulan Kegiatan ASB Detail';
 		$this->data['page'] = 'tambah_usulan_kegiatan_asb_detail';
 		$this->data['version'] = $this->uri->segment(2);
-		$this->data['id'] = @$this->get('id')?$this->get('id', TRUE):null;
+		$this->data['id'] = @$this->get('id') ? $this->get('id', TRUE) : null;
 
 		$this->data['js'] = array(
 			'assets/js/app/tambah_usulan_kegiatan_asb_detail.js?' . rand(),
@@ -86,10 +86,11 @@ class Usulan_kegiatan_asb_detail extends My_Controller
 	{
 		$params = $this->post(NULL, TRUE);
 
-		$tahunPekerjaan = explode(",",$params['id_thn_pekerjaan_detail']);
+		$tahunPekerjaan = explode(",", $params['id_thn_pekerjaan_detail']);
+		$koefisien = explode(",", $params['koefisien']);
 
 		$params['id_thn_pekerjaan_detail'] = json_encode($tahunPekerjaan);
-
+		$params['koefisien'] = json_encode($koefisien);
 		$params['updated_by'] = decrypt_url($this->data['users']['id']);
 		$params['updated_at'] = date('Y-m-d H:i:s');
 
@@ -100,7 +101,7 @@ class Usulan_kegiatan_asb_detail extends My_Controller
 
 	public function getById_get()
 	{
-		$return = $this->Usulan_kegiatan_asb_detail_model->getReqById($this->get('id', TRUE),$this->data['users']);
+		$return = $this->Usulan_kegiatan_asb_detail_model->getReqById($this->get('id', TRUE), $this->data['users']);
 
 		$this->response($return, $return['status'] == 500 ? false : 200);
 	}
