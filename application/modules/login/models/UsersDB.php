@@ -14,6 +14,7 @@ class UsersDB extends CI_Model
 	{
 		$select = [
 			'users.*',
+			'users.idOpd',
 			'users_role.name as role_name',
 			'users_role.role_access',
 		];

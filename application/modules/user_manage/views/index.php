@@ -231,6 +231,18 @@
 								</select>
 							</div>
 						</div>
+						<div class="form-group row">
+							<div class="col-md-2">
+								<label for="role_user" class="col-form-label">Dinas<span class="text-danger">*</span></label>
+							</div>
+							<div class="col-md-4">
+								<select ng-model="idOpd" class="form-select form-control-sm text-sm">
+									<option value="">- Pilih Dinas (Opsional) -</option>
+									<option ng-repeat="(key, value) in optionsOpd" value="{{value.idOpd}}">{{value.namaOpd}}
+									</option>
+								</select>
+							</div>
+						</div>
 						<div class="form-group row" ng-show="modal_title == 'Tambah User'">
 							<div class="col-md-2">
 								<label for="password" class="col-form-label">Password</label>

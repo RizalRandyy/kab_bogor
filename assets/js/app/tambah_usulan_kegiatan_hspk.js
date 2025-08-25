@@ -40,15 +40,6 @@ mainApp
 					$scope.options = response.data.data;
 				}
 			);
-
-			httpHandler.send({
-				method: 'GET',
-				url: urls + 'usulan_spesifikasi_item/Opd'
-			}).then(
-				function successCallbacks(response) {
-					$scope.optionsOpd = response.data.data;
-				}
-			);
 		}
 
 		$scope.id = !$("#id").val() ? null : $("#id").val();
@@ -70,7 +61,6 @@ mainApp
 							$scope.idBidangTeknis = response.data.data.idBidangTeknis;
 							$scope.satuan = response.data.data.satuan;
 							$scope.tahun = response.data.data.tahunPekerjaan;
-							$scope.idOpd = response.data.data.idOpd;
 						} else {
 							Swal.close();
 							Swal.fire({
@@ -102,7 +92,6 @@ mainApp
 			var idBidangTeknis = $('#idBidangTeknis').val();
 			var satuan = $('#satuan').val();
 			var tahun = $('#tahun').val();
-			var idOpd = $('#idOpd').val();
 
 			if (idKeg == null) {
 				$('#idKeg').focus();
@@ -152,12 +141,6 @@ mainApp
 					icon: "warning",
 					title: 'Input Tahun 4 Karakter!',
 				});
-			} else if (idOpd == null) {
-				$('#idOpd').focus();
-				return Toast.fire({
-					icon: "warning",
-					title: 'Pilih OPD / Dinas Pengusul!',
-				});
 			}
 
 			var formData = new FormData();
@@ -171,7 +154,6 @@ mainApp
 			formData.append("idBidangTeknis", idBidangTeknis);
 			formData.append("satuan", satuan);
 			formData.append("tahunPekerjaan", tahun);
-			formData.append("idOpd", idOpd);
 
 			Swal.fire({
 				title: 'Loading...',
@@ -237,9 +219,5 @@ mainApp
 $(document).ready(function () {
 	$('#idSpesifikasi').select2({
 		placeholder: "Pilih Kelompok Item"
-	});
-
-	$('#idOpd').select2({
-		placeholder: "Pilih OPD / Dinas Pengusul"
 	});
 });

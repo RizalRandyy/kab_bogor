@@ -40,15 +40,6 @@ mainApp
 					$scope.options = response.data.data;
 				}
 			);
-
-			httpHandler.send({
-				method: 'GET',
-				url: urls + 'usulan_spesifikasi_item/Opd'
-			}).then(
-				function successCallbacks(response) {
-					$scope.optionsOpd = response.data.data;
-				}
-			);
 		}
 
 		$scope.id = !$("#id").val() ? null : $("#id").val();
@@ -68,9 +59,8 @@ mainApp
 						$scope.idSpesifikasi = response.data.data.idSpesifikasi;
 						$scope.UraianSpesifikasi = response.data.data.UraianSpesifikasi;
 						$scope.satuan = response.data.data.satuan;
-						$scope.TahunHarga = response.data.data.TahunHarga;
+						$scope.tahun = response.data.data.tahun;
 						$scope.harga = response.data.data.harga;
-						$scope.idOpd = response.data.data.idOpd;
 					} else {
 						Swal.close();
 						Swal.fire({
@@ -100,9 +90,8 @@ mainApp
 			var idSpesifikasi = $('#idSpesifikasi').val();
 			var UraianSpesifikasi = $('#UraianSpesifikasi').val();
 			var satuan = $('#satuan').val();
-			var TahunHarga = $('#TahunHarga').val();
+			var tahun = $('#tahun').val();
 			var harga = $('#harga').val();
-			var idOpd = $('#idOpd').val();
 
 			if (kodeItem == null) {
 				$('#kodeItem').focus();
@@ -135,20 +124,15 @@ mainApp
 					icon: "warning",
 					title: 'Masukan Satuan!',
 				});
-			} else if (idOpd == null) {
-				$('#idOpd').focus();
-				return Toast.fire({
-					icon: "warning",
-					title: 'Pilih OPD / Dinas Pengusul!',
-				});
-			}else if (TahunHarga == "") {
-				$('#TahunHarga').focus();
+			} 
+			else if (tahun == "") {
+				$('#tahun').focus();
 				return Toast.fire({
 					icon: "warning",
 					title: 'Masukan Tahun!',
 				});
-			} else if (TahunHarga.length != 4) {
-				$('#TahunHarga').focus();
+			} else if (tahun.length != 4) {
+				$('#tahun').focus();
 				return Toast.fire({
 					icon: "warning",
 					title: 'Input Tahun 4 Karakter!',
@@ -171,9 +155,8 @@ mainApp
 			formData.append("idSpesifikasi", idSpesifikasi);
 			formData.append("UraianSpesifikasi", UraianSpesifikasi);
 			formData.append("satuan", satuan);
-			formData.append("TahunHarga", TahunHarga);
+			formData.append("TahunHarga", tahun);
 			formData.append("harga", harga);
-			formData.append("idOpd", idOpd);
 
 			Swal.fire({
 				title: 'Loading...',
@@ -239,9 +222,5 @@ mainApp
 $(document).ready(function () {
 	$('#kodeItem').select2({
 		placeholder: "Pilih Kelompok Item"
-	});
-
-	$('#idOpd').select2({
-		placeholder: "Pilih OPD / Dinas Pengusul"
 	});
 });

@@ -76,6 +76,7 @@ class Login extends My_Controller
 							'full_name' => $users->full_name,
 							'role_id' => $users->role_id,
 							'role_name' => $users->role_name,
+							'idOpd' => $users->idOpd ? $users->idOpd : '-',
 							'role_access'	=> json_decode($users->role_access, TRUE),
 							'photo_profile' => $users->photo ? base_url($users->photo) : base_url('/resources/img/profile/photo_orang.JPG'),
 						]

@@ -10,6 +10,7 @@ class User_manage_model extends CI_Model
 			'users.nick_name',
 			'users.phone',
 			'users.email',
+			'users.idOpd',
 			'users.last_login',
 			'users.role_id',
 			'ur.name as role_name',
@@ -97,6 +98,16 @@ class User_manage_model extends CI_Model
 			'status' => !empty($data) ? 200 : 400,
 			'message' => !empty($data) ? null : 'List users role not found!',
 			'data' => !empty($data) ? $data : [],
+		];
+	}
+
+	public function getOpd()
+	{
+		$get_data = $this->db->select('id,idOpd,namaOpd')
+			->order_by('idOpd')->get('tb_opd')->result_array();
+
+		return [
+			'data' => !empty($get_data) ? $get_data : []
 		];
 	}
 

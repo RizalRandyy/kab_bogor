@@ -36,6 +36,7 @@ mainApp.controller('user_manage', ['$scope', 'httpHandler', '$filter', '$attrs',
     $scope.email = '';
     $scope.phone = '';
     $scope.role_user = '';
+    $scope.idOpd = '';
     $scope.status = '';
     $scope.password = '';
     $scope.id_user = '';
@@ -193,6 +194,7 @@ mainApp.controller('user_manage', ['$scope', 'httpHandler', '$filter', '$attrs',
         $scope.getUsers(0);
     } else {
         $scope.getRole(1);
+        $scope.getOpd(2);
     }
 
     $scope.show_modal = function ($action, $data = false) {
@@ -300,8 +302,8 @@ mainApp.controller('user_manage', ['$scope', 'httpHandler', '$filter', '$attrs',
                 }
 
                 console.log('Full Name:', $scope.full_name);
-console.log('ID User:', $scope.id_user);
-console.log('Password:', $scope.password);
+                console.log('ID User:', $scope.id_user);
+                console.log('Password:', $scope.password);
 
                 var formData = new FormData();
 
@@ -310,6 +312,7 @@ console.log('Password:', $scope.password);
                 formData.append('email', $scope.email);
                 formData.append('phone', $scope.phone);
                 formData.append('role_id', $scope.role_user);
+                formData.append('idOpd', $scope.idOpd);
                 formData.append('status', $scope.status);
                 if ($scope.password && $scope.password.trim() !== "") {
                     formData.append('password', $scope.password);
@@ -392,6 +395,19 @@ console.log('Password:', $scope.password);
         );
     }
 
+    $scope.getOpd = function () {
+        httpHandler.send({
+            method: 'GET',
+            url: urls + 'user_manage/Opd'
+        }).then(
+            function successCallbacks(response) {
+                $scope.optionsOpd = response.data.data;
+            }
+        );
+    }
+
+
+
     $scope.clear = function () {
         $scope.modal_title = 'Tambah User';
         $scope.full_name = '';
@@ -421,6 +437,7 @@ console.log('Password:', $scope.password);
         $scope.status = data.status;
         $scope.password = '';
         $scope.id_user = data.id;
+        $scope.idOpd = data.idOpd;
 
         if (data.photo) {
             $scope.photos.photoUsers = data.photo;
@@ -431,6 +448,7 @@ console.log('Password:', $scope.password);
     }
 
     $scope.getRole();
+    $scope.getOpd();
 
 
     $scope.delete_user = function (id) {

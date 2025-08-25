@@ -84,6 +84,7 @@ class Usulan_kegiatan_hspk extends My_Controller
 	{
 		$params = $this->post(NULL, TRUE);
 
+		$params['idOpd'] = $this->data['users']['idOpd'];
 		$params['updated_by'] = decrypt_url($this->data['users']['id']);
 		$params['updated_at'] = date('Y-m-d H:i:s');
 

@@ -68,6 +68,7 @@ class User_manage extends My_Controller
 		$data = $this->post();
 
 		$id_user = !empty($_POST['id']) ? $_POST['id'] : false;
+		unset($data['id']);
 
 		$return = $this->manage_model->saveUser($data, $id_user);
 
@@ -140,6 +141,13 @@ class User_manage extends My_Controller
 	{
 		$return = $this->manage_model->getRoleUsers();
 		$this->response($return, $return['status']);
+	}
+
+	public function opd_get()
+	{
+		$return = $this->manage_model->getOpd();
+
+		$this->response($return, 200);
 	}
 
 	public function update_password_post()

@@ -19,15 +19,6 @@
 										<div class="col-md-6 col-lg-12">
 											<form>
 												<div class="form-group row">
-													<label for="idOpd" class="col-sm-4 col-form-label text-sm">OPD / Dinas Pengusul</label>
-													<div class="col-sm-8">
-														<select class="form-control" id="idOpd" ng-model="idOpd">
-															<option value="" disabled>Pilih OPD / Dinas Pengusul</option>
-															<option ng-repeat="option in optionsOpd" value="{{option.idOpd}}" name="{{option.idOpd}}" id="{{option.idOpd}}">{{option.namaOpd}}</option>
-														</select>
-													</div>
-												</div>
-												<div class="form-group row">
 													<label for="idKeg" class="col-sm-4 col-form-label text-sm">Kode Kegiatan</label>
 													<div class="col-sm-8">
 														<input type="text" class="form-control form-control-sm text-sm" id="idKeg" name="idKeg" ng-model="idKeg" ng-maxlength="6" placeholder="Input Kode Kegiatan">

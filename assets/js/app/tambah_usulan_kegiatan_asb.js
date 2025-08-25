@@ -40,15 +40,6 @@ mainApp
 					$scope.options = response.data.data;
 				}
 			);
-
-			httpHandler.send({
-				method: 'GET',
-				url: urls + 'usulan_kegiatan_asb/Opd_pengusul'
-			}).then(
-				function successCallbacks(response) {
-					$scope.optionsOpdPengusul = response.data.data;
-				}
-			);
 		}
 
 		$scope.id = !$("#id").val() ? null : $("#id").val();
@@ -66,7 +57,6 @@ mainApp
 						$scope.loading = false;
 						$scope.id = response.data.data.id;
 						$scope.idASB = response.data.data.idASB;
-						$scope.idOpdPengusul = response.data.data.idOpdPengusul;
 						$scope.idOpd = response.data.data.idOpd;
 						$scope.namaOpd = response.data.data.namaOpd;
 						$scope.urKeg = response.data.data.UraianKegiatan;
@@ -98,7 +88,6 @@ mainApp
 
 		$scope.save = function () {
 			var idASB = $('#idASB').val();
-			var idOpdPengusul = $('#idOpdPengusul').val();
 			var idOpd = $('#idOpd').val();
 			var urKeg = $('#urKeg').val();
 			var satuan = $('#satuan').val();
@@ -115,12 +104,6 @@ mainApp
 				return Toast.fire({
 					icon: "warning",
 					title: 'Pilih Bidang!',
-				});
-			} else if (idOpdPengusul == null) {
-				$('#idOpdPengusul').focus();
-				return Toast.fire({
-					icon: "warning",
-					title: 'Pilih OPD / Dinas Pengusul!',
 				});
 			} else if (idASB.length > 6) {
 				$('#idASB').focus();
@@ -167,7 +150,6 @@ mainApp
 			}
 
 			formData.append("idASB", idASB);
-			formData.append("idOpdPengusul", idOpdPengusul);
 			formData.append("idOpd", idOpd);
 			formData.append("UraianKegiatan", urKeg);
 			formData.append("satuan", satuan);
@@ -241,9 +223,5 @@ $(document).ready(function () {
 
 	$('#idOpd').select2({
 		placeholder: "Pilih Bidang"
-	});
-
-	$('#idOpdPengusul').select2({
-		placeholder: "Pilih OPD / Dinas Pengusul"
 	});
 });

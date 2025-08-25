@@ -19,15 +19,6 @@
 										<div class="col-md-6 col-lg-12">
 											<form>
 												<div class="form-group row">
-													<label for="idOpd" class="col-sm-4 col-form-label text-sm">OPD / Dinas Pengusul</label>
-													<div class="col-sm-8">
-														<select class="form-control" id="idOpd" ng-model="idOpd">
-															<option value="" disabled>Pilih OPD / Dinas Pengusul</option>
-															<option ng-repeat="option in optionsOpd" value="{{option.idOpd}}" name="{{option.idOpd}}" id="{{option.idOpd}}">{{option.namaOpd}}</option>
-														</select>
-													</div>
-												</div>
-												<div class="form-group row">
 													<label for="kodeItem" class="col-sm-4 col-form-label text-sm">Kode Kelompok Item</label>
 													<div class="col-sm-8">
 														<select class="form-control" id="kodeItem" ng-model="kodeItem">
@@ -59,15 +50,15 @@
 													</div>
 												</div>
 												<div class="form-group row">
-													<label for="TahunHarga" class="col-sm-4 col-form-label text-sm">Tahun</label>
+													<label for="tahun" class="col-sm-4 col-form-label text-sm">Tahun</label>
 													<div class="input-group col-sm-8">
-														<input class="form-control" ng-minlength="4" ng-maxlength="4" id="TahunHarga" name="TahunHarga" ng-model="TahunHarga" ng-pattern="/^\d+$/" placeholder="Input Tahun">
+														<input class="form-control" ng-minlength="4" ng-maxlength="4" id="tahun" name="tahun" ng-model="tahun" ng-pattern="/^\d+$/" placeholder="Input Tahun">
 
 													</div>
 													<div class="col-sm-4"></div>
 													<div class="col-sm-8">
-														<span ng-show="addReq.TahunHarga.$error.maxlength" style="color: red;">Input Tahun 4 Karakter!</span>
-														<span ng-show="addReq.TahunHarga.$error.minlength" style="color: red;">Input Tahun 4 Karakter!</span>
+														<span ng-show="addReq.tahun.$error.maxlength" style="color: red;">Input Tahun 4 Karakter!</span>
+														<span ng-show="addReq.tahun.$error.minlength" style="color: red;">Input Tahun 4 Karakter!</span>
 													</div>
 												</div>
 												<div class="form-group row">
