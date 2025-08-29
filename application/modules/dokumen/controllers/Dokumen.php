@@ -62,4 +62,17 @@ class Dokumen extends My_Controller
 
 		$this->template->load($this->data, null, 'show', null, 'frontend');
 	}
+
+	public function download_get($filename)
+	{
+		$this->load->helper('download');
+
+		$path = FCPATH . 'resources/uploads/dokumen/' . $filename;
+
+		if (file_exists($path)) {
+			force_download($path, NULL); // NULL biar ambil nama asli
+		} else {
+			show_404();
+		}
+	}
 }

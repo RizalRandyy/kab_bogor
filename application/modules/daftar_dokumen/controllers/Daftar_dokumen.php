@@ -70,7 +70,7 @@ class Daftar_dokumen extends My_Controller
 		if (!empty($_FILES['dokumen']['name'])) {
 			$config['upload_path']   = FCPATH . 'resources/uploads/dokumen/';
 			$config['allowed_types'] = 'pdf|doc|docx|xls|xlsx';
-			$config['max_size']      = 10000; // 10MB
+			$config['max_size']      = 1000000; // 1GB
 
 			$this->load->library('upload', $config);
 

@@ -74,7 +74,7 @@
 												<td class="text-center">
 													<a ng-if="value.dokumen"
 														class="btn btn-primary btn-sm"
-														ng-href="<?= base_url('resources/uploads/dokumen/') ?>{{value.dokumen}}">
+														ng-href="<?= base_url('dokumen/download/') ?>{{value.dokumen}}">
 														<i class="fas fa-download"></i> Download
 													</a>
 													<span ng-if="!value.dokumen">-</span>
