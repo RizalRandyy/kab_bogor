@@ -3,15 +3,15 @@ mainApp.controller('dashboard', ['$scope', 'httpHandler', '$http', '$window', fu
     $scope.no = 1;
     $scope.itemsPerPage = 10;
     $scope.keyword = {};
-    $scope.search_Method ={};
+    $scope.search_Method = {};
     $scope.total_count = 0;
     $scope.message = null;
 
     $scope.getData = function (pageno) {
-        if(pageno == 0)
+        if (pageno == 0)
             $scope.no = 1;
         else
-            $scope.no = (pageno*$scope.itemsPerPage) - ($scope.itemsPerPage - 1);
+            $scope.no = (pageno * $scope.itemsPerPage) - ($scope.itemsPerPage - 1);
 
         $scope.total_count = 0;
         $scope.message = null;
@@ -42,29 +42,27 @@ mainApp.controller('dashboard', ['$scope', 'httpHandler', '$http', '$window', fu
 
     $scope.getData(0);
 
-    $scope.searchMethod = function(keyname, val)
-    {
+    $scope.searchMethod = function (keyname, val) {
         $scope.keyword[keyname] = val;
         $scope.getData(1);
     }
 
-    $scope.reset = function(is_master)
-    {
+    $scope.reset = function (is_master) {
         $scope.keyword = {};
         $scope.search_Method = {};
-        if(is_master == "master"){
+        if (is_master == "master") {
             $scope.getData(1);
         }
     }
 
-	$scope.chartdiv = function() {
+    $scope.chartdiv = function () {
 
-		const params = {};
-		httpHandler.send({
+        const params = {};
+        httpHandler.send({
             method: 'GET',
             url: urls + "dashboard/data",
             params: params
-            
+
         }).then(function successCallback(response) {
             $scope.data = response.data.data;
 
@@ -95,11 +93,11 @@ mainApp.controller('dashboard', ['$scope', 'httpHandler', '$http', '$window', fu
                 var dimmed = segment.states.create("dimmed");
                 dimmed.properties.stroke = am4core.color("#dadada");
 
-                segment.events.on("over", function(event) {
+                segment.events.on("over", function (event) {
                     processOver(event.target.parent.parent.parent);
                 });
 
-                segment.events.on("out", function(event) {
+                segment.events.on("out", function (event) {
                     processOut(event.target.parent.parent.parent);
                 });
 
@@ -108,11 +106,11 @@ mainApp.controller('dashboard', ['$scope', 'httpHandler', '$http', '$window', fu
                     var dataItem = { year: new Date(value.year) };
                     dataItem["value" + s] = value.harga;
                     data.push(dataItem);
-                    
+
                 });
 
                 series.data = data;
-                
+
                 return series;
             }
 
@@ -123,48 +121,112 @@ mainApp.controller('dashboard', ['$scope', 'httpHandler', '$http', '$window', fu
             chart.legend.markers.template.states.create("dimmed").properties.opacity = 0.3;
             chart.legend.labels.template.states.create("dimmed").properties.opacity = 0.3;
 
-            chart.legend.itemContainers.template.events.on("over", function(event) {
+            chart.legend.itemContainers.template.events.on("over", function (event) {
                 processOver(event.target.dataItem.dataContext);
             })
 
-            chart.legend.itemContainers.template.events.on("out", function(event) {
+            chart.legend.itemContainers.template.events.on("out", function (event) {
                 processOut(event.target.dataItem.dataContext);
             })
 
             function processOver(hoveredSeries) {
                 hoveredSeries.toFront();
 
-                hoveredSeries.segments.each(function(segment) {
+                hoveredSeries.segments.each(function (segment) {
                     segment.setState("hover");
                 })
-              
-              hoveredSeries.legendDataItem.marker.setState("default");
-              hoveredSeries.legendDataItem.label.setState("default");
 
-                chart.series.each(function(series) {
+                hoveredSeries.legendDataItem.marker.setState("default");
+                hoveredSeries.legendDataItem.label.setState("default");
+
+                chart.series.each(function (series) {
                     if (series != hoveredSeries) {
-                        series.segments.each(function(segment) {
+                        series.segments.each(function (segment) {
                             segment.setState("dimmed");
                         })
                         series.bulletsContainer.setState("dimmed");
-                  series.legendDataItem.marker.setState("dimmed");
-                  series.legendDataItem.label.setState("dimmed");
+                        series.legendDataItem.marker.setState("dimmed");
+                        series.legendDataItem.label.setState("dimmed");
                     }
                 });
             }
 
             function processOut() {
-                chart.series.each(function(series) {
-                    series.segments.each(function(segment) {
+                chart.series.each(function (series) {
+                    series.segments.each(function (segment) {
                         segment.setState("default");
                     })
                     series.bulletsContainer.setState("default");
-                series.legendDataItem.marker.setState("default");
-                series.legendDataItem.label.setState("default");
+                    series.legendDataItem.marker.setState("default");
+                    series.legendDataItem.label.setState("default");
                 });
             }
-		})
-	}
+        })
+    }
+
+    $scope.chartLokasi = function () {
+        httpHandler.send({
+            method: 'GET',
+            url: urls + "dashboard/getDataLokasi"
+        }).then(function (response) {
+            // ambil array lokasi dari nested data
+            var lokasi = response.data.data.data;
+            console.log(lokasi);
+
+            am4core.useTheme(am4themes_animated);
+            var chart = am4core.create("chartLokasi", am4charts.XYChart);
+
+            chart.data = lokasi.map(item => ({
+                tahun: item.tahun,
+                jumlah: parseInt(item.jumlah)
+            }));
+
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "tahun";
+            categoryAxis.title.text = "Tahun Survey";
+
+            categoryAxis.renderer.minGridDistance = 40;
+            categoryAxis.renderer.labels.template.rotation = 0;
+            categoryAxis.renderer.labels.template.horizontalCenter = "middle";
+            categoryAxis.renderer.labels.template.verticalCenter = "top";
+
+            categoryAxis.sortBySeries = chart.series.values[0];
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.title.text = "Jumlah Lokasi";
+            valueAxis.min = 0;
+            valueAxis.strictMinMax = true;
+            valueAxis.renderer.minGridDistance = 30;
+            valueAxis.renderer.minLabelPosition = 0.01;
+            valueAxis.renderer.maxLabelPosition = 0.99;
+            valueAxis.renderer.grid.template.disabled = false;
+
+
+            valueAxis.extraMin = 1;
+            valueAxis.extraMax = 5;
+            valueAxis.renderer.minGridDistance = 50;
+            valueAxis.renderer.ticks.template.disabled = false;
+            valueAxis.renderer.ticks.template.strokeOpacity = 0.5;
+            valueAxis.renderer.ticks.template.stroke = am4core.color("#000");
+            valueAxis.renderer.ticks.template.length = 10;
+            valueAxis.renderer.line.strokeOpacity = 1;
+            valueAxis.strictMinMax = true;
+            valueAxis.calculateTotals = true;
+            valueAxis.renderer.baseGrid.disabled = true;
+            valueAxis.renderer.labels.template.adapter.add("text", function (text) {
+                return text;
+            });
+
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.valueY = "jumlah";
+            series.dataFields.categoryX = "tahun";
+            series.columns.template.fill = am4core.color("#4dd0e1");
+            series.columns.template.tooltipText = "Tahun {categoryX}: [bold]{valueY} Lokasi[/]";
+        });
+    };
+
+
+    $scope.chartLokasi();
 
     $scope.chartdiv();
 

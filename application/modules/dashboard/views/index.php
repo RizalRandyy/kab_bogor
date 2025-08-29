@@ -130,9 +130,20 @@
 						<div class="card animate-box">
 							<div class="card-header">
 							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<h4>Kelompok Item Barang</h4>
+									<div id="chartKelompok" style="width:100%; height:400px;"></div>
+								</div>
+								<div class="col-md-6">
+									<h4 class="text-center">Jumlah Lokasi Survey</h4>
+									<div id="chartLokasi" style="width:100%; height:400px;"></div>
+								</div>
+							</div>
 							<div class="card-body">
 								<div class="chartdiv" style="height: 450px"></div>
 							</div>
+
 						</div>
 					</div>
 				</div>
