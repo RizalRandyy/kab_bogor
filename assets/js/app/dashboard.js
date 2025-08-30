@@ -225,8 +225,67 @@ mainApp.controller('dashboard', ['$scope', 'httpHandler', '$http', '$window', fu
         });
     };
 
+    $scope.chartKelompok = function () {
+        httpHandler.send({
+            method: 'GET',
+            url: urls + "dashboard/dataAll"
+        }).then(function successCallback(response) {
+            $scope.dataKelompok = response.data.data;
+
+            // Proses data supaya jadi jumlah item per tahun
+            var groupedData = {};
+            angular.forEach($scope.dataKelompok, function (items, kelompok) {
+                angular.forEach(items, function (val, tahun) {
+                    if (!groupedData[tahun]) {
+                        groupedData[tahun] = 0;
+                    }
+                    // hitung jumlah item yang ada di tahun itu
+                    if (val.harga && val.harga > 0) {
+                        groupedData[tahun] += 1;
+                    }
+                });
+            });
+
+            // convert ke array untuk chart
+            var chartData = [];
+            angular.forEach(groupedData, function (jumlah, tahun) {
+                chartData.push({
+                    tahun: tahun,
+                    jumlah: jumlah
+                });
+            });
+
+            am4core.useTheme(am4themes_animated);
+            var chart = am4core.create("chartKelompok", am4charts.XYChart);
+            chart.data = chartData;
+
+            // Axis Y = Tahun
+            var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "tahun";
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.title.text = "Tahun Survey";
+
+            // Axis X = Jumlah item
+            var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+            valueAxis.title.text = "Jumlah Item";
+
+            // Series bar horizontal
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.valueX = "jumlah";
+            series.dataFields.categoryY = "tahun";
+            series.columns.template.fill = am4core.color("#4dd0e1");
+            series.columns.template.strokeWidth = 0;
+            series.tooltipText = "Tahun {categoryY}: [bold]{valueX} Item[/]";
+
+            chart.cursor = new am4charts.XYCursor();
+        });
+    };
+
+
+
 
     $scope.chartLokasi();
+    $scope.chartKelompok();
 
     $scope.chartdiv();
 

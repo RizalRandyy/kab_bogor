@@ -80,4 +80,24 @@ class Dashboard extends My_Controller
 			], 200);
 		}
 	}
+
+	public function dataAll_get()
+	{
+		$data = $this->models->getDataAll();
+		if (!$data) {
+			$this->set_response([
+				'status'  => 500,
+				'icon'    => 'failed',
+				'message' => 'Data tidak ada!',
+				'data'    => []
+			]);
+		} else {
+			$this->set_response([
+				'status'  => 200,
+				'icon'    => 'success',
+				'message' => '',
+				'data'    => $data
+			]);
+		}
+	}
 }

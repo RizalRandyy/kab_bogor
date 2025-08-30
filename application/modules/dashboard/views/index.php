@@ -119,20 +119,20 @@
 		<div class="colorlib-services">
 			<div class="container">
 				<div class="row">
-					<div class="col-12 wrap-1">
+					<!-- <div class="col-12 wrap-1">
 						<div class="card animate-box">
 							<div class="card-body">
 								<b style="font-weight: 600; font-size: 24px;">Grafik Fluktuasi Harga</b>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<div class="col-12 wrap-1">
 						<div class="card animate-box">
 							<div class="card-header">
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<h4>Kelompok Item Barang</h4>
+									<h4 class="text-center animate-box">Kelompok Item Barang</h4>
 									<div id="chartKelompok" style="width:100%; height:400px;"></div>
 								</div>
 								<div class="col-md-6">

@@ -112,6 +112,55 @@ class Dashboard_model extends CI_Model
 		];
 	}
 
+	public function getDataAll()
+	{
+		$list = [];
+
+		// Ambil semua tahun dari tb_thn_harga
+		$years = $this->db->query("
+        SELECT DISTINCT TahunHarga 
+        FROM tb_thn_harga 
+        ORDER BY TahunHarga
+    ")->result_array();
+
+		$yearList = array_column($years, 'TahunHarga');
+
+		// Ambil semua data harga + join spesifikasi/kelompok
+		$qry = $this->db->select("harga.TahunHarga, harga.harga, spesifikasi.id as idSpesifikasi, 
+                              spesifikasi.UraianSpesifikasi, spesifikasi.satuan, 
+                              kelompok.UraianKelompok")
+			->from("tb_thn_harga harga")
+			->join("tb_spesifikasi_item spesifikasi", "harga.idSpesifikasi = spesifikasi.id")
+			->join("tb_jenis_item jenis", "spesifikasi.idJenisItem = jenis.id")
+			->join("tb_kelompok_item kelompok", "jenis.idKelompokItem = kelompok.id")
+			->where_in("harga.TahunHarga", $yearList)
+			->order_by("harga.TahunHarga, spesifikasi.id")
+			->get()
+			->result_array();
+
+		// Susun data
+		foreach ($qry as $row) {
+			foreach ($yearList as $year) {
+				if ((int)$row['TahunHarga'] == (int)$year) {
+					$list[$row['UraianKelompok'] . " - " . $row['UraianSpesifikasi'] . " (" . $row['satuan'] . ")"][$year] = [
+						"year" => $year,
+						"harga" => (int)$row['harga']
+					];
+				} else {
+					// kalau tidak ada harga di tahun tsb, isi 0
+					if (!isset($list[$row['UraianKelompok'] . " - " . $row['UraianSpesifikasi'] . " (" . $row['satuan'] . ")"][$year])) {
+						$list[$row['UraianKelompok'] . " - " . $row['UraianSpesifikasi'] . " (" . $row['satuan'] . ")"][$year] = [
+							"year" => $year,
+							"harga" => 0
+						];
+					}
+				}
+			}
+		}
+
+		return $list;
+	}
+
 	public function getheader()
 	{
 		$header  = array("No" => 'reset', "Nama Toko" => "nama_toko", "Tahun" => "tahun");
