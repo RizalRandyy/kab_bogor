@@ -21,7 +21,8 @@ class Privilege_hook
 			'perkiraan_hps',
 			'hspk',
 			'ssh',
-			'asb'
+			'asb',
+			'dokumen'
 		);	
 
 		// Check is this from whitelist or not ?

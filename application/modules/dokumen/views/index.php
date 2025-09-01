@@ -36,9 +36,7 @@
 												<th class="text-center">Tahun</th>
 												<th class="text-center">Deskripsi</th>
 												<th class="text-center">Download File</th>
-												<?php if ($users['role_access']['daftar_dokumen']['accessedit_daftar_dokumen'] == 'on' || $users['role_access']['daftar_dokumen']['accessdelete_daftar_dokumen'] == 'on') { ?>
-													<th class="text-center"></th>
-												<?php } ?>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>
