@@ -22,15 +22,15 @@ mainApp.controller('asb', ['$scope', 'httpHandler', '$filter', '$attrs', functio
 	$scope.no = 1;
 	$scope.itemsPerPage = 10;
 	$scope.keyword = {};
-	$scope.search_Method ={};
+	$scope.search_Method = {};
 	$scope.total_count = 0;
 	$scope.message = null;
 
 	$scope.getData = function (pageno) {
-		if(pageno == 0)
-            $scope.no = 1;
-        else
-            $scope.no = (pageno*$scope.itemsPerPage) - ($scope.itemsPerPage - 1);
+		if (pageno == 0)
+			$scope.no = 1;
+		else
+			$scope.no = (pageno * $scope.itemsPerPage) - ($scope.itemsPerPage - 1);
 
 		$scope.total_count = 0;
 		$scope.message = null;
@@ -61,62 +61,92 @@ mainApp.controller('asb', ['$scope', 'httpHandler', '$filter', '$attrs', functio
 
 	$scope.getData(0);
 
-	$scope.searchMethod = function(keyname, val)
-	{
+	$scope.searchMethod = function (keyname, val) {
 		$scope.keyword[keyname] = val;
 		$scope.getData(0);
-    }
+	}
 
-    $scope.reset = function(is_master)
-    {
-    	$scope.keyword = {};
-    	$scope.search_Method = {};
-    	if(is_master == "master"){
-    		$scope.getData(0);
-    	}
-    }
+	$scope.reset = function (is_master) {
+		$scope.keyword = {};
+		$scope.search_Method = {};
+		if (is_master == "master") {
+			$scope.getData(0);
+		}
+	}
 
-    $scope.show_modal = function($data){
-        $('#modal_detail').modal('show');
-        $scope.view($data);
+	$scope.show_modal = function ($data) {
+		$('#modal_detail').modal('show');
+		$scope.view($data);
 
-    }
+	}
 
-    $scope.view = function($id){
-    httpHandler.send({
-            method: 'GET',
-            url: urls + 'asb/getById',
-            params: {'id': $id}
-        }).then(
-            function successCallbacks(response) {
-                
-                if(response.data.status == 200){
-                    $scope.loading = false;
-                    $scope.kegiatan = response.data.data.kegiatan;
-                    $scope.spesifikasi = response.data.data.spesifikasi;
-                    $scope.total = response.data.data.total;
-                    $scope.tableKelompok = $scope.spesifikasi;
+	$scope.view = function ($id) {
+		httpHandler.send({
+			method: 'GET',
+			url: urls + 'asb/getById',
+			params: { 'id': $id }
+		}).then(
+			function successCallbacks(response) {
 
-                    $scope.viewKegiatan = $scope.kegiatan
+				if (response.data.status == 200) {
+					$scope.loading = false;
+					$scope.kegiatan = response.data.data.kegiatan;
+					$scope.spesifikasi = response.data.data.spesifikasi;
+					$scope.total = response.data.data.total;
+					$scope.tableKelompok = $scope.spesifikasi;
 
-                }else{
-                    Swal.close();
-                    Swal.fire({
-                        title: 'Failed',
-                        text: response.data.message,
-                        icon: response.data.status == 500 ? 'error' : 'warning',
-                        showCancelButton: false,
-                        allowEscapeKey: false,
-                        allowOutsideClick: false,
-                        confirmButtonColor: "#fc544b",
-                        confirmButtonText: "Oke",
-                    }).then((result) => {
-                        if (result.value) {
-                        }
-                    });
-                }
-            }
-        );
-    }
+					$scope.viewKegiatan = $scope.kegiatan
 
+				} else {
+					Swal.close();
+					Swal.fire({
+						title: 'Failed',
+						text: response.data.message,
+						icon: response.data.status == 500 ? 'error' : 'warning',
+						showCancelButton: false,
+						allowEscapeKey: false,
+						allowOutsideClick: false,
+						confirmButtonColor: "#fc544b",
+						confirmButtonText: "Oke",
+					}).then((result) => {
+						if (result.value) {
+						}
+					});
+				}
+			}
+		);
+	}
+
+	$scope.openHspk = {};
+	$scope.toggleHspkDetail = function (index, id_hspk) {
+
+		// Jika sedang dibuka → tutup saja
+		if ($scope.openHspk[index] === true) {
+			$scope.openHspk[index] = false;
+			return;
+		}
+
+		// Tutup semua dulu
+		$scope.openHspk = {};
+
+		// Set baris ini terbuka
+		$scope.openHspk[index] = true;
+
+		// Loading detail HSPK
+		$scope.hspkLoading = true;
+
+		httpHandler.send({
+			method: 'GET',
+			url: urls + 'hspk/getById',
+			params: { id: id_hspk }
+		}).then(response => {
+
+			$scope.hspkLoading = false;
+
+			if (response.data.status === 200) {
+				$scope.hspkDetail = response.data.data.spesifikasi;
+				$scope.hspkDetailTotal = response.data.data.total;
+			}
+		});
+	};
 }]);

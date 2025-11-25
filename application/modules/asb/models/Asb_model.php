@@ -141,6 +141,7 @@ class Asb_model extends CI_Model
                     unset($kel_spesifikasi[$key]['id_thn_harga']);
                     unset($kel_spesifikasi[$key]['total_item']);
 
+                    $spesifikasi[$key]['id'] = encrypt_url($kel_spesifikasi[$key]['id']);
                     $spesifikasi[$key]['value'] = $kel_spesifikasi[$key]['kodeKelompok'].' - '.$kel_spesifikasi[$key]['UraianKegiatan'].' - ('.$kel_spesifikasi[$key]['satuan'].') - '.$kel_spesifikasi[$key]['tahunPekerjaan'];
                     $spesifikasi[$key]['harga'] = $kel_spesifikasi[$key]['harga'];
                 }

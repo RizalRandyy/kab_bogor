@@ -28,7 +28,7 @@ class Dashboard extends My_Controller
 		);
 
 		$this->data['users'] = $this->data['users'];
-		$this->template->load($this->data, null, 'index', null, 'frontend');
+		$this->template->load($this->data, null, 'index');
 	}
 
 	public function data_get()

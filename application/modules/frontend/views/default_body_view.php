@@ -15,7 +15,7 @@
 						<div class="row">
 							<div class="col-md-2">
 								<div id="colorlib-logo">
-									<a href="<?= base_url($this->uri->segment(1)) ?>">
+									<a href="<?= base_url('landing_page') ?>">
 										<img src="<?= base_url('assets/img/logo_kab_bogor_hitam_regular.png') ?>"
 											alt="Logo"
 											class="logo-img mr-0">
@@ -24,7 +24,7 @@
 							</div>
 							<div class="col-md-10 text-right menu-1">
 								<ul>
-									<li><a href="<?= base_url(); ?>">Dashboard</a></li>
+									<!-- <li><a href="<?= base_url("dashboard"); ?>">Dashboard</a></li> -->
 									<li class="has-dropdown">
 										<a href="#">SSH & SBU</a>
 										<ul class="dropdown">
@@ -39,23 +39,23 @@
 										</ul>
 									</li>
 									<li><a href="<?= base_url("dokumen"); ?>">Unduh</a></li>
-									<!-- <li class="has-dropdown">
+									<li class="has-dropdown">
 										<a href="#">ASB</a>
 										<ul class="dropdown">
 											<li><a href="<?= base_url("asb"); ?>">ASB Kontruksi Umum</a></li>
 										</ul>
-									</li> -->
+									</li>
 									<li>
 										<?php if (!empty($users['role_id'])) { ?>
 									<li class="has-dropdown">
 										<a href="#">Hi, <?= ucwords($users["full_name"]) ?></a>
 										<ul class="dropdown">
-											<?php foreach ($users['role_access'] as $key => $value) {
-												if ($value[$key] == 'on') { ?>
-													<li><a href="<?= base_url($key); ?>">Admin Panel</a></li>
-											<?php break;
-												}
-											} ?>
+											<?php 
+											// var_dump($users);
+											if (in_array($users['role_name'], ['Administrator', 'admin'])): ?>
+												<li><a href="<?= base_url('dashboard'); ?>">Admin Panel</a></li>
+											<?php endif; ?>
+
 											<li><a href="<?= base_url("index.php/logout"); ?>">Keluar</a></li>
 										</ul>
 									</li>

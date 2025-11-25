@@ -13,6 +13,30 @@ class Privilege_hook
 
 	public function Privilege_check()
 	{
+		$session = $this->CI->session->userdata('kab_bogor');
+		$module  = strtolower($this->CI->router->fetch_module());
+
+		if (!empty($session)) {
+
+			$role_name = isset($session['role_name']) ? strtolower($session['role_name']) : null;
+
+			// ini untuk kalo non admin akses modul di bawah
+			$allowedForNonAdmin = [
+				'landing_page',
+				'dokumen',
+				'perkiraan_hps',
+				'hspk',
+				'ssh',
+				'asb',
+			];
+			if (!in_array($role_name, ['administrator', 'admin'])) {
+				if (!in_array($module, $allowedForNonAdmin)) {
+					show_404();
+				}
+			}
+		}
+
+
 		$whiteList = array(
 			'api',
 			'login',
@@ -22,13 +46,16 @@ class Privilege_hook
 			'hspk',
 			'ssh',
 			'asb',
-			'dokumen'
-		);	
+			'dokumen',
+			'landing_page',
+		);
 
 		// Check is this from whitelist or not ?
 		if (!(str_replace($whiteList, '', $this->CI->router->uri->uri_string) != $this->CI->router->uri->uri_string) and !in_array($this->CI->router->fetch_module(), $whiteList) and !empty($this->CI->session->userdata('kab_bogor')['id'])) :
 			// This method intended based on normal request
 			$user_access = $this->CI->session->userdata('kab_bogor')['role_access'];
+			// $role_name = $this->CI->session->userdata('kab_bogor')['role_name'];
+
 			// prepare var
 			// we check current module & class is accessible for current user?
 			if (isset($user_access[strtolower($this->CI->router->fetch_module())][strtolower($this->CI->router->fetch_class())]) && $user_access[strtolower($this->CI->router->fetch_module())][strtolower($this->CI->router->fetch_class())] == 'on') {
@@ -46,30 +73,33 @@ class Privilege_hook
 		else :
 			// This method intended based on whitelist such as api request etc.
 			// checker if user not in whitelist URL
-			
+			// buat kalo user blm login gabisa masuk, pasang disini url nya
 			foreach ($whiteList as $list) :
-				if($this->CI->router->fetch_module() == 'perkiraan_hps' &&  empty($this->CI->session->userdata('kab_bogor'))){
+				if ($this->CI->router->fetch_module() == 'perkiraan_hps' &&  empty($this->CI->session->userdata('kab_bogor'))) {
 					redirect(base_url() . 'login');
-				} else if($this->CI->router->fetch_module() == 'hspk' &&  empty($this->CI->session->userdata('kab_bogor'))){
+				} else if ($this->CI->router->fetch_module() == 'hspk' &&  empty($this->CI->session->userdata('kab_bogor'))) {
 					redirect(base_url() . 'login');
-				} else if($this->CI->router->fetch_module() == 'ssh' &&  empty($this->CI->session->userdata('kab_bogor'))){
+				} else if ($this->CI->router->fetch_module() == 'ssh' &&  empty($this->CI->session->userdata('kab_bogor'))) {
 					redirect(base_url() . 'login');
-				} else if($this->CI->router->fetch_module() == 'asb' &&  empty($this->CI->session->userdata('kab_bogor'))){
+				} else if ($this->CI->router->fetch_module() == 'asb' &&  empty($this->CI->session->userdata('kab_bogor'))) {
+					redirect(base_url() . 'login');
+				} else if ($this->CI->router->fetch_module() == 'dashboard' &&  empty($this->CI->session->userdata('kab_bogor'))) {
+					redirect(base_url() . 'login');
+				} else if ($this->CI->router->fetch_module() == 'landing_page' &&  empty($this->CI->session->userdata('kab_bogor'))) {
 					redirect(base_url() . 'login');
 				}
 
 				if ($list == $this->CI->router->fetch_module() || $list == $this->CI->router->uri->uri_string || strpos($this->CI->router->uri->uri_string, $list) !== FALSE || $this->CI->router->uri->uri_string == '') {
-					// print_r($this->CI->router->uri->uri_string); exit();
+					// redirect(base_url() . 'landing_page');
 					return;
 				}
 			endforeach;
-			
+
 			// if user hasn't login
 			if (empty($this->CI->session->userdata('kab_bogor')['id']) && !in_array($this->CI->router->fetch_module(), $whiteList)) {
 				redirect(base_url(), 'refresh');
 			};
 		endif;
-
 	}
 }
 

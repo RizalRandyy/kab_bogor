@@ -114,94 +114,107 @@
 		}
 	}
 </style>
-<div ng-controller="<?= $page ?>" id="<?= $page ?>">
-	<div id="page">
-		<div class="colorlib-services">
-			<div class="container">
-				<div class="row">
-					<!-- <div class="col-12 wrap-1">
+<div class="main-content" ng-controller="<?= $page ?>" id="<?= $page ?>">
+	<section class="section">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<div class="card-bg"></div>
+				<div class="row mt-2">
+					<div class="col-lg-6 col-md-6 col-sm-6" style="color:white; margin-top:25px; margin-bottom:25px;">
+						<h3><?= $title ?></h3>
+						<span>Data Master > Bidang Teknis</span>
+					</div>
+				</div>
+				<div id="page">
+					<div class="colorlib-services">
+						<div class="container">
+							<div class="row">
+								<!-- <div class="col-12 wrap-1">
 						<div class="card animate-box">
 							<div class="card-body">
 								<b style="font-weight: 600; font-size: 24px;">Grafik Fluktuasi Harga</b>
 							</div>
 						</div>
 					</div> -->
-					<div class="col-12 wrap-1">
-						<div class="card animate-box">
-							<div class="card-header">
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<h4 class="text-center animate-box">Kelompok Item Barang</h4>
-									<div id="chartKelompok" style="width:100%; height:400px;"></div>
-								</div>
-								<div class="col-md-6">
-									<h4 class="text-center">Jumlah Lokasi Survey</h4>
-									<div id="chartLokasi" style="width:100%; height:400px;"></div>
-								</div>
-							</div>
-							<div class="card-body">
-								<div class="chartdiv" style="height: 450px"></div>
-							</div>
+								<div class="col-12 wrap-1">
+									<div class="card animate-box">
+										<div class="card-header">
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<h4 class="text-center animate-box">Kelompok Item Barang</h4>
+												<div id="chartKelompok" style="width:100%; height:400px;"></div>
+											</div>
+											<div class="col-md-6">
+												<h4 class="text-center">Jumlah Lokasi Survey</h4>
+												<div id="chartLokasi" style="width:100%; height:400px;"></div>
+											</div>
+										</div>
+										<div class="card-body">
+											<div class="chartdiv" style="height: 450px"></div>
+										</div>
 
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="colorlib-services colorlib-bg-white" style="padding-top: 1px; padding-left: 1px;">
+						<div class="container">
+							<div class="row animate-box">
+								<div class="col-lg-12 col-md-12 col-sm-12">
+									<div class="col-lg-12 col-md-12 col-sm-12" style="margin-top:25px; margin-bottom:25px;">
+										<h2 class="text-center animate-box">Daftar Lokasi Survey</h2>
+									</div>
+									<div class="table-responsive">
+										<table class="table table-striped table-md animate-box" style="font-size: 12px;">
+											<thead>
+												<tr style="font-size:18px">
+													<th style="width: 10%;">No</th>
+													<th class="text-center" style="width: 80%;">Nama Toko</th>
+													<th class="text-center" style="width: 10%;"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr style="background-color: rgba(0, 0, 0, 0.02);">
+													<td ng-repeat="(a,b) in table_header" class="no-padding px-1">
+														<button type="button" class="btn btn-success btn-sm text-center" ng-if="b == 'reset'" title="Reset Search" ng-click="reset('master')">
+															<i class="fas fa-redo"></i>
+														</button>
+														<input ng-if="b != 'reset'" type="text" class="form-control no-margin form-filter " ng-model="search_Method.val[b]" ng-change="searchMethod(b, search_Method.val[b])" ng-model-options="{debounce: 2000}">
+													</td>
+													<td class="no-padding px-1"></td>
+												</tr>
+												<tr ng-show="message != null">
+													<td colspan="3" class="text-center" ng-bind="message"></td>
+												</tr>
+												<tr>
+													<td colspan="3" ng-show="loading">
+														<img class="loader-img" src="<?= base_url('assets/img/loadertsel.gif') ?>" alt="loader">
+														Loading...
+													</td>
+												</tr>
+												<tr ng-hide="loading" dir-paginate="(key, value) in datalokasi|itemsPerPage:itemsPerPage" total-items="total_count" current-page="curPage" pagination-id="paginateID" style="font-size:14px">
+													<td ng-bind="key+no"></td>
+													<td ng-bind="value.nama_toko"></td>
+													<td class="text-center" title="Lokasi">
+														<a href="{{value.tautan}}" class="btn btn-danger btn-sm p-1" target="_blank">
+															<i class="fas fa-map-marker-alt"></i>&nbsp;
+														</a>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+
+									<dir-pagination-controls direction-links="true" pagination-id="paginateID" boundary-links="true" on-page-change="getData(newPageNumber)">
+									</dir-pagination-controls>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="colorlib-services colorlib-bg-white" style="padding-top: 1px; padding-left: 1px;">
-			<div class="container">
-				<div class="row animate-box">
-					<div class="col-lg-12 col-md-12 col-sm-12">
-						<div class="col-lg-12 col-md-12 col-sm-12" style="margin-top:25px; margin-bottom:25px;">
-							<h2 class="text-center animate-box">Daftar Lokasi Survey</h2>
-						</div>
-						<div class="table-responsive">
-							<table class="table table-striped table-md animate-box" style="font-size: 12px;">
-								<thead>
-									<tr style="font-size:18px">
-										<th style="width: 10%;">No</th>
-										<th class="text-center" style="width: 80%;">Nama Toko</th>
-										<th class="text-center" style="width: 10%;"></th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr style="background-color: rgba(0, 0, 0, 0.02);">
-										<td ng-repeat="(a,b) in table_header" class="no-padding px-1">
-											<button type="button" class="btn btn-success btn-sm text-center" ng-if="b == 'reset'" title="Reset Search" ng-click="reset('master')">
-												<i class="fas fa-redo"></i>
-											</button>
-											<input ng-if="b != 'reset'" type="text" class="form-control no-margin form-filter " ng-model="search_Method.val[b]" ng-change="searchMethod(b, search_Method.val[b])" ng-model-options="{debounce: 2000}">
-										</td>
-										<td class="no-padding px-1"></td>
-									</tr>
-									<tr ng-show="message != null">
-										<td colspan="3" class="text-center" ng-bind="message"></td>
-									</tr>
-									<tr>
-										<td colspan="3" ng-show="loading">
-											<img class="loader-img" src="<?= base_url('assets/img/loadertsel.gif') ?>" alt="loader">
-											Loading...
-										</td>
-									</tr>
-									<tr ng-hide="loading" dir-paginate="(key, value) in datalokasi|itemsPerPage:itemsPerPage" total-items="total_count" current-page="curPage" pagination-id="paginateID" style="font-size:14px">
-										<td ng-bind="key+no"></td>
-										<td ng-bind="value.nama_toko"></td>
-										<td class="text-center" title="Lokasi">
-											<a href="{{value.tautan}}" class="btn btn-danger btn-sm p-1" target="_blank">
-												<i class="fas fa-map-marker-alt"></i>&nbsp;
-											</a>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-
-						<dir-pagination-controls direction-links="true" pagination-id="paginateID" boundary-links="true" on-page-change="getData(newPageNumber)">
-						</dir-pagination-controls>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	</section>
 </div>

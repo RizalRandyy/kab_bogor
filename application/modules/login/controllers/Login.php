@@ -85,7 +85,7 @@ class Login extends My_Controller
 					$this->session->set_flashdata('success', "User valid, please wait!");
 
 					$redirect = json_decode($users->role_access, TRUE);
-					redirect(base_url());
+					redirect(base_url("landing_page/".$redirect[0]));
 				}else{
 					$this->session->set_flashdata('error', "Password salah!");
 					redirect(base_url("login"));

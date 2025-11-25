@@ -1,0 +1,88 @@
+/* ----- CAROUSEL ----- */
+#myCarousel,
+#myCarousel .carousel-item,
+#myCarousel svg {
+  height: 400px !important;
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.carousel-caption h1 {
+  font-size: 40px;
+  font-weight: 700;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+.carousel-caption p {
+  font-size: 18px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+
+/* ----- SECTION WRAPPER ----- */
+.section-wrapper {
+  background: #fff;
+  padding: 40px 20px;
+  border-radius: 30px 30px 0 0;
+  margin-top: -30px;
+  /* tarik ke atas */
+  position: relative;
+  z-index: 10;
+}
+
+
+/* ----- GRID SECTION ----- */
+.section-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.grid-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.grid-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+.grid-card img,
+.grid-card svg {
+  width: 100%;
+  height: 180px !important;
+  object-fit: cover;
+  background: #ddd;
+}
+
+.grid-card .inner {
+  padding: 15px;
+}
+
+.grid-card h5 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.grid-card p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* ----- FOOTER ----- */
+/* footer {
+  margin-top: 40px;
+  padding: 25px 0;
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+} */

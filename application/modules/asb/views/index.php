@@ -114,19 +114,69 @@
 																<tr>
 																	<th class="text-center" style="width: 90%;">Kelompok HSPK</th>
 																	<th class="text-center" style="width: 10%;">Harga</th>
+																	<th class="text-center" style="width: 10%;">Aksi</th>
 																</tr>
 															</thead>
-															<tbody>
+															<tbody ng-repeat="(key,data) in tableKelompok">
 																<tr>
 																	<td class="text-center" colspan="2" ng-show="loading">
 																		<img class="loader-img" src="<?= base_url('assets/img/loadertsel.gif') ?>" alt="loader">
 																		Loading...
 																	</td>
 																</tr>
-																<tr ng-hide="loading" ng-repeat="(key,data) in tableKelompok">
+																<tr ng-hide="loading">
 																	<td class="text-nowrap" ng-bind="data.value">
 																	</td>
 																	<td class="text-right" ng-bind="data.harga">
+																	</td>
+																	<td class="text-center">
+																		<button class="btn btn-info btn-sm p-1"
+																			ng-click="toggleHspkDetail(key, data.id)">
+																			<i class="fas fa-eye"></i>
+																		</button>
+																	</td>
+																</tr>
+																<tr ng-if="openHspk[key]">
+																	<td colspan="3">
+
+																		<div ng-if="hspkLoading">
+																			<img src="<?= base_url('assets/img/loadertsel.gif') ?>" class="loader-img">
+																			Loading detail...
+																		</div>
+
+																		<table class="table table-bordered mt-2" ng-if="!hspkLoading">
+																			<thead>
+																				<tr>
+																					<th>Kode</th>
+																					<th>Kelompok</th>
+																					<th>Jenis</th>
+																					<th>Uraian</th>
+																					<th>Satuan</th>
+																					<th>Harga</th>
+																					<th>Banyak</th>
+																					<th>Total</th>
+																				</tr>
+																				</thead>
+																				<tbody>
+																					<tr ng-repeat="d in hspkDetail">
+																						<td>{{ d.kodeKelompok }}</td>
+																						<td>{{ d.UraianKelompok }}</td>
+																						<td>{{ d.NamaJenis }}</td>
+																						<td>{{ d.UraianSpesifikasi }}</td>
+																						<td>{{ d.satuan }}</td>
+																						<td>{{ d.harga }}</td>
+																						<td>{{ d.banyak }}</td>
+																						<td>{{ d.total }}</td>
+																					</tr>
+																				</tbody>
+																				<tfoot>
+																					<tr>
+																						<th colspan="3" class="text-right">Total</th>
+																						<th>{{ hspkDetailTotal }}</th>
+																					</tr>
+																				</tfoot>
+																		</table>
+
 																	</td>
 																</tr>
 															</tbody>

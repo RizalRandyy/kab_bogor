@@ -119,11 +119,11 @@ class Hspk_model extends CI_Model
 
                     $kel_spesifikasi[$key]['banyak'] = $banyak[$key];
 
-                    $total[$key] = ((int)$value['harga'] * (int)$banyak[$key]);
+                    $total[$key] = ((int)$value['harga'] * $banyak[$key]);
 
                     $kel_spesifikasi[$key]['total'] = 'Rp.'.number_format($total[$key], 0, '', '.');
 
-                    unset($kel_spesifikasi[$key]['id']);
+                    // unset($kel_spesifikasi[$key]['id']);
                 }
                 $total_all = array_sum($total);
             }

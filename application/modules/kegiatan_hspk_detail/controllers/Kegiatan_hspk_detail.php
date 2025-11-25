@@ -316,9 +316,10 @@ class Kegiatan_hspk_detail extends My_Controller
 						if ($cek_kelompok) {
 							if ($cek_kelompok->UraianKelompok != $sheetData[$i][7]) {
 								if ($i == 1) {
-									$msg = 'Data pada Row ' . $i + 1 . ' Column IdKelBrg ' . $sheetData[$i][6] . ' sudah digunakan oleh UraianKelompok = ' . $cek_kelompok->UraianKelompok . '!';
+									$msg = 'Data pada Row ' . ($i + 1) . ' Column IdKelBrg ' . $sheetData[$i][6] .
+										' sudah digunakan oleh UraianKelompok = ' . $cek_kelompok->UraianKelompok . '!';
 								} else {
-									$msg = 'Data pada Row ' . $i + 1 . ' Column IdKelBrg ' . $sheetData[$i][6] . ' sudah digunakan oleh UraianKelompok = ' . $cek_kelompok->UraianKelompok . '! Tetapi Data pada row 1 s/d row ' . ($i - 1) . ' telah berhasil tersimpan.';
+									$msg = 'Data pada Row ' . ($i + 1) . ' Column IdKelBrg ' . $sheetData[$i][6] . ' sudah digunakan oleh UraianKelompok = ' . $cek_kelompok->UraianKelompok . '! Tetapi Data pada row 1 s/d row ' . ($i - 1) . ' telah berhasil tersimpan.';
 								}
 
 								$return = [
@@ -357,9 +358,9 @@ class Kegiatan_hspk_detail extends My_Controller
 						if ($cek_jenis) {
 							if ($cek_jenis->NamaJenis != $sheetData[$i][10]) {
 								if ($i == 1) {
-									$msg = 'Data pada Row ' . $i + 1 . ' Column IdJenisBrg ' . $sheetData[$i][9] . ' sudah digunakan oleh NamaJenis = ' . $cek_jenis->NamaJenis . '!';
+									$msg = 'Data pada Row ' . ($i + 1) . ' Column IdJenisBrg ' . $sheetData[$i][9] . ' sudah digunakan oleh NamaJenis = ' . $cek_jenis->NamaJenis . '!';
 								} else {
-									$msg = 'Data pada Row ' . $i + 1 . ' Column IdJenisBrg ' . $sheetData[$i][9] . ' sudah digunakan oleh NamaJenis = ' . $cek_jenis->NamaJenis . ' ! Tetapi Data pada row 1 s/d row ' . ($i - 1) . ' telah berhasil tersimpan.';
+									$msg = 'Data pada Row ' . ($i + 1) . ' Column IdJenisBrg ' . $sheetData[$i][9] . ' sudah digunakan oleh NamaJenis = ' . $cek_jenis->NamaJenis . ' ! Tetapi Data pada row 1 s/d row ' . ($i - 1) . ' telah berhasil tersimpan.';
 								}
 								$return = [
 									'status' => 500,
@@ -444,9 +445,9 @@ class Kegiatan_hspk_detail extends My_Controller
 						if ($cek_harga) {
 							if ($cek_harga->harga != $sheetData[$i][9]) {
 								if ($i == 1) {
-									$msg = 'Data pada Row ' . $i + 1 . ' Column TahunHarga ' . $sheetData[$i][14] . ' sudah digunakan dengan Harga = ' . $cek_harga->harga . '!';
+									$msg = 'Data pada Row ' . ($i + 1) . ' Column TahunHarga ' . $sheetData[$i][14] . ' sudah digunakan dengan Harga = ' . $cek_harga->harga . '!';
 								} else {
-									$msg = 'Data pada Row ' . $i + 1 . ' Column TahunHarga ' . $sheetData[$i][14] . ' sudah digunakan dengan Harga = ' . $cek_harga->harga . '! Tetapi Data pada row 1 s/d row ' . ($i - 1) . ' telah berhasil tersimpan.';
+									$msg = 'Data pada Row ' . ($i + 1) . ' Column TahunHarga ' . $sheetData[$i][14] . ' sudah digunakan dengan Harga = ' . $cek_harga->harga . '! Tetapi Data pada row 1 s/d row ' . ($i - 1) . ' telah berhasil tersimpan.';
 								}
 								$return = [
 									'status' => 500,

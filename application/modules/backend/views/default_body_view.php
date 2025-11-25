@@ -83,7 +83,7 @@
 					</div>
 					<ul class="sidebar-menu mt-5">
 						<li class="nav-item dropdown <?= $this->uri->segment(1) == 'dashboard' ? 'active' : '' ?>">
-							<a href="<?= base_url(); ?>" class="nav-link"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+							<a href="<?= base_url("dashboard"); ?>" class="nav-link"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
 						</li>
 
 						<?php if ((!empty($users['role_access']['kelompok_item']) && $users['role_access']['kelompok_item']['kelompok_item'] == 'on') || (!empty($users['role_access']['jenis_item']) && $users['role_access']['jenis_item']['jenis_item'] == 'on')) { ?>
