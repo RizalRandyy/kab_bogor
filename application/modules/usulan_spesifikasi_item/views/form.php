@@ -70,6 +70,25 @@
 														<input class="form-control" ng-minlength="8" ng-maxlength="13" id="harga" name="harga" ng-model="harga" ng-pattern="/^\d+$/" placeholder="Input Harga">
 													</div>
 												</div>
+												<div class="form-group row">
+													<label for="dokumen" class="col-sm-4 col-form-label text-sm">Dokumen</label>
+													<div class="col-sm-8">
+														<input type="file" class="form-control form-control-md text-sm" id="dokumen" name="dokumen" ng-model="dokumen">
+
+														<!-- Jika ada file lama, tampilkan link -->
+														<div ng-if="dokumen">
+															<a ng-href="{{urls}}resources/uploads/dokumen_usulan_ssh/{{dokumen}}" download class="btn btn-sm btn-success mt-2">
+																<i class="fas fa-download"></i> Download Dokumen Lama
+															</a>
+														</div>
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="tautan" class="col-sm-4 col-form-label text-sm">Tautan (Opsional)</label>
+													<div class="col-sm-8">
+														<input type="text" class="form-control form-control-sm text-sm" id="tautan" name="tautan" ng-model="tautan" placeholder="Input Tautan">
+													</div>
+												</div>
 											</form>
 										</div>
 									</div>

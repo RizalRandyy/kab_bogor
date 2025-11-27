@@ -6,7 +6,7 @@ class Daftar_dokumen_model extends CI_Model
         $start = ($params['offset'] - 1) * $params['limit'];
         $keyresult = (array)json_decode($params['keyword']);
 
-        $this->db->select('d.id, d.nama_dokumen, d.id_jenis_dokumen, j.jenis_dokumen as nama_jenis_dokumen, d.tahun, d.deskripsi, d.dokumen');
+        $this->db->select('d.id, d.nama_dokumen, d.nomor_dokumen, d.id_jenis_dokumen, j.jenis_dokumen as nama_jenis_dokumen, d.tahun, d.deskripsi, d.dokumen');
         $this->db->from('tb_detail_dokumen d');
         $this->db->join('tb_jenis_dokumen j', 'j.id = d.id_jenis_dokumen', 'left');
 
@@ -84,7 +84,7 @@ class Daftar_dokumen_model extends CI_Model
     public function getReqById($id, $users)
     {
         $id = decrypt_url($id);
-        $this->db->select('d.id, d.nama_dokumen, d.id_jenis_dokumen, j.jenis_dokumen as nama_jenis_dokumen, d.tahun, d.deskripsi, d.dokumen');
+        $this->db->select('d.id, d.nama_dokumen, d.nomor_dokumen, d.id_jenis_dokumen, j.jenis_dokumen as nama_jenis_dokumen, d.tahun, d.deskripsi, d.dokumen');
         $this->db->from('tb_detail_dokumen d');
         $this->db->join('tb_jenis_dokumen j', 'j.id = d.id_jenis_dokumen', 'left');
         $this->db->where('d.id', $id);
@@ -145,7 +145,7 @@ class Daftar_dokumen_model extends CI_Model
 
     public function getheader()
     {
-        $header  = array("No" => 'reset', "Nama Dokumen" => "nama_dokumen", "Jenis" => "nama_jenis_dokumen", "Tahun" => "tahun", "Deskripsi" => "deskripsi", "Download File" => "dokumen");
+        $header  = array("No" => 'reset', "Nama Dokumen" => "nama_dokumen", "Nomor Dokumen" => "nomor_dokumen","Jenis" => "nama_jenis_dokumen", "Tahun" => "tahun", "Deskripsi" => "deskripsi", "Download File" => "dokumen");
         return $header;
     }
 }

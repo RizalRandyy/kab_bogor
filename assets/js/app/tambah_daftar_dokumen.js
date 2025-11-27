@@ -58,6 +58,7 @@ mainApp
 						if (response.data.status == 200) {
 							$scope.loading = false;
 							$scope.nama_dokumen = response.data.data.nama_dokumen;
+							$scope.nomor_dokumen = response.data.data.nomor_dokumen;
 							$scope.id_jenis_dokumen = parseInt(response.data.data.id_jenis_dokumen);
 							$scope.tahun = response.data.data.tahun;
 							$scope.deskripsi = response.data.data.deskripsi;
@@ -87,9 +88,10 @@ mainApp
 
 		$scope.save = function () {
 			var namaDokumen = $('#nama_dokumen').val();
+			var nomorDokumen = $('#nomor_dokumen').val();
 			var idJenisDokumen = $scope.id_jenis_dokumen;
-			var tahun = $('#tahun').val();
 			var deskripsi = $('#deskripsi').val();
+			var tahun = $('#tahun').val();
 			var dokumen = $('#dokumen')[0].files[0];
 
 			if (namaDokumen == "") {
@@ -136,6 +138,7 @@ mainApp
 				formData.append("id", $scope.id);
 			}
 			formData.append("nama_dokumen", namaDokumen);
+			formData.append("nomor_dokumen", nomorDokumen);
 			formData.append("id_jenis_dokumen", idJenisDokumen);
 			formData.append("tahun", tahun);
 			formData.append("deskripsi", deskripsi);

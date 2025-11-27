@@ -45,6 +45,8 @@
 												<th class="text-center">Satuan</th>
 												<th class="text-center">Tahun</th>
 												<th class="text-center">Harga</th>
+												<th class="text-center">Download Dokumen</th>
+												<th class="text-center">Tautan</th>
 												<th class="text-center">OPD / Dinas Pengusul</th>
 												<?php if ($users['role_access']['spesifikasi_item']['accessedit_spesifikasi_item'] == 'on' || $users['role_access']['spesifikasi_item']['accessdelete_spesifikasi_item'] == 'on') { ?>
 													<th class="text-center"></th>
@@ -79,12 +81,26 @@
 												<td ng-bind="value.satuan"></td>
 												<td class="text-center" ng-bind="value.TahunHarga"></td>
 												<td class="text-right" ng-bind="value.harga"></td>
+												<td class="text-center">
+													<a ng-if="value.dokumen"
+														class="btn btn-primary btn-sm"
+														ng-href="<?= base_url('usulan_spesifikasi_item/download/') ?>{{value.dokumen}}">
+														<i class="fas fa-download"></i> Download
+													</a>
+													<span ng-if="!value.dokumen">-</span>
+												</td>
+												<td class="text-center">
+													<a ng-if="value.tautan"
+														ng-href="{{value.tautan}}" target="_blank" ng-bind="value.tautan">
+													</a>
+													<span ng-if="!value.dokumen">-</span>
+												</td>
 												<td ng-bind="value.namaOpd"></td>
 												<?php if ($users['role_access']['spesifikasi_item']['accessedit_spesifikasi_item'] == 'on' || $users['role_access']['spesifikasi_item']['accessdelete_spesifikasi_item'] == 'on') { ?>
 													<td class="text-center" style="white-space: nowrap;">
 
 														<span ng-if="value.status == 'disetujui'" class="badge badge-success">Disetujui</span>
-														
+
 														<?php if ($users['role_access']['kelola_usulan']['akses_ubah_status'] == 'on') { ?>
 															<a href="" class="btn btn-success btn-sm p-1" title="Setujui: {{value.idKelompok}}" ng-click="setujuiUsulan(value)" ng-if="value.status != 'disetujui'">
 																<i class="fas fa-check"></i>&nbsp;

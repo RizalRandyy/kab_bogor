@@ -19,9 +19,15 @@
 										<div class="col-md-6 col-lg-12">
 											<form enctype="multipart/form-data">
 												<div class="form-group row">
-													<label for="nama_dokumen" class="col-sm-4 col-form-label text-sm">Nama Dokumen</label>
+													<label for="nama_dokumen" class="col-sm-4 col-form-label text-sm">Judul</label>
 													<div class="col-sm-8">
 														<input type="text" class="form-control form-control-sm text-sm" id="nama_dokumen" name="nama_dokumen" ng-model="nama_dokumen" placeholder="Input Nama Dokumen">
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="nama_dokumen" class="col-sm-4 col-form-label text-sm">Nomor Dokumen</label>
+													<div class="col-sm-8">
+														<input type="text" class="form-control form-control-sm text-sm" id="nomor_dokumen" name="nomor_dokumen" ng-model="nomor_dokumen" placeholder="Input Nomor Dokumen">
 													</div>
 												</div>
 												<div class="form-group row">

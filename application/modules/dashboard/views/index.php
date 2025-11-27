@@ -122,7 +122,7 @@
 				<div class="row mt-2">
 					<div class="col-lg-6 col-md-6 col-sm-6" style="color:white; margin-top:25px; margin-bottom:25px;">
 						<h3><?= $title ?></h3>
-						<span>Data Master > Bidang Teknis</span>
+						<span>Dashboard</span>
 					</div>
 				</div>
 				<div id="page">

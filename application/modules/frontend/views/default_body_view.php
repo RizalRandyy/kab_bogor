@@ -50,12 +50,12 @@
 									<li class="has-dropdown">
 										<a href="#">Hi, <?= ucwords($users["full_name"]) ?></a>
 										<ul class="dropdown">
-											<?php 
-											// var_dump($users);
-											if (in_array($users['role_name'], ['Administrator', 'admin'])): ?>
+											
+											<?php if (in_array($users['role_name'], ['Administrator', 'admin'])): ?>
 												<li><a href="<?= base_url('dashboard'); ?>">Admin Panel</a></li>
+											<?php else: ?>
+												<li><a href="<?= base_url('opd'); ?>">Admin Panel</a></li>
 											<?php endif; ?>
-
 											<li><a href="<?= base_url("index.php/logout"); ?>">Keluar</a></li>
 										</ul>
 									</li>

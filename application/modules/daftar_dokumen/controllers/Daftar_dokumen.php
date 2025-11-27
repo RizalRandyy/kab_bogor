@@ -127,4 +127,17 @@ class Daftar_dokumen extends My_Controller
 			'data' => $data
 		]);
 	}
+
+	public function download_get($filename)
+	{
+		$this->load->helper('download');
+
+		$path = FCPATH . 'resources/uploads/dokumen/' . $filename;
+
+		if (file_exists($path)) {
+			force_download($path, NULL); // NULL biar ambil nama asli
+		} else {
+			show_404();
+		}
+	}
 }

@@ -13,6 +13,8 @@ class Usulan_spesifikasi_item_model extends CI_Model
         tb_usulan_spesifikasi_item.satuan,
         tb_usulan_spesifikasi_item.TahunHarga,
         tb_usulan_spesifikasi_item.harga,
+        tb_usulan_spesifikasi_item.dokumen,
+        tb_usulan_spesifikasi_item.tautan,
         tb_usulan_spesifikasi_item.idOpd,
         tb_usulan_spesifikasi_item.status,
         tb_kelompok_item.UraianKelompok,
@@ -164,16 +166,19 @@ class Usulan_spesifikasi_item_model extends CI_Model
     {
         $id = decrypt_url($id);
         $this->db->select('
-        tb_usulan_spesifikasi_item.id,
-        idJenisItem,
-        idSpesifikasi,
-        UraianSpesifikasi,
-        satuan,
-        TahunHarga,
-        harga,
-        tb_usulan_spesifikasi_item.idOpd,
-        tb_opd.namaOpd
-    ');
+            tb_usulan_spesifikasi_item.id,
+            idJenisItem,
+            idSpesifikasi,
+            UraianSpesifikasi,
+            satuan,
+            TahunHarga,
+            harga,
+            dokumen,
+            tautan,
+            tb_usulan_spesifikasi_item.idOpd,
+            tb_opd.namaOpd
+        ');
+
         $this->db->from('tb_usulan_spesifikasi_item');
         $this->db->join('tb_opd', 'tb_opd.idOpd = tb_usulan_spesifikasi_item.idOpd', 'left');
         $this->db->where('tb_usulan_spesifikasi_item.id', $id);
@@ -247,7 +252,7 @@ class Usulan_spesifikasi_item_model extends CI_Model
             'idJenisItem'      => $usulan->idJenisItem,
             'idSpesifikasi'    => $usulan->idSpesifikasi,
             'kodeKelompok'     => $usulan->kodeKelompok,
-            'UraianSpesifikasi'=> $usulan->UraianSpesifikasi,
+            'UraianSpesifikasi' => $usulan->UraianSpesifikasi,
             'satuan'           => $usulan->satuan,
             'updated_by'       => $user['id'],
             'updated_at'       => $now,
@@ -277,7 +282,7 @@ class Usulan_spesifikasi_item_model extends CI_Model
 
     public function getheader()
     {
-        $header  = array("No" => 'reset', "Kode Item" => "kodeKelompok", "Nama Kelompok" => "UraianKelompok", "Nama Jenis" => "NamaJenis", "Usaraian Spesifikasi" => "UraianSpesifikasi", "Satuan" => "satuan", "Tahun" => "TahunHarga", "Harga" => "harga", "Nama OPD / Dinas Pengusul" => "namaOpd");
+        $header  = array("No" => 'reset', "Kode Item" => "kodeKelompok", "Nama Kelompok" => "UraianKelompok", "Nama Jenis" => "NamaJenis", "Usaraian Spesifikasi" => "UraianSpesifikasi", "Satuan" => "satuan", "Tahun" => "TahunHarga", "Harga" => "harga", "dokumen" => "Download Dokumen", "tautan" => "Tautan","Nama OPD / Dinas Pengusul" => "namaOpd");
         return $header;
     }
 }

@@ -28,6 +28,21 @@ class Privilege_hook
 				'hspk',
 				'ssh',
 				'asb',
+				'opd',
+				'bidang_teknis',
+				'jenis_item',
+				'kelompok_item',
+				'spesifikasi_item',
+				'spesifikasi_harga',
+				'kegiatan_hspk',
+				'tahun_kegiatan_hspk',
+				'kegiatan_hspk_detail',
+				'kegiatan_asb',
+				'tahun_kegiatan_asb',
+				'usulan_spesifikasi_item',
+				'usulan_kegiatan_hspk',
+				'usulan_kegiatan_asb',
+				'usulan_kegiatan_asb_detail',
 			];
 			if (!in_array($role_name, ['administrator', 'admin'])) {
 				if (!in_array($module, $allowedForNonAdmin)) {

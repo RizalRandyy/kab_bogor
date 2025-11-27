@@ -39,7 +39,8 @@
 										<thead>
 											<tr>
 												<th>No</th>
-												<th class="text-center">Nama Dokumen</th>
+												<th class="text-center">Judul</th>
+												<th class="text-center">Nomor Dokumen</th>
 												<th class="text-center">Jenis</th>
 												<th class="text-center">Tahun</th>
 												<th class="text-center">Deskripsi</th>
@@ -71,6 +72,7 @@
 											<tr ng-hide="loading" dir-paginate="(key, value) in data|itemsPerPage:itemsPerPage" total-items="total_count" current-page="curPage" pagination-id="paginateID">
 												<td ng-bind="key+no"></td>
 												<td ng-bind="value.nama_dokumen"></td>
+												<td ng-bind="value.nomor_dokumen"></td>
 												<td ng-bind="value.nama_jenis_dokumen"></td>
 												<td ng-bind="value.tahun"></td>
 												<td ng-bind="value.deskripsi"
@@ -82,7 +84,7 @@
 												<td class="text-center">
 													<a ng-if="value.dokumen"
 														class="btn btn-primary btn-sm"
-														ng-href="<?= base_url('resources/uploads/dokumen/') ?>{{value.dokumen}}">
+														ng-href="<?= base_url('dokumen/download/') ?>{{value.dokumen}}">
 														<i class="fas fa-download"></i> Download
 													</a>
 													<span ng-if="!value.dokumen">-</span>

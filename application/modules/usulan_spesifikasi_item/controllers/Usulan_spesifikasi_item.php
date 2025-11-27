@@ -97,6 +97,40 @@ class Usulan_spesifikasi_item extends My_Controller
 		$params['updated_by'] = decrypt_url($this->data['users']['id']);
 		$params['updated_at'] = date('Y-m-d H:i:s');
 
+		if (!empty($_FILES['dokumen']['name'])) {
+			$config['upload_path']   = FCPATH . 'resources/uploads/dokumen_usulan_ssh/';
+			$config['allowed_types'] = 'pdf|doc|docx|xls|xlsx';
+			$config['max_size']      = 1000000; // 1GB
+
+			$this->load->library('upload', $config);
+
+			if ($this->upload->do_upload('dokumen')) {
+				$uploadData = $this->upload->data();
+				$params['dokumen'] = $uploadData['file_name'];
+
+				// === HAPUS FILE LAMA JIKA ADA ===
+				if (!empty($params['dokumen_lama'])) {
+					$oldFile = FCPATH . 'resources/uploads/dokumen_usulan_ssh/' . $params['dokumen_lama'];
+					if (file_exists($oldFile)) {
+						unlink($oldFile); // hapus file lama
+					}
+				}
+
+				unset($params['dokumen_lama']);
+			} else {
+				$this->response([
+					'status'  => 500,
+					'message' => $this->upload->display_errors()
+				], 500);
+				return;
+			}
+		} else {
+			if (!empty($params['dokumen_lama'])) {
+				$params['dokumen'] = $params['dokumen_lama'];
+			}
+			unset($params['dokumen_lama']);
+		}
+
 		$return = $this->Usulan_spesifikasi_item_model->saveData($params);
 
 		$this->response($return, $return['status']);
@@ -113,5 +147,18 @@ class Usulan_spesifikasi_item extends My_Controller
 	{
 		$return = $this->Usulan_spesifikasi_item_model->deleteReq($this->post('id', TRUE));
 		$this->response($return, $return['status']);
+	}
+
+	public function download_get($filename)
+	{
+		$this->load->helper('download');
+
+		$path = FCPATH . 'resources/uploads/dokumen_usulan_ssh/' . $filename;
+
+		if (file_exists($path)) {
+			force_download($path, NULL);
+		} else {
+			show_404();
+		}
 	}
 }

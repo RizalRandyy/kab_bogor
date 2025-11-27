@@ -59,8 +59,10 @@ mainApp
 						$scope.idSpesifikasi = response.data.data.idSpesifikasi;
 						$scope.UraianSpesifikasi = response.data.data.UraianSpesifikasi;
 						$scope.satuan = response.data.data.satuan;
-						$scope.tahun = response.data.data.tahun;
+						$scope.tahun = response.data.data.TahunHarga;
 						$scope.harga = response.data.data.harga;
+						$scope.dokumen = response.data.data.dokumen;
+						$scope.tautan = response.data.data.tautan;
 					} else {
 						Swal.close();
 						Swal.fire({
@@ -92,6 +94,8 @@ mainApp
 			var satuan = $('#satuan').val();
 			var tahun = $('#tahun').val();
 			var harga = $('#harga').val();
+			var dokumen = $('#dokumen')[0].files[0];
+			var tautan = $('#tautan').val();
 
 			if (kodeItem == null) {
 				$('#kodeItem').focus();
@@ -124,7 +128,7 @@ mainApp
 					icon: "warning",
 					title: 'Masukan Satuan!',
 				});
-			} 
+			}
 			else if (tahun == "") {
 				$('#tahun').focus();
 				return Toast.fire({
@@ -143,6 +147,12 @@ mainApp
 					icon: "warning",
 					title: 'Masukan Harga!',
 				});
+			} else if (dokumen == "") {
+				$('#dokumen').focus();
+				return Toast.fire({
+					icon: "warning",
+					title: 'Masukan Dokumen!',
+				});
 			}
 
 			var formData = new FormData();
@@ -157,6 +167,14 @@ mainApp
 			formData.append("satuan", satuan);
 			formData.append("TahunHarga", tahun);
 			formData.append("harga", harga);
+			var file = document.getElementById("dokumen").files[0];
+			if (file) {
+				formData.append("dokumen", file);
+			}
+			if ($scope.dokumen) {
+				formData.append("dokumen_lama", $scope.dokumen);
+			}
+			formData.append("tautan", tautan);
 
 			Swal.fire({
 				title: 'Loading...',
