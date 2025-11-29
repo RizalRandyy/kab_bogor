@@ -34,17 +34,17 @@
 									<li class="has-dropdown">
 										<a href="#">HSPK</a>
 										<ul class="dropdown">
-											<li><a href="<?= base_url("perkiraan_hps"); ?>">Perkiraan HSP</a></li>
 											<li><a href="<?= base_url("hspk"); ?>">Harga Satuan Pekerjaan (HSP) Kontruksi Umum</a></li>
 										</ul>
 									</li>
-									<li><a href="<?= base_url("dokumen"); ?>">Unduh</a></li>
 									<li class="has-dropdown">
 										<a href="#">ASB</a>
 										<ul class="dropdown">
 											<li><a href="<?= base_url("asb"); ?>">ASB Kontruksi Umum</a></li>
 										</ul>
 									</li>
+									<li><a href="<?= base_url("perkiraan_hps"); ?>">Kalkulator</a></li>
+									<li><a href="<?= base_url("dokumen"); ?>">Unduh</a></li>
 									<li>
 										<?php if (!empty($users['role_id'])) { ?>
 									<li class="has-dropdown">
