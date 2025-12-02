@@ -8,7 +8,7 @@
 							<input type="hidden" id="id" value="<?= $id ?>">
 							<div class="row">
 								<div class="col-lg-12 col-md-12 col-sm-12" style="margin-top:25px; margin-bottom:25px;">
-									<h3 class="text-center"><?= $title ?> <br>KONSTRUKSI UMUM</h3>
+									<h3 class="text-center">SIMULASI HARGA PERKIRAAN SENDIRI (HPS)<br>KONSTRUKSI UMUM</h3>
 								</div>
 
 								<div class="col-lg-12 col-md-12 col-sm-12">
@@ -16,7 +16,7 @@
 										<div class="col-md-6 col-lg-12">
 	                                        <form>
 	                                            <div class="form-group row">
-	                                                <label for="idKegiatan" class="col-sm-4 col-form-label text-sm">Tahun Pekerjaan</label>
+	                                                <label for="idKegiatan" class="col-sm-4 col-form-label text-sm">Harga Satuan Pokok Pekerjaan</label>
 	                                                <div class="col-sm-8">
 														<select class="form-control" id="idKegiatan" ng-model="idKegiatan">
 															<option value="" disabled>Pilih Tahun Pekerjaan</option>
@@ -47,7 +47,7 @@
 																		<th class="text-center">Kelompok Item</th>
 																		<th class="text-center">Harga</th>
 																		<th class="text-center"></th>
-																		<th class="text-center">Koefisien</th>
+																		<th class="text-center">Volume</th>
 																		<th class="text-center">Total</th>
 																	</tr>
 																</thead>

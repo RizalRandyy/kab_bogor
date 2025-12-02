@@ -30,7 +30,7 @@ class Ssh extends My_Controller
 	{
 		$params = $this->get(NULL, TRUE);
 
-		$year = date("Y");
+		$year = 2026;
 
 		$keyresult = (array)json_decode($params['keyword']);
 

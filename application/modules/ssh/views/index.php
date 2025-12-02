@@ -7,11 +7,20 @@
 		width: 25px !important;
 	}
 
-	@media (min-width: 992px) {
-	.modal-lg, .modal-xl {
-	    max-width: 1200px;
+	select.form-control {
+		height: auto !important;
+		padding-top: 6px !important;
+		padding-bottom: 6px !important;
+		line-height: normal !important;
 	}
-}
+
+	@media (min-width: 992px) {
+
+		.modal-lg,
+		.modal-xl {
+			max-width: 1200px;
+		}
+	}
 </style>
 <div ng-controller="<?= $page ?>" id="<?= $page ?>">
 	<section class="section" style="margin-bottom:125px">
@@ -22,7 +31,7 @@
 						<div class="row">
 							<div class="col-lg-12 col-md-12 col-sm-12">
 								<div class="col-lg-12 col-md-12 col-sm-12" style="margin-top:25px; margin-bottom:25px;">
-									<h3 class="text-center">SSH & SBU <br>KONSTRUKSI UMUM <br> Tahun <span ng-bind="year"></span></h3>
+									<h3 class="text-center">SSH & SBU <br>KONSTRUKSI UMUM</h3>
 								</div>
 								<div class="col-lg-12 col-md-12 col-sm-12">
 									<div class="selectgroup w-100">
@@ -34,6 +43,20 @@
 											<input type="radio" name="input_tab" ng-click="tab('sbu')" value="SBU" ng-model="input_tab" class="selectgroup-input">
 											<span class="selectgroup-button selectgroup-button-icon">SBU</span>
 										</label>
+
+										<div class="col-auto">
+											<label class="mr-2">Tampilkan</label>
+											<select class="form-control d-inline-block" style="width: 80px;"
+												ng-model="itemsPerPage"
+												ng-change="changeItemPerPage()">
+												<option value="5">5</option>
+												<option value="10">10</option>
+												<option value="20">20</option>
+												<option value="50">50</option>
+												<option value="100">100</option>
+											</select>
+											<span class="ml-2">data</span>
+										</div>
 									</div>
 								</div>
 								<div class="table-responsive">
@@ -61,7 +84,7 @@
 													<input ng-if="b == 'TahunHarga'" class="form-control no-margin form-filter " id="year" ng-model="search_Method.val[b]" ng-change="searchMethod(b, search_Method.val[b])" ng-model-options="{debounce: 2000}">
 												</td>
 												<!-- <td class="no-padding px-1"></td> -->
-											</tr> 
+											</tr>
 											<tr ng-show="message != null">
 												<td colspan="8" class="text-center" ng-bind="message"></td>
 											</tr>
@@ -90,8 +113,18 @@
 									</table>
 								</div>
 
-								<dir-pagination-controls direction-links="true" pagination-id="paginateID" boundary-links="true" on-page-change="getData(newPageNumber)">
-								</dir-pagination-controls>
+								<div class="row mb-3" style="align-items: center;">
+									<div class="col-md-10 d-flex">
+										<dir-pagination-controls
+											max-size="10"
+											direction-links="true"
+											boundary-links="true"
+											pagination-id="paginateID"
+											on-page-change="getData(newPageNumber)">
+										</dir-pagination-controls>
+									</div>
+								</div>
+
 							</div>
 						</div>
 					</div>
@@ -115,10 +148,10 @@
 							<div class="col-lg-12 col-md-12 col-sm-12">
 								<div class="row p-0">
 									<div class="col-md-12 col-lg-12">
-                                        <form>
-                                            <div class="row">
+										<form>
+											<div class="row">
 												<div class="col-lg-12 col-md-12 col-sm-12">
-													
+
 													<div class="table-responsive">
 														<table class="table table-striped table-md">
 															<thead>
@@ -166,8 +199,8 @@
 													</div>
 												</div>
 											</div>
-                                        </form>
-                                    </div>
+										</form>
+									</div>
 								</div>
 							</div>
 							<div class="col-12 col-md-12 col-lg-12 text-right">
