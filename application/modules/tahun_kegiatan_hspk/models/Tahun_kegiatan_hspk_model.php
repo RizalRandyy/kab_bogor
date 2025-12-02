@@ -145,7 +145,7 @@ class Tahun_kegiatan_hspk_model extends CI_Model
     public function getReqById($id, $users)
     {
         $id = decrypt_url($id);
-        $this->db->select('id,idKegiatan,tahunPekerjaan')
+        $this->db->select('id,idKegiatan,tahunPekerjaan,perbub_nomor')
             ->where('id', $id);
 
         $data =  $this->db->get('tb_thn_kegiatan')->row();

@@ -59,6 +59,7 @@ mainApp
 					$scope.kodeKelompok = response.data.data.kodeKelompok;
 					$scope.tahun = response.data.data.TahunHarga;
 					$scope.harga = response.data.data.harga;
+					$scope.perbub_nomor = response.data.data.perbub_nomor;
 					$scope.satuan = response.data.data.satuan;
 				}else{
 					Swal.close();
@@ -88,6 +89,7 @@ mainApp
 		var idSpesifikasi = $('#idSpesifikasi').val();
 		var tahun = $('#tahun').val();
 		var harga = $('#harga').val();
+		var perbub_nomor = $('#perbub_nomor').val();
 
 		if (idSpesifikasi == null) {
 			$('#idSpesifikasi').focus();
@@ -124,6 +126,7 @@ mainApp
 		formData.append("idSpesifikasi", idSpesifikasi);
 		formData.append("TahunHarga", tahun);
 		formData.append("harga", harga);
+		formData.append("perbub_nomor", perbub_nomor);
 
 		Swal.fire({
 			title: 'Loading...',

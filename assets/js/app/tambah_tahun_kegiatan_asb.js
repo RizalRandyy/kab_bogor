@@ -57,6 +57,7 @@ mainApp
                     $scope.loading = false;
                     $scope.idASB = response.data.data.idASB;
                     $scope.tahun = response.data.data.tahunASB;
+                    $scope.perbub_nomor = response.data.data.perbub_nomor;
                 }else{
                     Swal.close();
                     Swal.fire({
@@ -84,6 +85,7 @@ mainApp
     $scope.save = function () {
         var idASB = $('#idASB').val();
         var tahun = $('#tahun').val();
+        var perbub_nomor = $('#perbub_nomor').val();
 
         if (idASB == null) {
             $('#idASB').focus();
@@ -112,6 +114,7 @@ mainApp
         }
         formData.append("idASB", idASB);
         formData.append("tahunASB", tahun);
+        formData.append("perbub_nomor", perbub_nomor);
 
         Swal.fire({
             title: 'Loading...',

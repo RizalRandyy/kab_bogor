@@ -49,6 +49,13 @@
 
 													</div>
 												</div>
+												<div class="form-group row">
+													<label for="perbub_nomor" class="col-sm-4 col-form-label text-sm">Perbub Nomor</label>
+													<div class="input-group col-sm-8">
+														<input class="form-control" id="perbub_nomor" name="perbub_nomor" ng-model="perbub_nomor" placeholder="Input Nomor Perbub">
+
+													</div>
+												</div>
 											</form>
 										</div>
 									</div>

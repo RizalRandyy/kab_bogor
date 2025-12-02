@@ -145,7 +145,7 @@ class Spesifikasi_harga_model extends CI_Model
     public function getReqById($id, $users)
     {
         $id = decrypt_url($id);
-        $this->db->select('id,idSpesifikasi,kodeKelompok,TahunHarga,harga')
+        $this->db->select('id,idSpesifikasi,kodeKelompok,TahunHarga,harga,perbub_nomor')
             ->where('id', $id);
 
         $data =  $this->db->get('tb_thn_harga')->row();

@@ -146,7 +146,7 @@ class Tahun_kegiatan_asb_model extends CI_Model
     public function getReqById($id, $users)
     {
         $id = decrypt_url($id);
-        $this->db->select('id,idASB,tahunASB')
+        $this->db->select('id,idASB,tahunASB,perbub_nomor')
             ->where('id', $id);
 
         $data =  $this->db->get('tb_standar_biaya_thn')->row();
