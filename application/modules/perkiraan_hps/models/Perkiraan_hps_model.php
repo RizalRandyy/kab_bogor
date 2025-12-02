@@ -1,31 +1,31 @@
 <?php
 class Perkiraan_hps_model extends CI_Model
 {
-    public function getData($params,$users)
+    public function getData($params, $users)
     {
         $start = ($params['offset'] - 1) * $params['limit'];
         $keyresult = (array)json_decode($params['keyword']);
 
         $this->db->select('tb_thn_pekerjaan_detail.id,tahunPekerjaan,tb_thn_kegiatan.kodeKelompok,tb_kegiatan.UraianKegiatan,tb_kegiatan.satuan,id_thn_harga,total_item')
-                ->join('tb_thn_kegiatan', 'tb_thn_pekerjaan_detail.id_thn_kegiatan = tb_thn_kegiatan.id')
-                ->join('tb_kegiatan', 'tb_thn_kegiatan.idKegiatan = tb_kegiatan.id')
-                ->where('id_thn_harga !=','[]')
-                ->where('id_thn_harga is not null', null);
+            ->join('tb_thn_kegiatan', 'tb_thn_pekerjaan_detail.id_thn_kegiatan = tb_thn_kegiatan.id')
+            ->join('tb_kegiatan', 'tb_thn_kegiatan.idKegiatan = tb_kegiatan.id')
+            ->where('id_thn_harga !=', '[]')
+            ->where('id_thn_harga is not null', null);
 
         if (!empty($keyresult)) {
             foreach ($keyresult as $key => $value) {
-                if($value){
-                    if($key == 'UraianKegiatan'){
+                if ($value) {
+                    if ($key == 'UraianKegiatan') {
                         $this->db->like('tb_kegiatan.UraianKegiatan', $value);
-                    } elseif($key == 'satuan'){
+                    } elseif ($key == 'satuan') {
                         $this->db->like('tb_kegiatan.satuan', $value);
-                    } else{
+                    } else {
                         $this->db->like($key, $value);
                     }
                 }
             }
         }
-        
+
         $tot = clone $this->db;
         $this->db->order_by('tb_thn_kegiatan.kodeKelompok ASC, tb_thn_kegiatan.tahunPekerjaan DESC');
         $get_data = $this->db->limit($params['limit'], $start)->get('tb_thn_pekerjaan_detail')->result_array();
@@ -40,17 +40,17 @@ class Perkiraan_hps_model extends CI_Model
                 $total_satuan = [];
 
                 foreach ($id_harga as $ky => $val) {
-                    $data_harga = $this->db->query("SELECT SUM(harga * ".$total_item[$ky].") as total FROM tb_thn_harga WHERE id = '".$val."'")->first_row();
+                    $data_harga = $this->db->query("SELECT SUM(harga * " . $total_item[$ky] . ") as total FROM tb_thn_harga WHERE id = '" . $val . "'")->first_row();
                     $total_satuan[] = $data_harga->total;
                 }
                 $total = array_sum($total_satuan);
 
-                $get_data[$key]['harga'] = 'Rp.'.number_format($total, 0, '', '.');
+                $get_data[$key]['harga'] = 'Rp.' . number_format($total, 0, '', '.');
                 unset($get_data[$key]['id_thn_harga']);
                 unset($get_data[$key]['total_item']);
             }
         }
-        
+
         return [
             'count' => $get_count,
             'data' => !empty($get_data) ? $get_data : [],
@@ -61,22 +61,22 @@ class Perkiraan_hps_model extends CI_Model
     public function getkegiatan()
     {
         $kegiatan = $this->db->select('tb_thn_kegiatan.id,kodeKelompok,UraianKegiatan,satuan,tahunPekerjaan')
-                            ->join("tb_kegiatan", "tb_thn_kegiatan.idKegiatan = tb_kegiatan.id")
-                            ->order_by('kodeKelompok')
-                            ->order_by('tahunPekerjaan', 'DESC')
-                            ->get('tb_thn_kegiatan')->result_array();
+            ->join("tb_kegiatan", "tb_thn_kegiatan.idKegiatan = tb_kegiatan.id")
+            ->order_by('kodeKelompok')
+            ->order_by('tahunPekerjaan', 'DESC')
+            ->get('tb_thn_kegiatan')->result_array();
 
         $kel_spesifikasi = $this->db->select("tb_thn_harga.id,tb_spesifikasi_item.kodeKelompok,TahunHarga,harga,UraianSpesifikasi,satuan,tb_jenis_item.NamaJenis,tb_kelompok_item.tipe,tb_kelompok_item.UraianKelompok")
-                            ->join("tb_spesifikasi_item", "tb_thn_harga.idSpesifikasi = tb_spesifikasi_item.id")
-                            ->join("tb_jenis_item", "tb_spesifikasi_item.idJenisItem = tb_jenis_item.id")
-                            ->join("tb_kelompok_item", "tb_jenis_item.idKelompokItem = tb_kelompok_item.id")
-                            ->order_by('tb_spesifikasi_item.kodeKelompok')
-                            ->order_by('TahunHarga', 'DESC')
-                            ->get('tb_thn_harga')->result_array();
+            ->join("tb_spesifikasi_item", "tb_thn_harga.idSpesifikasi = tb_spesifikasi_item.id")
+            ->join("tb_jenis_item", "tb_spesifikasi_item.idJenisItem = tb_jenis_item.id")
+            ->join("tb_kelompok_item", "tb_jenis_item.idKelompokItem = tb_kelompok_item.id")
+            ->order_by('tb_spesifikasi_item.kodeKelompok')
+            ->order_by('TahunHarga', 'DESC')
+            ->get('tb_thn_harga')->result_array();
 
         if (!empty($kel_spesifikasi)) {
             foreach ($kel_spesifikasi as $key => $value) {
-                $kel_spesifikasi[$key]['harga'] = 'Rp.'.number_format($value['harga'], 0, '', '.');
+                $kel_spesifikasi[$key]['harga'] = 'Rp.' . number_format($value['harga'], 0, '', '.');
                 $kel_spesifikasi[$key]['value_harga'] = $value['harga'];
             }
         }
@@ -120,52 +120,70 @@ class Perkiraan_hps_model extends CI_Model
         }
     }
 
-    public function getReqById($id)
+    public function getHargaById($id)
     {
-        $data = "";
-        $qry = $this->db->select("tb_thn_harga.id,tb_spesifikasi_item.kodeKelompok,TahunHarga,harga,UraianSpesifikasi,satuan,tb_jenis_item.NamaJenis,tb_kelompok_item.tipe,tb_kelompok_item.UraianKelompok")
-                            ->join("tb_spesifikasi_item", "tb_thn_harga.idSpesifikasi = tb_spesifikasi_item.id")
-                            ->join("tb_jenis_item", "tb_spesifikasi_item.idJenisItem = tb_jenis_item.id")
-                            ->join("tb_kelompok_item", "tb_jenis_item.idKelompokItem = tb_kelompok_item.id")
-                            ->where("tb_thn_harga.id",$id)
-                            ->order_by('tb_spesifikasi_item.kodeKelompok')
-                            ->get('tb_thn_harga')->first_row();
-
-        if($qry){
-            $data = $qry->kodeKelompok.' - '.$qry->UraianKelompok.' - '.$qry->NamaJenis.' - '.$qry->UraianSpesifikasi.' - '.$qry->satuan.' - ('.$qry->tipe.') - '.$qry->TahunHarga;
-        }
-
-        return $data;
+        return $this->db->select("
+            tb_thn_harga.id,
+            tb_spesifikasi_item.kodeKelompok,
+            tb_spesifikasi_item.UraianSpesifikasi,
+            tb_spesifikasi_item.satuan,
+            tb_jenis_item.NamaJenis,
+            tb_kelompok_item.UraianKelompok,
+            tb_kelompok_item.tipe,
+            tb_thn_harga.TahunHarga,
+            tb_thn_harga.harga
+        ")
+            ->join("tb_spesifikasi_item", "tb_thn_harga.idSpesifikasi = tb_spesifikasi_item.id")
+            ->join("tb_jenis_item", "tb_spesifikasi_item.idJenisItem = tb_jenis_item.id")
+            ->join("tb_kelompok_item", "tb_jenis_item.idKelompokItem = tb_kelompok_item.id")
+            ->where("tb_thn_harga.id", $id)
+            ->get("tb_thn_harga")->row();
     }
 
+
+    public function getDetailByKegiatan($id)
+    {
+        $row = $this->db->select('id_thn_harga,total_item,tb_thn_kegiatan.kodeKelompok,UraianKegiatan,satuan,tahunPekerjaan')
+            ->join('tb_thn_kegiatan', 'tb_thn_kegiatan.id = tb_thn_pekerjaan_detail.id_thn_kegiatan')
+            ->join('tb_kegiatan', 'tb_kegiatan.id = tb_thn_kegiatan.idKegiatan')
+            ->where('tb_thn_pekerjaan_detail.id_thn_kegiatan', $id)
+            ->get('tb_thn_pekerjaan_detail')
+            ->row();
+
+        return [
+            'detail_ids'   => json_decode($row->id_thn_harga),
+            'total_item'   => json_decode($row->total_item),
+            'kegiatan_text' => $row->kodeKelompok . ' - ' . $row->UraianKegiatan . ' - (' . $row->satuan . ') - ' . $row->tahunPekerjaan
+        ];
+    }
 
     public function deleteReq($id)
     {
         $id = decrypt_url($id);
         if ($this->db->delete('tb_standar_biaya_thn_detail', ['id' => $id])) {
             $cek = $this->db->select('id,id_thn_pekerjaan_detail')
-                            ->like('id_thn_pekerjaan_detail', '"'.$id.'"')
-                            ->get('tb_standar_biaya_thn_detail')
-                            ->result_array();
+                ->like('id_thn_pekerjaan_detail', '"' . $id . '"')
+                ->get('tb_standar_biaya_thn_detail')
+                ->result_array();
 
-            if($cek){
+            if ($cek) {
                 foreach ($cek as $key => $value) {
                     $id_thn_pekerjaan_detail = json_decode($value['id_thn_pekerjaan_detail']);
                     $thn_harga = [];
                     $banyak_item = [];
 
                     foreach ($id_thn_pekerjaan_detail as $ky => $val) {
-                        if($val != $id){
+                        if ($val != $id) {
                             $thn_harga[] = $val;
                         }
                     }
-                    $data[] = ['id' => $value['id'],
-                            'id_thn_pekerjaan_detail' => json_encode($thn_harga)
-                        ];
+                    $data[] = [
+                        'id' => $value['id'],
+                        'id_thn_pekerjaan_detail' => json_encode($thn_harga)
+                    ];
                 }
 
                 $this->db->update_batch('tb_standar_biaya_thn_detail', $data, 'id');
-
             }
 
             return [
@@ -180,8 +198,9 @@ class Perkiraan_hps_model extends CI_Model
         ];
     }
 
-    public function getheader(){
-        $header  = array("No" => 'reset', "Kode Item" => "kodeKelompok", "Uraian Kegiatan" => "UraianKegiatan", "Satuan" => "satuan", "Tahun" => "tahunPekerjaan",);  
+    public function getheader()
+    {
+        $header  = array("No" => 'reset', "Kode Item" => "kodeKelompok", "Uraian Kegiatan" => "UraianKegiatan", "Satuan" => "satuan", "Tahun" => "tahunPekerjaan",);
         return $header;
     }
 }

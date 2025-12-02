@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * CodeIgniter DomPDF Library
  *
@@ -6,15 +6,27 @@
  */
 
 use Dompdf\Dompdf;
-class Pdf extends Dompdf{
-    
+use Dompdf\Options;
+
+class Pdf extends Dompdf
+{
+
     /**
      * PDF filename & attachment setting
      */
     public $filename;
     public $attachment;
-    public function __construct(){
-        parent::__construct();
+    public function __construct()
+    {
+        $options = new Options();
+        $options->set('isRemoteEnabled', TRUE);
+        $options->set('isHtml5ParserEnabled', TRUE);
+        $options->set('isPhpEnabled', TRUE);
+        $options->set('defaultFont', 'Helvetica');
+
+        $options->set('chroot', FCPATH);
+
+        parent::__construct($options);
         $this->attachment = false;
         $this->filename = "laporan.pdf";
     }
@@ -39,7 +51,8 @@ class Pdf extends Dompdf{
      * @param    array    $data The view data
      * @return    void
      */
-    public function load_view($view, $data = array()){
+    public function load_view($view, $data = array())
+    {
         $html = $this->ci()->load->view($view, $data, TRUE);
 
         $this->load_html($html);
@@ -49,7 +62,8 @@ class Pdf extends Dompdf{
         $this->stream($this->filename, array("Attachment" => $this->attachment));
     }
 
-    public function load_view_for_zip($view, $data = array()){
+    public function load_view_for_zip($view, $data = array())
+    {
         $html = $this->ci()->load->view($view, $data, TRUE);
 
         $this->load_html($html);
