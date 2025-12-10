@@ -1,5 +1,5 @@
 <?php
-class Perkiraan_hps_model extends CI_Model
+class Rab_model extends CI_Model
 {
     public function getData($params, $users)
     {
@@ -60,54 +60,30 @@ class Perkiraan_hps_model extends CI_Model
 
     public function getkegiatan()
     {
-        $kegiatan = $this->db->select('tk.id,kodeKelompok,UraianKegiatan,satuan,tahunPekerjaan')
-            ->from("tb_thn_kegiatan tk")
-            ->join("tb_kegiatan k", "tk.idKegiatan = k.id")
+        $kegiatan = $this->db->select('tb_thn_kegiatan.id,kodeKelompok,UraianKegiatan,satuan,tahunPekerjaan')
+            ->join("tb_kegiatan", "tb_thn_kegiatan.idKegiatan = tb_kegiatan.id")
             ->order_by('kodeKelompok')
             ->order_by('tahunPekerjaan', 'DESC')
-            ->get()->result_array();
+            ->get('tb_thn_kegiatan')->result_array();
 
-        $kel_spesifikasi = $this->db->select("
-            k.id AS id_kelompok,
-            k.idKelItem AS kodeKelItem,
-            k.UraianKelompok,
-            k.tipe,
-            k.kriteria,
+        $kel_spesifikasi = $this->db->select("tb_thn_harga.id,tb_spesifikasi_item.kodeKelompok,TahunHarga,harga,UraianSpesifikasi,satuan,tb_jenis_item.NamaJenis,tb_kelompok_item.tipe,tb_kelompok_item.UraianKelompok")
+            ->join("tb_spesifikasi_item", "tb_thn_harga.idSpesifikasi = tb_spesifikasi_item.id")
+            ->join("tb_jenis_item", "tb_spesifikasi_item.idJenisItem = tb_jenis_item.id")
+            ->join("tb_kelompok_item", "tb_jenis_item.idKelompokItem = tb_kelompok_item.id")
+            ->order_by('tb_spesifikasi_item.kodeKelompok')
+            ->order_by('TahunHarga', 'DESC')
+            ->get('tb_thn_harga')->result_array();
 
-            j.id AS id_jenis,
-            j.NamaJenis,
-
-            s.id AS id_spesifikasi,
-            s.kodeKelompok,
-            s.UraianSpesifikasi,
-            s.satuan,
-
-            h.id AS id_harga,
-            h.TahunHarga,
-            h.harga AS value_harga
-        ")
-
-            ->from("tb_kelompok_item k")
-            ->join("tb_jenis_item j", "j.idKelompokItem = k.id", "left")
-            ->join("tb_spesifikasi_item s", "s.idJenisItem = j.id", "left")
-            ->join("tb_thn_harga h", "h.idSpesifikasi = s.id", "left")
-
-            ->order_by("k.tipe ASC")
-            ->order_by("k.kriteria ASC")
-            ->order_by("k.idKelItem ASC")
-
-            ->get()
-            ->result_array();
-
-
-        // Format harga
-        foreach ($kel_spesifikasi as &$row) {
-            $row['harga'] = $row['value_harga'] ? 'Rp.' . number_format($row['value_harga'], 0, '', '.') : '-';
+        if (!empty($kel_spesifikasi)) {
+            foreach ($kel_spesifikasi as $key => $value) {
+                $kel_spesifikasi[$key]['harga'] = 'Rp.' . number_format($value['harga'], 0, '', '.');
+                $kel_spesifikasi[$key]['value_harga'] = $value['harga'];
+            }
         }
 
         return [
-            'kegiatan' => $kegiatan ?: [],
-            'kel_spesifikasi' => $kel_spesifikasi ?: []
+            'kegiatan' => !empty($kegiatan) ? $kegiatan : [],
+            'kel_spesifikasi' => !empty($kel_spesifikasi) ? $kel_spesifikasi : []
         ];
     }
 

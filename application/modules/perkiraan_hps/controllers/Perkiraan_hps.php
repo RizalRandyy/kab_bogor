@@ -1,5 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-
+require('././assets/plugins/SpreadsheetExcel/vendor/autoload.php');
 class Perkiraan_hps extends My_Controller
 {
 	function __construct()
@@ -48,7 +48,7 @@ class Perkiraan_hps extends My_Controller
 		$this->response($data, 200);
 	}
 
-	public function saveData_get()
+	public function downloadExcel()
 	{
 		$params = $this->get(NULL, TRUE);
 
@@ -61,52 +61,114 @@ class Perkiraan_hps extends My_Controller
 		$detailItems = [];
 		$total_harga = [];
 
-		foreach ($id_thn_harga as $key => $idHarga) {
+		foreach ($id_thn_harga as $i => $idHarga) {
 
 			$item = $this->Perkiraan_hps_model->getHargaById($idHarga);
-			$detailItems[$key] = $item;
+			$detailItems[] = $item;
 
-			$total_harga[$key] = $harga_satuan[$key] * $total_item[$key];
+			$total_harga[$i] = floatval($harga_satuan[$i]) * floatval($total_item[$i]);
 		}
 
-		$kegiatan = $this->db->select("kodeKelompok,UraianKegiatan,satuan,tahunPekerjaan")
+		$kegiatan = $this->db
+			->select("kodeKelompok,UraianKegiatan,satuan,tahunPekerjaan")
 			->join("tb_kegiatan", "tb_kegiatan.id = tb_thn_kegiatan.idKegiatan")
 			->where("tb_thn_kegiatan.id", $idKegiatan)
 			->get("tb_thn_kegiatan")->row();
 
-		$kegiatan_text =
-			$kegiatan->kodeKelompok . ' - ' .
-			$kegiatan->UraianKegiatan . ' - (' .
-			$kegiatan->satuan . ') - ' .
+		$judul =
+			$kegiatan->kodeKelompok . " - " .
+			$kegiatan->UraianKegiatan . " (" . $kegiatan->satuan . ") - " .
 			$kegiatan->tahunPekerjaan;
 
-		$total_percent = (array_sum($total_harga) / 100) * $percent;
-		$total_all = array_sum($total_harga) + $total_percent;
+		$jumlah_total = array_sum($total_harga);
+		$total_percent = ($jumlah_total * $percent) / 100;
+		$total_all = $jumlah_total + $total_percent;
 
-		$result['data'] = [
-			'kegiatan_text' => $kegiatan_text,
-			'id_thn_harga' => $detailItems,
-			'harga_satuan' => $harga_satuan,
-			'total_item' => $total_item,
-			'total_harga' => $total_harga,
-			'jumlah_total' => array_sum($total_harga),
-			'percent' => $percent,
-			'total_percent' => $total_percent,
-			'total_all' => $total_all,
-			'updated_by' => $this->data['users']['full_name']
-		];
+		if (ob_get_length()) ob_end_clean();
 
-		$logoPath = FCPATH . 'assets/img/logo-pemkab-bogor.png';
-		$logoData = base64_encode(file_get_contents($logoPath));
-		$mime = mime_content_type($logoPath);
+		error_reporting(0);
+		ini_set('display_errors', 0);
+		require FCPATH . 'assets/plugins/SpreadsheetExcel/vendor/autoload.php';
 
-		$result['data']['logo'] = "data:$mime;base64,$logoData";
+		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
 
-		$this->load->library('pdf');
-		$this->pdf->setPaper('A4', 'potrait');
-		$this->pdf->set_option('isRemoteEnabled', TRUE);
-		$this->pdf->filename  = "Simulasi Perkiraan HSP Kabupaten Bogor.pdf";
-		$this->pdf->attachment = true;
-		$this->pdf->load_view('report/perkiraan_hps', $result);
+		$sheet->setCellValue('A1', "SIMULASI PERKIRAAN HPS");
+		$sheet->mergeCells('A1:F1');
+		$sheet->getStyle('A1')->getFont()->setBold(true)->setSize(16);
+		$sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+		$sheet->setCellValue('A2', $judul);
+		$sheet->mergeCells('A2:F2');
+		$sheet->getStyle('A2')->getFont()->setBold(true);
+		$sheet->getStyle('A2')->getAlignment()->setHorizontal('center');
+
+		$sheet->setCellValue('A4', 'No');
+		$sheet->setCellValue('B4', 'Uraian');
+		$sheet->setCellValue('C4', 'Sat');
+		$sheet->setCellValue('D4', 'Volume');
+		$sheet->setCellValue('E4', 'Harga Satuan');
+		$sheet->setCellValue('F4', 'Jumlah Harga');
+
+		$sheet->getStyle('A4:F4')->getFont()->setBold(true);
+		$sheet->getStyle('A4:F4')->getAlignment()->setHorizontal('center');
+		$sheet->getStyle('A4:F4')->getBorders()->getAllBorders()->setBorderStyle('thin');
+
+		$row = 5;
+		foreach ($detailItems as $i => $item) {
+
+			$sheet->setCellValue("A$row", $i + 1);
+			$sheet->setCellValue("B$row", $item->UraianSpesifikasi);
+			$sheet->setCellValue("C$row", $item->satuan);
+			$sheet->setCellValue("D$row", $total_item[$i]);
+			$sheet->setCellValue("E$row", $harga_satuan[$i]);
+			$sheet->setCellValue("F$row", $total_harga[$i]);
+
+			$sheet->getStyle("A$row:F$row")->getBorders()->getAllBorders()->setBorderStyle('thin');
+
+			$row++;
+		}
+
+		$sheet->setCellValue("E$row", "Jumlah");
+		$sheet->setCellValue("F$row", $jumlah_total);
+		$sheet->getStyle("E$row")->getFont()->setBold(true);
+
+		$row++;
+
+		$sheet->setCellValue("E$row", "Biaya Umum + Profit ($percent%)");
+		$sheet->setCellValue("F$row", $total_percent);
+
+		$row++;
+
+		$sheet->setCellValue("E$row", "TOTAL");
+		$sheet->setCellValue("F$row", $total_all);
+		$sheet->getStyle("E$row")->getFont()->setBold(true);
+
+		// Format angka ribuan
+		$sheet->getStyle("D5:F$row")
+			->getNumberFormat()
+			->setFormatCode('#,##0');
+
+		// Auto width
+		foreach (range('A', 'F') as $col) {
+			$sheet->getColumnDimension($col)->setAutoSize(true);
+		}
+
+		// ===================
+		// OUTPUT FILE
+		// ===================
+		$filename = "Simulasi-HPS.xlsx";
+
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="Simulasi-HPS.xlsx"');
+		header('Cache-Control: max-age=0');
+
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+		// Wajib:
+		if (ob_get_length()) ob_end_clean();
+
+		$writer->save('php://output');
+		exit;
 	}
 }

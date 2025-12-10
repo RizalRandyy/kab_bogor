@@ -31,14 +31,14 @@
 			<img src="<?= $data['logo'] ?>" style="width:80px;">
 		<?php endif; ?>
 		<h2>
-			SIMULASI PERKIRAAN HPS <br> Kabupaten Bogor <br> <?= date("d M Y") ?>
+			RENCANA ANGGARAN BIAYA (RAB) <br> Kabupaten Bogor <br> <?= date("d M Y") ?>
 		</h2>
 		<hr>
 	</header>
 
 	<article>
 
-		<p>Simulasi Perkiraan HPS</p>
+		<p>Rencana Anggaran Biaya</p>
 
 		<table>
 			<tr>

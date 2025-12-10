@@ -58,6 +58,9 @@ mainApp
 						$scope.idKegiatan = response.data.data.idKegiatan;
 						$scope.tahun = response.data.data.tahunPekerjaan;
 						$scope.perbub_nomor = response.data.data.perbub_nomor;
+						if ($scope.tahun && $scope.tahun.length === 4) {
+							$scope.onChangeTahun();
+						}
 					} else {
 						Swal.close();
 						Swal.fire({
@@ -81,6 +84,39 @@ mainApp
 		} else {
 			$scope.getData();
 		}
+
+		$(document).ready(function () {
+			$('#tahun').on('change', function () {
+				var val = $(this).val();
+
+				var scope = angular.element($('#tahun')).scope();
+				scope.$apply(function () {
+					scope.tahun = val;
+
+					if (scope.onChangeTahun) {
+						scope.onChangeTahun();
+					}
+				});
+			});
+		});
+
+		$scope.onChangeTahun = function () {
+			let tahun = $scope.tahun;
+
+			if (!tahun || tahun.length !== 4) return;
+
+			httpHandler.send({
+				method: "GET",
+				url: urls + 'spesifikasi_harga/getPerbub',
+				params: { tahun: tahun }
+			}).then(function (res) {
+				if (res.data.status == 200) {
+					$scope.perbub_nomor = res.data.nomor_dokumen;
+				} else {
+					$scope.perbub_nomor = "";
+				}
+			});
+		};
 
 		$scope.save = function () {
 			var idKegiatan = $('#idKegiatan').val();

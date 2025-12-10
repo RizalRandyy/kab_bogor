@@ -51,6 +51,18 @@
 		                                                <span ng-show="addReq.tipe.$error.maxlength" style="color: red;">Tipe Item Maksimal hanya 4 Karakter!</span>
 		                                            </div> -->
 												</div>
+												<div class="form-group row">
+													<label class="col-sm-4 col-form-label text-sm">Kriteria</label>
+													<div class="col-sm-8">
+														<select class="form-control" id="kriteria" ng-model="kriteria">
+															<option value="" disabled selected>Pilih Kriteria</option>
+															<option ng-repeat="item in kriteriaList"
+																value="{{item.value}}">
+																{{item.label}}
+															</option>
+														</select>
+													</div>
+												</div>
 											</form>
 										</div>
 									</div>

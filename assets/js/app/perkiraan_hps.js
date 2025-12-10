@@ -1,437 +1,320 @@
 mainApp
-
-    .directive('customOnChange', function () {
+    .directive("customOnChange", function () {
         return {
-            restrict: 'A',
+            restrict: "A",
             link: function (scope, element, attrs) {
-                var onChangeFunc = scope.$eval(attrs.customOnChange);
-                element.bind('change', onChangeFunc);
-            }
+                var func = scope.$eval(attrs.customOnChange);
+                element.bind("change", func);
+            },
         };
     })
 
-    .controller('perkiraan_hps', ['$scope', 'httpHandler', '$filter', '$attrs', '$timeout', function ($scope, httpHandler, $filter, $attrs, $timeout) {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3500,
-            timerProgressBar: false,
-            allowEscapeKey: false,
-            allowOutsideClick: false,
-            showClass: {
-                popup: "animated lightSpeedIn",
-            },
-            hideClass: {
-                popup: "animated lightSpeedOut",
-            },
-            onOpen: (toast) => {
-                toast.addEventListener("mouseenter", Swal.stopTimer);
-                toast.addEventListener("mouseleave", Swal.resumeTimer);
-            },
-        });
-        function setInputFilter(textbox, inputFilter) {
-            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
-                if (textbox != null) {
-                    textbox.addEventListener(event, function () {
-                        if (inputFilter(this.value)) {
-                            this.oldValue = this.value;
-                            this.oldSelectionStart = this.selectionStart;
-                            this.oldSelectionEnd = this.selectionEnd;
-                        } else if (this.hasOwnProperty("oldValue")) {
-                            this.value = this.oldValue;
-                            this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                        } else {
-                            this.value = "";
-                        }
-                    });
-                }
-            });
-        }
+    .controller("perkiraan_hps", [
+        "$scope",
+        "httpHandler",
+        "$filter",
+        "$attrs",
+        "$timeout",
+        function ($scope, httpHandler, $filter, $attrs, $timeout) {
 
-        $scope.id = !$("#id").val() ? null : $("#id").val();
-        $scope.tableKelompok = [];
-        $scope.total = [];
-        $scope.total_item = [];
-        $scope.idKelItem = [];
-        $scope.jumlah = 0;
-        $scope.percent = 0;
-        $scope.total_percent = 0;
-        $scope.total_all = 0;
-        $scope.inputTotal = {
-            val: {}
-        };
-        $scope.inputHarga = {
-            val: {}
-        };
-        $scope.keyword = '';
-        $scope.viewKegiatan = '';
-        $scope.tempRows = [];
+            $scope.id = $("#id").val() || null;
 
-        $scope.addNewRow = function () {
-            $scope.tempRows.push({});
+            $scope.tableTenagaKerja = [];
+            $scope.tableBahan = [];
+            $scope.tablePeralatan = [];
 
-            $timeout(() => {
-                $('.row-select').select2({
-                    placeholder: "Pilih Kode Kelompok Item",
-                    width: '100%'
-                });
+            $scope.tempRowsTenagaKerja = [];
+            $scope.tempRowsBahan = [];
+            $scope.tempRowsPeralatan = [];
 
-                $('.row-select').off('select2:select').on('select2:select', function (e) {
-                    let selectedId = e.params.data.id;
-                    let rowIndex = $(this).data('row');
+            $scope.total = [];
+            $scope.inputTotal = { val: {} };
+            $scope.inputHarga = { val: {} };
+            $scope.hargaAsli = { val: {} };
+            $scope.jumlah = 0;
+            $scope.total_percent = 0;
+            $scope.total_all = 0;
+            $scope.percent = 0;
 
-                    let scope = angular.element(document.getElementById('perkiraan_hps')).scope();
-
-                    scope.$apply(function () {
-                        scope.addItemFromSelect(selectedId, rowIndex);
-                    });
-                });
-
-            }, 10);
-        };
-
-        $scope.addItemFromSelect = function (selectedId, index) {
-
-            if (!$scope.tableKelompok.includes(selectedId)) {
-                $scope.tableKelompok.push({
-                    id: selectedId,
-                    isDefault: false
-                });
-
-                $scope.inputTotal.val[selectedId] = 1;
-                $scope.total[selectedId] = $scope.getHarga(selectedId);
-                $scope.jumlahHarga();
-                $scope.totalHarga($scope.percent);
-            }
-
-            $scope.tempRows.splice(index, 1);
-        };
-
-        $scope.removeItem = function (id) {
-            $scope.tableKelompok = $scope.tableKelompok.filter(row => row.id !== id);
-        };
-
-        $scope.hasAdditionalItems = function () {
-            return $scope.tableKelompok.some(item => !item.isDefault);
-        };
-
-
-        // setInputFilter(document.getElementById('percent'), function (value) {
-        //     return /^-?\d*[.]?\d{0,2}$/.test(value);
-        // });
-
-        $scope.getData = function (pageno = 1) {
-            httpHandler.send({
-                method: 'GET',
-                url: urls + 'perkiraan_hps/kegiatan'
-            }).then(
-                function successCallbacks(response) {
-                    $scope.options_kegiatan = response.data.kegiatan;
-                    $scope.options_kel_spesifikasi = response.data.kel_spesifikasi;
-                }
-            );
-        }
-        $scope.getData();
-        $scope.id = !$("#id").val() ? null : $("#id").val();
-
-        if ($scope.id) {
-            $scope.loading = true;
-            $timeout(function () {
-                httpHandler.send({
-                    method: 'GET',
-                    url: urls + 'perkiraan_hps/getById',
-                    params: { 'id': $scope.id }
-                }).then(
-                    function successCallbacks(response) {
-
-                        if (response.data.status == 200) {
-                            $scope.loading = false;
-                            $scope.idKegiatan = response.data.data.id_thn_kegiatan;
-                            $scope.idKelItem = response.data.data.id_thn_harga;
-                            $scope.total_item = response.data.data.total_item;
-                            $scope.tableKelompok = $scope.idKelItem;
-                            $scope.inputTotal['val'] = $scope.total_item;
-                            var result = $scope.options_kegiatan.find(function (item) {
-                                return item.id === $scope.idKegiatan;
-                            });
-                            $scope.viewKegiatan = result.kodeKelompok + ' - ' + result.UraianKegiatan + ' - (' + result.satuan + ') - ' + result.tahunPekerjaan;
-
-                        } else {
-                            Swal.close();
-                            Swal.fire({
-                                title: 'Failed',
-                                text: response.data.message,
-                                icon: response.data.status == 500 ? 'error' : 'warning',
-                                showCancelButton: false,
-                                allowEscapeKey: false,
-                                allowOutsideClick: false,
-                                confirmButtonColor: "#fc544b",
-                                confirmButtonText: "Oke",
-                            }).then((result) => {
-                                if (result.value) {
-                                    window.location.replace(urls + 'perkiraan_hps');
-                                }
-                            });
-                        }
-                        $scope.getData();
-                    }
+            $scope.filterTenaga = function () {
+                return $scope.options_kel_spesifikasi.filter(x =>
+                    x.tipe?.toLowerCase() === "sbu" &&
+                    (x.kriteria?.toLowerCase() === "upah" || !x.kriteria)
                 );
-            }, 1000);
-        }
+            };
 
-        $('#item').on('select2:select', function (e) {
-            const selectedId = e.params.data.id;
-            const label = e.params.data.text;
+            $scope.filterBahan = function () {
+                return $scope.options_kel_spesifikasi.filter(x =>
+                    x.tipe?.toLowerCase() === "ssh" &&
+                    x.kriteria?.toLowerCase() === "bahan"
+                );
+            };
 
-            $scope.$apply(function () {
-                if (!$scope.tableKelompok.includes(selectedId)) {
-                    $scope.tableKelompok.push({
-                        id: selectedId,
-                        isDefault: false
+            $scope.filterPeralatan = function () {
+                return $scope.options_kel_spesifikasi.filter(x =>
+                    x.tipe?.toLowerCase() === "ssh" &&
+                    x.kriteria?.toLowerCase() === "peralatan"
+                );
+            };
+
+            $scope.addRowTenagaKerja = function () {
+                $scope.tempRowsTenagaKerja.push({});
+                $scope.initSelect2();
+            };
+
+            $scope.addRowBahan = function () {
+                $scope.tempRowsBahan.push({});
+                $scope.initSelect2();
+            };
+
+            $scope.addRowPeralatan = function () {
+                $scope.tempRowsPeralatan.push({});
+                $scope.initSelect2();
+            };
+
+            $scope.addItemFromSelectTenagaKerja = function (id, index) {
+                let item = $scope.options_kel_spesifikasi.find(x => x.id_kelompok == id);
+                $scope.hargaAsli.val[id] = item?.value_harga ?? 0;
+                // $scope.inputHarga.val[id] = item?.value_harga ?? 0;
+                $scope.inputHarga.val[id] = "";
+
+
+                if (!$scope.tableTenagaKerja.some(x => x.id == id)) {
+                    $scope.tableTenagaKerja.push({ id: id, isDefault: false });
+                }
+                $scope.tempRowsTenagaKerja.splice(index, 1);
+            };
+
+            $scope.addItemFromSelectBahan = function (id, index) {
+                let item = $scope.options_kel_spesifikasi.find(x => x.id_kelompok == id);
+                $scope.hargaAsli.val[id] = item?.value_harga ?? 0;
+                // $scope.inputHarga.val[id] = item?.value_harga ?? 0;
+                $scope.inputHarga.val[id] = "";
+                if (!$scope.tableBahan.some(x => x.id == id)) {
+                    $scope.tableBahan.push({ id: id, isDefault: false });
+                }
+                $scope.tempRowsBahan.splice(index, 1);
+            };
+
+            $scope.addItemFromSelectPeralatan = function (id, index) {
+                let item = $scope.options_kel_spesifikasi.find(x => x.id_kelompok == id);
+                $scope.hargaAsli.val[id] = item?.value_harga ?? 0;
+                // $scope.inputHarga.val[id] = item?.value_harga ?? 0;
+                $scope.inputHarga.val[id] = "";
+                if (!$scope.tablePeralatan.some(x => x.id == id)) {
+                    $scope.tablePeralatan.push({ id: id, isDefault: false });
+                }
+                $scope.tempRowsPeralatan.splice(index, 1);
+            };
+
+
+            $scope.removeItemKategori = function (kategori, id) {
+                if (kategori === "tenaga") {
+                    $scope.tableTenagaKerja = $scope.tableTenagaKerja.filter(function (x) {
+                        return x.id !== id;
+                    });
+                }
+                if (kategori === "bahan") {
+                    $scope.tableBahan = $scope.tableBahan.filter(function (x) {
+                        return x.id !== id;
+                    });
+                }
+                if (kategori === "peralatan") {
+                    $scope.tablePeralatan = $scope.tablePeralatan.filter(function (x) {
+                        return x.id !== id;
+                    });
+                }
+
+                $scope.jumlahHarga();
+            };
+
+            $scope.initSelect2 = function () {
+                $timeout(function () {
+
+                    $(".row-select-tenaga").select2().off("select2:select")
+                        .on("select2:select", function (e) {
+                            var id = e.params.data.id;
+                            var index = $(this).data("row");
+                            $scope.$apply(function () {
+                                $scope.addItemFromSelectTenagaKerja(id, index);
+                            });
+                        });
+
+                    $(".row-select-bahan").select2().off("select2:select")
+                        .on("select2:select", function (e) {
+                            var id = e.params.data.id;
+                            var index = $(this).data("row");
+                            $scope.$apply(function () {
+                                $scope.addItemFromSelectBahan(id, index);
+                            });
+                        });
+
+                    $(".row-select-peralatan").select2().off("select2:select")
+                        .on("select2:select", function (e) {
+                            var id = e.params.data.id;
+                            var index = $(this).data("row");
+                            $scope.$apply(function () {
+                                $scope.addItemFromSelectPeralatan(id, index);
+                            });
+                        });
+
+                }, 50);
+            };
+
+            $scope.getKelompokById = function (idKelompok) {
+                let data = $scope.options_kel_spesifikasi.find(x => x.id_kelompok == idKelompok);
+                if (!data) return "";
+
+                console.log(data);
+
+                return (
+                    data.kodeKelItem + " - " + data.UraianKelompok
+                    // + (data.UraianSpesifikasi ? (" - " + data.UraianSpesifikasi) : "") + " - (" + data.satuan + ") - " + data.tipe
+                );
+            };
+
+            $scope.getData = function () {
+                httpHandler.send({
+                    method: "GET",
+                    url: urls + "perkiraan_hps/kegiatan",
+                }).then(function (res) {
+                    $scope.options_kegiatan = res.data.kegiatan;
+                    $scope.options_kel_spesifikasi = res.data.kel_spesifikasi;
+
+                    console.log('kel_spesifikasi: ', $scope.options_kel_spesifikasi);
+                    console.log('TENAGA: ', $scope.filterTenaga());
+                    console.log('BAHAN: ', $scope.filterBahan());
+                    console.log('PERALATAN: ', $scope.filterPeralatan());
+
+                    if ($scope.id) $scope.loadSavedData();
+                });
+            };
+
+            $scope.getData();
+
+            $scope.loadSavedData = function () {
+                httpHandler.send({
+                    method: "GET",
+                    url: urls + "perkiraan_hps/getById",
+                    params: { id: $scope.id },
+                }).then(function (res) {
+
+                    var detail = res.data.data;
+
+                    $scope.idKegiatan = detail.id_thn_kegiatan;
+                    $scope.inputTotal.val = detail.total_item;
+
+                    $scope.tableTenagaKerja = [];
+                    $scope.tableBahan = [];
+                    $scope.tablePeralatan = [];
+
+                    detail.id_thn_harga.forEach(function (id) {
+                        var item = $scope.options_kel_spesifikasi.find(function (o) { return o.id == id; });
+                        if (!item) return;
+
+                        if (item.tipe === "SBU" && item.kriteria === "upah")
+                            $scope.tableTenagaKerja.push({ id: id, isDefault: true });
+
+                        if (item.tipe === "SSH" && item.kriteria === "bahan")
+                            $scope.tableBahan.push({ id: id, isDefault: true });
+
+                        if (item.tipe === "SSH" && item.kriteria === "peralatan")
+                            $scope.tablePeralatan.push({ id: id, isDefault: true });
                     });
 
-                }
-            });
-
-            $('#item').val(null).trigger('change');
-        });
-
-        $('#idKegiatan').on("change", function () {
-            const kegiatanId = $(this).val();
-            $scope.$apply(function () {
-                $scope.idKegiatan = $('#idKegiatan').val();
-                $scope.loadDetailByKegiatan(kegiatanId);
-            });
-        });
-
-        $scope.loadDetailByKegiatan = function (kegiatanId) {
-            httpHandler.send({
-                method: 'GET',
-                url: urls + 'perkiraan_hps/getDetailByKegiatan',
-                params: { id: kegiatanId }
-            }).then(function (response) {
-
-                $scope.tableKelompok = response.data.detail_ids.map(id => ({
-                    id: id,
-                    isDefault: true
-                }));
-
-                $scope.inputTotal.val = response.data.total_item;
-                $scope.viewKegiatan = response.data.kegiatan_text;
-            });
-        }
-
-
-        $scope.getKelompokById = function (id) {
-            setInputFilter(document.getElementById('banyak_' + id), function (value) {
-                return /^-?\d*[.]?\d{0,3}$/.test(value);
-            });
-            setInputFilter(document.getElementById('harga_' + id), function (value) {
-                return /^-?\d*$/.test(value);
-            });
-            for (var i = 0; i < $scope.options_kel_spesifikasi.length; i++) {
-                if ($scope.options_kel_spesifikasi[i].id === id) {
-                    data = $scope.options_kel_spesifikasi[i];
-
-                    return data.kodeKelompok + ' - ' + data.UraianKelompok + ' - ' + data.NamaJenis + ' - ' + data.UraianSpesifikasi + ' - ' + data.satuan + ' - (' + data.tipe + ') - ' + data.TahunHarga;
-                }
-            }
-            return "";
-        };
-
-        // $scope.getSatuan = function (id) {
-        //     for (let i = 0; i < $scope.options_kel_spesifikasi.length; i++) {
-        //         if ($scope.options_kel_spesifikasi[i].id == id) {
-        //             return $scope.options_kel_spesifikasi[i].satuan;
-        //         }
-        //     }
-        //     return "";
-        // };
-
-        $scope.getHarga = function (id) {
-
-            for (var i = 0; i < $scope.options_kel_spesifikasi.length; i++) {
-                if ($scope.options_kel_spesifikasi[i].id === id) {
-                    data = $scope.options_kel_spesifikasi[i];
-                    return data.value_harga;
-                }
-            }
-            return "";
-        };
-
-        $scope.getTotal = function (id, val = '1') {
-            var banyak = 0;
-            var harga = 0;
-            var percent = 0;
-
-            const inputBanyak = document.getElementById("banyak_" + id);
-
-            inputBanyak.addEventListener("input", function () {
-                const value_banyak = inputBanyak.value;
-
-                if (value_banyak.length === 1 && (value_banyak[0] === ".")) {
-                    inputBanyak.value = "0.";
-                } else if (value_banyak.length === 2 && (value_banyak[0] === "0" && value_banyak[1] != ".")) {
-                    inputBanyak.value = value_banyak[1];
-                } else if (value_banyak.length > 5 && (value_banyak[1].slice(-1) === ".")) {
-                    inputBanyak.value = value_banyak.slice(0, -1);
-                }
-            });
-
-            if (inputBanyak.value) {
-                banyak = inputBanyak.value;
-                if (banyak.length > 5) {
-                    banyak = inputBanyak.value.slice(0, -1);
-                }
-            }
-
-            const inputHarga = document.getElementById("harga_" + id);
-
-            inputHarga.addEventListener("input", function () {
-                const value_harga = inputHarga.value;
-
-                if (value_harga.length === 1 && (value_harga[0] === ".")) {
-                    inputHarga.value = "0.";
-                } else if (value_harga.length === 2 && (value_harga[0] === "0" && value_harga[1] != ".")) {
-                    inputHarga.value = value[1];
-                } else if (value_harga.length > 5 && (value_harga[1].slice(-1) === ".")) {
-                    inputHarga.value = value_harga.slice(0, -1);
-                }
-            });
-
-            if (inputHarga.value) {
-                if (inputHarga.value > 0) {
-                    harga = inputHarga.value;
-                } else {
-                    harga = inputHarga.value.slice(0, -1);
-                }
-            }
-
-            const inputPercent = document.getElementById("percent");
-
-            inputPercent.addEventListener("input", function () {
-                const value_percent = inputPercent.value;
-
-                if (value_percent.length === 1 && (value_percent[0] === ".")) {
-                    inputPercent.value = "0.";
-                } else if (value_percent.length === 2 && (value_percent[0] === "0" && value_percent[1] != ".")) {
-                    inputPercent.value = value_percent[1];
-
-                } else if (value_percent.length > 5 && (value_percent[1].slice(-1) === ".")) {
-                    inputPercent.value = value_percent.slice(0, -1);
-                }
-            });
-
-            if (inputPercent.value) {
-                percent = inputPercent.value;
-                if (percent.length > 5) {
-                    percent = inputPercent.value.slice(0, -1);
-                }
-            }
-
-            for (var k = 0; k < $scope.options_kel_spesifikasi.length; k++) {
-                if ($scope.options_kel_spesifikasi[k].id === id) {
-                    data = $scope.options_kel_spesifikasi[k];
-                    total = banyak > 0 ? (banyak * harga) : harga;
-                    $scope.total[id] = parseInt(total);
                     $scope.jumlahHarga();
-                    $scope.totalHarga(percent);
-                    return total;
-                    break;
+                });
+            };
+
+            $scope.getHarga = function (id) {
+                let item = $scope.options_kel_spesifikasi.find(x => x.id_kelompok == id);
+                return item?.value_harga ?? 0;
+            };
+
+            $scope.getTotal = function (id) {
+                let qty = parseFloat($scope.inputTotal.val[id]);
+                let harga = parseFloat($scope.inputHarga.val[id]);
+
+                if (isNaN(qty) || isNaN(harga)) {
+                    $scope.total[id] = 0;
+                    return "";
                 }
-            }
 
-            return "";
-        };
+                let total = qty * harga;
+                $scope.total[id] = total;
 
-        $scope.jumlahHarga = function () {
-            $scope.gettotal = [];
+                $scope.jumlahHarga();
+                return total;
+            };
 
-            for (var i = 0; i < $scope.tableKelompok.length; i++) {
-                let row = $scope.tableKelompok[i];
-                let id = row.id;
+            $scope.jumlahHarga = function () {
 
-                if ($scope.total[id]) {
-                    $scope.gettotal.push($scope.total[id]);
+                var semua = []
+                    .concat($scope.tableTenagaKerja)
+                    .concat($scope.tableBahan)
+                    .concat($scope.tablePeralatan);
+
+                var totalAkhir = 0;
+                semua.forEach(function (row) {
+                    if ($scope.total[row.id])
+                        totalAkhir += $scope.total[row.id];
+                });
+
+                $scope.jumlah = totalAkhir;
+                $scope.totalHarga($scope.percent);
+            };
+
+            $scope.totalHarga = function (percent) {
+                var p = parseFloat(percent || 0);
+                $scope.total_percent = ($scope.jumlah * p) / 100;
+                $scope.total_all = $scope.jumlah + $scope.total_percent;
+            };
+
+            $scope.save = function () {
+                var semua = []
+                    .concat($scope.tableTenagaKerja)
+                    .concat($scope.tableBahan)
+                    .concat($scope.tablePeralatan)
+                    .map(function (x) { return x.id; });
+
+                if (semua.length === 0) {
+                    Swal.fire("Peringatan", "Pilih minimal satu item!", "warning");
+                    return;
                 }
-            }
 
-            $scope.jumlah = $scope.gettotal.reduce((a, b) => a + b, 0);
-            $scope.totalHarga($scope.percent);
+                if (!$scope.idKegiatan || $scope.idKegiatan === "") {
+                    Swal.fire("Peringatan", "Pilih Tahun Pekerjaan terlebih dahulu!", "warning");
+                    return;
+                }
 
-            return $scope.jumlah;
+                let harga_satuan = semua.map(id => $scope.inputHarga.val[id] || 0).join(",");
+                let total_item = semua.map(id => $scope.inputTotal.val[id] || 0).join(",");
+
+                var url =
+                    urls + "perkiraan_hps/saveData?" +
+                    "kegiatan=" + $scope.idKegiatan +
+                    "&id_thn_harga=" + semua.join(",") +
+                    "&harga_satuan=" + harga_satuan +
+                    "&total_item=" + total_item +
+                    "&percent=" + ($scope.percent || 0);
+
+                window.location.href = urls + "ExportExcel/download?kegiatan=..." ;
+
+            };
+
         }
-
-        $scope.totalHarga = function (percent) {
-
-            var total = ($scope.jumlah / 100) * percent;
-
-            $scope.total_percent = total;
-            $scope.total_all = $scope.jumlah + total;
-
-            return $scope.total_all;
-        }
-
-        $scope.save = function () {
-
-            let idKegiatan = $scope.idKegiatan;
-            console.log(idKegiatan);
-
-            let id_thn_harga = $scope.tableKelompok.map(row => row.id);
-
-            let hargaInputs = document.getElementsByName('harga[]');
-            let banyakInputs = document.getElementsByName('banyak[]');
-            let percent = $scope.percent ?? 0;
-
-            if (!idKegiatan) {
-                $('#idKegiatan').focus();
-                return Toast.fire({ icon: "warning", title: 'Pilih ID Kegiatan!' });
-            }
-
-            if (id_thn_harga.length === 0) {
-                return Toast.fire({ icon: "warning", title: 'Pilih minimal 1 item!' });
-            }
-
-            let harga_satuan = [];
-            let total_item = [];
-
-            for (let i = 0; i < hargaInputs.length; i++) {
-                if (!hargaInputs[i].value || hargaInputs[i].value === "0") {
-                    hargaInputs[i].focus();
-                    return Toast.fire({ icon: "warning", title: 'Masukan Harga Item!' });
-                }
-                harga_satuan.push(hargaInputs[i].value);
-            }
-
-            for (let i = 0; i < banyakInputs.length; i++) {
-                if (!banyakInputs[i].value || banyakInputs[i].value === "0") {
-                    banyakInputs[i].focus();
-                    return Toast.fire({ icon: "warning", title: 'Masukan Banyak Item!' });
-                }
-                total_item.push(banyakInputs[i].value);
-            }
-
-            let url = urls + 'perkiraan_hps/saveData?' +
-                'kegiatan=' + idKegiatan +
-                '&id_thn_harga=' + id_thn_harga.join(',') +
-                '&harga_satuan=' + harga_satuan.join(',') +
-                '&total_item=' + total_item.join(',') +
-                '&percent=' + percent;
-
-            window.location.replace(url);
-        };
-
-        $scope.redirect = function () {
-            window.location.replace(urls + 'perkiraan_hps');
-        }
-    }]);
+    ]);
 
 $(document).ready(function () {
-    $('#idKegiatan').select2({
+    $("#idKegiatan").select2({
         placeholder: "Pilih Tahun Kegiatan"
     });
-    $('#item').select2({
-        placeholder: "Pilih Kode Kelompok Item"
+
+    $("#idKegiatan").on("change", function () {
+        var scope = angular.element($("#idKegiatan")).scope();
+        scope.$apply(function () {
+            scope.idKegiatan = $("#idKegiatan").val();
+        });
     });
 });
+

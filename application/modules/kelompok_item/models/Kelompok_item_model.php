@@ -6,7 +6,7 @@ class Kelompok_item_model extends CI_Model
         $start = ($params['offset'] - 1) * $params['limit'];
         $keyresult = (array)json_decode($params['keyword']);
 
-        $this->db->select('id,idKelItem,UraianKelompok,tipe');
+        $this->db->select('id,idKelItem,UraianKelompok,tipe,kriteria');
 
         if (!empty($keyresult)) {
             foreach ($keyresult as $key => $value) {
@@ -92,7 +92,7 @@ class Kelompok_item_model extends CI_Model
     public function getReqById($id,$users)
     {
         $id = decrypt_url($id);
-        $this->db->select('id,idKelItem,UraianKelompok,tipe')
+        $this->db->select('id,idKelItem,UraianKelompok,tipe,kriteria')
             ->where('id', $id);
 
         $data =  $this->db->get('tb_kelompok_item')->row();
@@ -126,7 +126,7 @@ class Kelompok_item_model extends CI_Model
     }
 
     public function getheader(){
-        $header  = array("No" => 'reset', "Kode Item" => "idKelItem", "Uraian Kelompok" => "UraianKelompok", "Tipe" => "tipe");  
+        $header  = array("No" => 'reset', "Kode Item" => "idKelItem", "Uraian Kelompok" => "UraianKelompok", "Tipe" => "tipe", "Kriteria" => "kriteria");  
         return $header;
     }
 

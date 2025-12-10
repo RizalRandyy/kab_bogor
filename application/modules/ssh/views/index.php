@@ -38,6 +38,30 @@
 										<label class="selectgroup-item" title="SSH">
 											<input type="radio" name="input_tab" ng-click="tab('ssh')" class="selectgroup-input" value="SSH" ng-model="input_tab" checked>
 											<span class="selectgroup-button selectgroup-button-icon">SSH</span>
+											<div class="selectgroup w-100 mt-2">
+												<label class="selectgroup-item" title="SSH">
+													<input type="radio"
+														class="selectgroup-input"
+														name="kriteria_ssh"
+														value="bahan"
+														ng-model="kriteria"
+														ng-click="setKriteria('bahan')">
+													<span class="selectgroup-button selectgroup-button-icon">
+														Bahan
+													</span>
+												</label>
+												<label class="selectgroup-item" title="SBU">
+													<input type="radio"
+														class="selectgroup-input"
+														name="kriteria_ssh"
+														value="peralatan"
+														ng-model="kriteria"
+														ng-click="setKriteria('peralatan')">
+													<span class="selectgroup-button selectgroup-button-icon">
+														Peralatan
+													</span>
+												</label>
+											</div>
 										</label>
 										<label class="selectgroup-item" title="SBU">
 											<input type="radio" name="input_tab" ng-click="tab('sbu')" value="SBU" ng-model="input_tab" class="selectgroup-input">

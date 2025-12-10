@@ -25,92 +25,236 @@
 														</select>
 													</div>
 												</div>
-												<!-- <div class="form-group row">
-													<label for="idKelItem" class="col-sm-4 col-form-label text-sm">Kode Kelompok Item</label>
-													<div class="col-sm-8">
-														<select multiple class="form-control select2" id="item" ng-model="idKelItem">
-															<option value="" disabled>Pilih Kode Kelompok Item</option>
-															<option ng-repeat="option2 in options_kel_spesifikasi" value="{{option2.id}}" name="{{option2.id}}" id="{{option2.id}}">{{option2.kodeKelompok}} - {{option2.UraianKelompok}} - {{option2.NamaJenis}} - {{option2.UraianSpesifikasi}} - {{option2.satuan}} - ({{option2.tipe}}) - {{option2.TahunHarga}} - {{option2.harga}}</option>
-														</select>
-														<div><span>Silahkan pilih beberapa item</span></div>
-													</div>
-												</div> -->
+												<p>Debug idKegiatan: {{ idKegiatan }}</p>
 												<div class="row">
 													<div class="col-lg-12 col-md-12 col-sm-12">
 
-														<div class="table-responsive">
-															<table class="table table-striped table-md">
-																<thead>
-																	<tr>
-																		<th class="text-center" style="background-color: #AFEEEE;" colspan="6" ng-bind="viewKegiatan"></th>
-																	</tr>
-																	<tr>
-																		<th class="text-center">Kelompok Item</th>
-																		<!-- <th class="text-center">Satuan</th> -->
-																		<th class="text-center">Harga</th>
-																		<th class="text-center"></th>
-																		<th class="text-center">Volume</th>
-																		<th class="text-center">Total</th>
-																		<th class="text-center" ng-if="hasAdditionalItems()">Aksi</th>
-																	</tr>
-																</thead>
-																<tbody>
-																	<tr>
-																		<td class="text-center" colspan="5" ng-show="loading">
-																			<img class="loader-img" src="<?= base_url('assets/img/loadertsel.gif') ?>" alt="loader">
-																			Loading...
-																		</td>
-																	</tr>
-																	<tr ng-hide="loading" ng-repeat="(key,row) in tableKelompok track by $index">
-																		<td style="width: 60%;">
-																			<input type="text" class="form-control" style="font-size: 12px;" ng-value="getKelompokById(row.id)" disabled>
-																		</td>
-																		<!-- <td style="width: 7%;">
-																			<input type="text" class="form-control" style="font-size: 12px;" ng-value="getSatuan(row.id)" disabled>
-																		</td> -->
-																		<td class="text-right" style="width: 15%;">
-																			<input name="harga[]" id="harga_{{row.id}}" class="form-control text-right" style="font-size: 12px;" ng-model="inputHarga.val[row.id]" ng-value="getHarga(row.id)">
-																		</td>
-																		<td class="text-wrap" style="width: 1%;">X</td>
-																		<td style="width: 10%;">
-																			<input name="banyak[]" id="banyak_{{row.id}}" class="form-control" style="font-size: 12px;" ng-model="inputTotal.val[row.id]" ng-value="total_item[row.id]">
-																		</td>
-																		<td style="width: 15%;">
-																			<input type="text" name="total[]" class="form-control text-right" style="font-size: 12px;" ng-value="getTotal(row.id, total_item[row.id]) | currency:'Rp. '" disabled>
+														<table class="table table-striped">
+															<thead>
+																<tr>
+																	<th colspan="7" class="text-center" style="background:#AFEEEE">
+																		TENAGA KERJA
+																	</th>
+																</tr>
+																<tr>
+																	<th>Item</th>
+																	<th>Harga Asli</th>
+																	<th>Harga Toko</th>
+																	<th></th>
+																	<th>Volume</th>
+																	<th>Total</th>
+																	<th>Aksi</th>
+																</tr>
+															</thead>
 
-																			<input type="hidden" name="total_hide[]" ng-value="getTotal(row.id, total_item[row.id])" disabled>
-																		</td>
-																		<td ng-if="!row.isDefault" style="width: 5%; text-align:center;">
-																			<button type="button" class="btn btn-danger btn-sm" ng-click="removeItem(row.id)">
-																				X
-																			</button>
-																		</td>
-																		<td ng-if="row.isDefault" style="width: 5%;"></td>
-																	</tr>
+															<tbody>
+																<tr ng-repeat="row in tableTenagaKerja track by $index">
+																	<td style="width: 30%;">
+																		<input type="text" class="form-control"
+																			ng-value="getKelompokById(row.id)" disabled>
+																	</td>
+																	<td class="text-right">
+																		{{ hargaAsli.val[row.id] | currency:'Rp. ' }}
+																	</td>
 
-																	<tr ng-repeat="(key,row) in tempRows">
-																		<td colspan="5">
-																			<select class="form-control row-select"
-																				data-row="{{key}}">
-																				<option value="" disabled selected>Pilih Kode Kelompok Item</option>
-																				<option ng-repeat="option2 in options_kel_spesifikasi"
-																					value="{{option2.id}}">
-																					{{option2.kodeKelompok}} - {{option2.UraianKelompok}} -
-																					{{option2.NamaJenis}} - {{option2.UraianSpesifikasi}} -
-																					{{option2.satuan}} - ({{option2.tipe}}) -
-																					{{option2.TahunHarga}} - {{option2.harga}}
-																				</option>
-																			</select>
-																		</td>
-																	</tr>
-																	<tr>
-																		<td colspan="5">
-																			<button type="button" class="btn btn-success btn-sm" ng-click="addNewRow()">+ Tambah Item</button>
-																		</td>
-																	</tr>
-																</tbody>
-															</table>
-														</div>
+																	<td>
+																		<input class="form-control text-right"
+																			ng-model="inputHarga.val[row.id]">
+																	</td>
+																	<td>X</td>
+																	<td>
+																		<input class="form-control"
+																			ng-model="inputTotal.val[row.id]">
+																	</td>
+																	<td>
+																		{{ getTotal(row.id, inputTotal.val[row.id]) | currency:'Rp. ' }}
+																	</td>
+																	<td>
+																		<button type="button" class="btn btn-danger btn-sm"
+																			ng-click="removeItemKategori('tenaga', row.id)">
+																			Hapus
+																		</button>
+																	</td>
+																</tr>
+
+																<!-- ROW TAMBAHAN -->
+																<tr ng-repeat="(i, row) in tempRowsTenagaKerja">
+																	<td colspan="6">
+																		<select class="form-control row-select-tenaga"
+																			data-row="{{i}}"
+																			ng-if="options_kel_spesifikasi.length > 0">
+
+																			<option value="">Pilih Tenaga Kerja</option>
+																			<option ng-repeat="opt in filterTenaga()" value="{{opt.id_kelompok}}">
+																				{{opt.kodeKelItem}} - {{opt.UraianKelompok}}
+																			</option>
+
+
+																		</select>
+
+																	</td>
+																</tr>
+
+																<!-- TOMBOL TAMBAH -->
+																<tr>
+																	<td colspan="7">
+																		<button type="button" class="btn btn-success btn-sm"
+																			ng-click="addRowTenagaKerja()">
+																			+ Tambah Tenaga Kerja
+																		</button>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+														<table class="table table-striped">
+															<thead>
+																<tr>
+																	<th colspan="7" class="text-center" style="background:#AFEEEE">
+																		BAHAN
+																	</th>
+																</tr>
+																<tr>
+																	<th>Item</th>
+																	<th>Harga Asli</th>
+																	<th>Harga Toko</th>
+																	<th></th>
+																	<th>Volume</th>
+																	<th>Total</th>
+																	<th>Aksi</th>
+																</tr>
+															</thead>
+
+															<tbody>
+																<tr ng-repeat="row in tableBahan track by $index">
+																	<td style="width: 30%;">
+																		<input type="text" class="form-control"
+																			ng-value="getKelompokById(row.id)" disabled>
+																	</td>
+																	<td class="text-right">
+																		{{ hargaAsli.val[row.id] | currency:'Rp. ' }}
+																	</td>
+
+																	<td>
+																		<input class="form-control text-right"
+																			ng-model="inputHarga.val[row.id]">
+																	</td>
+																	<td>X</td>
+																	<td>
+																		<input class="form-control"
+																			ng-model="inputTotal.val[row.id]">
+																	</td>
+																	<td>
+																		{{ getTotal(row.id, inputTotal.val[row.id]) | currency:'Rp. ' }}
+																	</td>
+																	<td>
+																		<button type="button" class="btn btn-danger btn-sm"
+																			ng-click="removeItemKategori('bahan', row.id)">
+																			Hapus
+																		</button>
+																	</td>
+																</tr>
+
+																<!-- ROW TAMBAHAN -->
+																<tr ng-repeat="(i, row) in tempRowsBahan">
+																	<td colspan="7">
+																		<select class="form-control row-select-bahan"
+																			data-row="{{i}}">
+																			<option value="">Pilih Bahan</option>
+																			<option ng-repeat="opt in filterBahan()" value="{{opt.id_kelompok}}">
+																				{{opt.kodeKelItem}} - {{opt.UraianKelompok}}
+																			</option>
+
+																		</select>
+																	</td>
+																</tr>
+
+
+																<!-- TOMBOL TAMBAH -->
+																<tr>
+																	<td colspan="7">
+																		<button type="button" class="btn btn-success btn-sm"
+																			ng-click="addRowBahan()">
+																			+ Tambah Bahan
+																		</button>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+														<table class="table table-striped">
+															<thead>
+																<tr>
+																	<th colspan="7" class="text-center" style="background:#AFEEEE">
+																		PERALATAN
+																	</th>
+																</tr>
+																<tr>
+																	<th>Item</th>
+																	<th>Harga Asli</th>
+																	<th>Harga Toko</th>
+																	<th></th>
+																	<th>Volume</th>
+																	<th>Total</th>
+																	<th>Aksi</th>
+																</tr>
+															</thead>
+
+															<tbody>
+																<tr ng-repeat="row in tablePeralatan track by $index">
+																	<td style="width: 30%;">
+																		<input type="text" class="form-control"
+																			ng-value="getKelompokById(row.id)" disabled>
+																	</td>
+																	<td class="text-right">
+																		{{ hargaAsli.val[row.id] | currency:'Rp. ' }}
+																	</td>
+
+																	<td>
+																		<input class="form-control text-right"
+																			ng-model="inputHarga.val[row.id]">
+																	</td>
+																	<td>X</td>
+																	<td>
+																		<input class="form-control"
+																			ng-model="inputTotal.val[row.id]">
+																	</td>
+																	<td>
+																		{{ getTotal(row.id, inputTotal.val[row.id]) | currency:'Rp. ' }}
+																	</td>
+																	<td>
+																		<button type="button" class="btn btn-danger btn-sm"
+																			ng-click="removeItemKategori('peralatan', row.id)">
+																			Hapus
+																		</button>
+																	</td>
+																</tr>
+
+																<!-- ROW TAMBAHAN -->
+																<tr ng-repeat="(i, row) in tempRowsPeralatan">
+																	<td colspan="7">
+																		<select class="form-control row-select-peralatan"
+																			data-row="{{i}}">
+																			<option value="">Pilih Peralatan</option>
+																			<option ng-repeat="opt in filterPeralatan()" value="{{opt.id_kelompok}}">
+																				{{opt.kodeKelItem}} - {{opt.UraianKelompok}}
+																			</option>
+
+																		</select>
+																	</td>
+																</tr>
+
+
+																<!-- TOMBOL TAMBAH -->
+																<tr>
+																	<td colspan="6">
+																		<button type="button" class="btn btn-success btn-sm"
+																			ng-click="addRowPeralatan()">
+																			+ Tambah Peralatan
+																		</button>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+
 													</div>
 												</div>
 											</form>

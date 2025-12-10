@@ -29,7 +29,7 @@ class Tahun_kegiatan_asb extends My_Controller
 
 	public function getData_get()
 	{
-		$return = $this->Tahun_kegiatan_asb_model->getData($this->get(NULL, TRUE),$this->data['users']);
+		$return = $this->Tahun_kegiatan_asb_model->getData($this->get(NULL, TRUE), $this->data['users']);
 		$return['header'] = $this->Tahun_kegiatan_asb_model->getheader();
 
 		$this->response($return, 200);
@@ -38,10 +38,10 @@ class Tahun_kegiatan_asb extends My_Controller
 	public function form_get()
 	{
 		$segment = $this->uri->segment(3);
-		$this->data['title'] = ucfirst($segment).' Tahun Kegiatan ASB';
+		$this->data['title'] = ucfirst($segment) . ' Tahun Kegiatan ASB';
 		$this->data['page'] = 'tambah_tahun_kegiatan_asb';
 		$this->data['version'] = $this->uri->segment(2);
-		$this->data['id'] = @$this->get('id')?$this->get('id', TRUE):null;
+		$this->data['id'] = @$this->get('id') ? $this->get('id', TRUE) : null;
 
 		$this->data['js'] = array(
 			'assets/js/app/tambah_tahun_kegiatan_asb.js?' . rand(),
@@ -80,9 +80,17 @@ class Tahun_kegiatan_asb extends My_Controller
 
 	public function getById_get()
 	{
-		$return = $this->Tahun_kegiatan_asb_model->getReqById($this->get('id', TRUE),$this->data['users']);
+		$return = $this->Tahun_kegiatan_asb_model->getReqById($this->get('id', TRUE), $this->data['users']);
 
 		$this->response($return, $return['status'] == 500 ? false : 200);
+	}
+
+	public function getPerbub_get()
+	{
+		$tahun = $this->get('tahun', TRUE);
+		$result = $this->Spesifikasi_harga_model->getPerbub($tahun);
+
+		$this->response($result, 200);
 	}
 
 	public function deleteData_post()

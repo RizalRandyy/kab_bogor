@@ -161,6 +161,29 @@ class Spesifikasi_harga_model extends CI_Model
         ];
     }
 
+    public function getPerbub($tahun)
+    {
+        $row = $this->db->select('nomor_dokumen')
+            ->from('tb_detail_dokumen')
+            ->where('tahun', $tahun)
+            ->where("id_jenis_dokumen", 3)
+            ->order_by('id', 'DESC')
+            ->limit(1)
+            ->get()
+            ->row();
+
+        if ($row) {
+            return [
+                'status' => 200,
+                'nomor_dokumen' => $row->nomor_dokumen
+            ];
+        } else {
+            return [
+                'status' => 404,
+                'nomor_dokumen' => null
+            ];
+        }
+    }
 
     public function deleteReq($id)
     {
@@ -228,7 +251,7 @@ class Spesifikasi_harga_model extends CI_Model
 
     public function getheader()
     {
-        $header  = array("No" => 'reset', "Kode Item" => "kodeKelompok", "Nama Kelompok" => "UraianKelompok", "Nama Item" => "NamaJenis", "Spesifikasi Item" => "UraianSpesifikasi", "Satuan" => "satuan", "Tahun" => "TahunHarga", "Harga" => "harga");
+        $header  = array("No" => 'reset', "Kode Item" => "kodeKelompok", "Nama Kelompok" => "UraianKelompok", "Nama Item" => "NamaJenis", "Spesifikasi Item" => "UraianSpesifikasi", "Satuan" => "satuan", "Tahun" => "TahunHarga", "Harga" => "harga", "Perbub Nomor" => "perbub_nomor");
         return $header;
     }
 }

@@ -41,6 +41,7 @@
 												<th class="text-center">Kode Item</th>
 												<th class="text-center">Uraian Kelompok Item</th>
 												<th class="text-center">Tipe</th>
+												<th class="text-center">Kriteria</th>
 												<?php if ($users['role_access']['kelompok_item']['accessedit_kelompok_item'] == 'on' || $users['role_access']['kelompok_item']['accessdelete_kelompok_item'] == 'on') { ?>
 													<th class="text-center"></th>
 												<?php } ?>
@@ -70,6 +71,7 @@
 												<td ng-bind="value.idKelItem"></td>
 												<td ng-bind="value.UraianKelompok"></td>
 												<td ng-bind="value.tipe"></td>
+												<td ng-bind="value.kriteria"></td>
 												<?php if ($users['role_access']['kelompok_item']['accessedit_kelompok_item'] == 'on' || $users['role_access']['kelompok_item']['accessdelete_kelompok_item'] == 'on') { ?>
 													<td class="text-center" style="white-space: nowrap;">
 														<?php if ($users['role_access']['kelompok_item']['accessedit_kelompok_item'] == 'on') { ?>

@@ -87,6 +87,14 @@ class Spesifikasi_harga extends My_Controller
 		$this->response($return, $return['status'] == 500 ? false : 200);
 	}
 
+	public function getPerbub_get()
+	{
+		$tahun = $this->get('tahun', TRUE);
+		$result = $this->Spesifikasi_harga_model->getPerbub($tahun);
+
+		$this->response($result, 200);
+	}
+	
 	public function deleteData_post()
 	{
 		$return = $this->Spesifikasi_harga_model->deleteReq($this->post('id', TRUE));
@@ -103,7 +111,7 @@ class Spesifikasi_harga extends My_Controller
 	public function import_post()
 	{
 		error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
-		
+
 		$file 		 = $_FILES['template'];
 		$tmp_name	 = $file['tmp_name'];
 

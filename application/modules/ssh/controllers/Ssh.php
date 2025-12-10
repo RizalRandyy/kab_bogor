@@ -34,17 +34,19 @@ class Ssh extends My_Controller
 
 		$keyresult = (array)json_decode($params['keyword']);
 
-		if(empty($keyresult['TahunHarga'])){
+		if (empty($keyresult['TahunHarga'])) {
 			$keyresult['TahunHarga'] = $year;
-		}elseif($keyresult['TahunHarga'] == ''){
+		} elseif ($keyresult['TahunHarga'] == '') {
 			$keyresult['TahunHarga'] = $year;
-		}else{
+		} else {
 			$year = $keyresult['TahunHarga'];
 		}
 
 		$params['keyword'] = json_encode($keyresult);
 
-		$return = $this->Ssh_model->getData($params,$this->data['users']);
+		$params['kriteria'] = isset($params['kriteria']) ? $params['kriteria'] : "";
+
+		$return = $this->Ssh_model->getData($params, $this->data['users']);
 		$return['header'] = $this->Ssh_model->getheader();
 		// $return['year'] = $year;
 
@@ -54,10 +56,10 @@ class Ssh extends My_Controller
 	public function form_get()
 	{
 		$segment = $this->uri->segment(3);
-		$this->data['title'] = ucfirst($segment).' Kegiatan ASB Detail';
+		$this->data['title'] = ucfirst($segment) . ' Kegiatan ASB Detail';
 		$this->data['page'] = 'tambah_kegiatan_asb_detail';
 		$this->data['version'] = $this->uri->segment(2);
-		$this->data['id'] = @$this->get('id')?$this->get('id', TRUE):null;
+		$this->data['id'] = @$this->get('id') ? $this->get('id', TRUE) : null;
 
 		$this->data['js'] = array(
 			'assets/js/app/tambah_kegiatan_asb_detail.js?' . rand(),
@@ -88,5 +90,4 @@ class Ssh extends My_Controller
 
 		$this->response($return, $return['status'] == 500 ? false : 200);
 	}
-
 }

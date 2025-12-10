@@ -13,45 +13,6 @@ class Privilege_hook
 
 	public function Privilege_check()
 	{
-		// $session = $this->CI->session->userdata('kab_bogor');
-		// $module  = strtolower($this->CI->router->fetch_module());
-
-		// if (!empty($session)) {
-
-		// 	$role_name = isset($session['role_name']) ? strtolower($session['role_name']) : null;
-
-		// 	// ini untuk kalo non admin akses modul di bawah
-		// 	$allowedForNonAdmin = [
-		// 		'landing_page',
-		// 		'dokumen',
-		// 		'perkiraan_hps',
-		// 		'hspk',
-		// 		'ssh',
-		// 		'asb',
-		// 		'opd',
-		// 		'bidang_teknis',
-		// 		'jenis_item',
-		// 		'kelompok_item',
-		// 		'spesifikasi_item',
-		// 		'spesifikasi_harga',
-		// 		'kegiatan_hspk',
-		// 		'tahun_kegiatan_hspk',
-		// 		'kegiatan_hspk_detail',
-		// 		'kegiatan_asb',
-		// 		'tahun_kegiatan_asb',
-		// 		'usulan_spesifikasi_item',
-		// 		'usulan_kegiatan_hspk',
-		// 		'usulan_kegiatan_asb',
-		// 		'usulan_kegiatan_asb_detail',
-		// 	];
-		// 	if (!in_array($role_name, ['administrator', 'admin'])) {
-		// 		if (!in_array($module, $allowedForNonAdmin)) {
-		// 			show_404();
-		// 		}
-		// 	}
-		// }
-
-
 		$whiteList = array(
 			'api',
 			'login',
@@ -65,11 +26,27 @@ class Privilege_hook
 			'landing_page',
 		);
 
+		$session = $this->CI->session->userdata('kab_bogor');
+		$module  = strtolower($this->CI->router->fetch_module());
+
+		if ($module === 'dashboard') {
+			if (empty($session)) {
+				redirect(base_url('login'));
+				exit;
+			}
+			$role = strtolower($session['role_name']);
+			if ($role !== 'admin' && $role !== 'administrator') {
+				show_404();
+				exit;
+			}
+			return;
+		}
+
 		// Check is this from whitelist or not ?
 		if (!(str_replace($whiteList, '', $this->CI->router->uri->uri_string) != $this->CI->router->uri->uri_string) and !in_array($this->CI->router->fetch_module(), $whiteList) and !empty($this->CI->session->userdata('kab_bogor')['id'])) :
 			// This method intended based on normal request
 			$user_access = $this->CI->session->userdata('kab_bogor')['role_access'];
-			// $role_name = $this->CI->session->userdata('kab_bogor')['role_name'];
+			$role_name = $this->CI->session->userdata('kab_bogor')['role_name'];
 
 			// prepare var
 			// we check current module & class is accessible for current user?

@@ -30,8 +30,15 @@
 												<div class="form-group row">
 													<label for="idJnsBrg" class="col-sm-4 col-form-label text-sm">Tahun Kegiatan</label>
 													<div class="input-group col-sm-8">
-														<input class="form-control" ng-minlength="4" ng-maxlength="4" id="tahun" name="tahun" ng-model="tahun" ng-pattern="/^\d+$/" placeholder="Input Tahun">
-
+														<input class="form-control"
+															ng-minlength="4"
+															ng-maxlength="4"
+															id="tahun"
+															name="tahun"
+															ng-model="tahun"
+															ng-change="onChangeTahun()"
+															ng-pattern="/^\d+$/"
+															placeholder="Input Tahun">
 													</div>
 													<div class="col-sm-4"></div>
 													<div class="col-sm-8">

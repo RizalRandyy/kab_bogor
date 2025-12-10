@@ -43,7 +43,8 @@
 											<li><a href="<?= base_url("asb"); ?>">ASB Kontruksi Umum</a></li>
 										</ul>
 									</li>
-									<li><a href="<?= base_url("perkiraan_hps"); ?>">Kalkulator</a></li>
+									<li><a href="<?= base_url("rab"); ?>">RAB</a></li>
+									<li><a href="<?= base_url("perkiraan_hps"); ?>">HPS</a></li>
 									<li><a href="<?= base_url("dokumen"); ?>">Unduh</a></li>
 									<li>
 										<?php if (!empty($users['role_id'])) { ?>
