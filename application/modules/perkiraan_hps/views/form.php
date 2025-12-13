@@ -1,4 +1,5 @@
 <div ng-controller="<?= $page ?>" id="<?= $page ?>">
+	<script src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
 	<section class="section">
 		<div class="row animate-box">
 			<div class="col-lg-12 col-md-12 col-sm-12">
@@ -295,8 +296,12 @@
 								</div>
 								<div class="col-12 col-md-12 col-lg-12 text-right">
 									<div class="form-group">
-										<button class="btn btn-info" type="submit"> Download
-										</button>&nbsp;&nbsp;
+										<button class="btn btn-success"
+											type="button"
+											ng-click="exportExcelHPS()">
+											Download Excel
+										</button>
+
 									</div>
 								</div>
 							</div>
