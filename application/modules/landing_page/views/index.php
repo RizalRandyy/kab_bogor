@@ -1,3 +1,76 @@
+<style>
+  /* Carousel */
+  .carousel-item img {
+    height: 500px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Section Title */
+  .section-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    position: relative;
+  }
+
+  .section-title::after {
+    content: "";
+    width: 60px;
+    height: 3px;
+    background: #0d6efd;
+    display: block;
+    margin-top: 8px;
+    border-radius: 2px;
+  }
+
+  /* Overview Section */
+  .overview-box {
+    background: #f8fafc;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Grid Cards */
+  .grid-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+    transition: 0.25s;
+  }
+
+  .grid-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .grid-card img,
+  .grid-card svg {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .grid-card .inner {
+    padding: 15px 18px;
+  }
+
+  .grid-card h5 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .grid-card p {
+    font-size: 0.9rem;
+    color: #555;
+  }
+</style>
+
+
 <div ng-controller="<?= $page ?>" id="<?= $page ?>">
   <div id="page">
 
@@ -12,42 +85,15 @@
       <div class="carousel-inner">
 
         <div class="carousel-item active">
-          <svg width="100%" height="100%">
-            <rect width="100%" height="100%" fill="#777" />
-          </svg>
-          <div class="container">
-            <div class="carousel-caption text-left">
-              <h1>Selamat Datang di Kabupaten Bogor</h1>
-              <p>Sistem informasi modern untuk kemudahan layanan publik.</p>
-              <p><a class="btn btn-lg btn-primary" href="#">Pelajari Selengkapnya</a></p>
-            </div>
-          </div>
+          <img src="<?= base_url('assets/img/carousel/bgnew.jpg') ?>" alt="Slide 1">
         </div>
 
         <div class="carousel-item">
-          <svg width="100%" height="100%">
-            <rect width="100%" height="100%" fill="#999" />
-          </svg>
-          <div class="container">
-            <div class="carousel-caption">
-              <h1>Data Terintegrasi</h1>
-              <p>Akses cepat untuk semua data pembangunan.</p>
-              <p><a class="btn btn-lg btn-primary" href="#">Lihat Data</a></p>
-            </div>
-          </div>
+          <img src="<?= base_url('assets/img/carousel/1.jpeg') ?>" alt="Slide 2">
         </div>
 
         <div class="carousel-item">
-          <svg width="100%" height="100%">
-            <rect width="100%" height="100%" fill="#555" />
-          </svg>
-          <div class="container">
-            <div class="carousel-caption text-right">
-              <h1>Layanan Lebih Mudah</h1>
-              <p>Kemudahan akses informasi di ujung jari Anda.</p>
-              <p><a class="btn btn-lg btn-primary" href="#">Mulai Sekarang</a></p>
-            </div>
-          </div>
+          <img src="<?= base_url('assets/img/carousel/2.jpeg') ?>" alt="Slide 3">
         </div>
 
       </div>
@@ -65,17 +111,32 @@
     <!-- ===================== CONTENT WRAPPER ===================== -->
     <div class="section-wrapper container">
 
+      <!-- ===================== OVERVIEW ===================== -->
+      <div class="overview-box mb-5">
+        <h2 class="section-title">Sistem Informasi SSH, HPSK, dan ASB Kabupaten Bogor</h2>
+        <p class="lead">
+          Sistem Informasi SSH, HPSK, dan ASB Dinas Pekerjaan Umum dan Penataan Ruang (PUPR)
+          Kabupaten Bogor merupakan platform digital yang menyediakan informasi terintegrasi
+          terkait Standar Satuan Harga, Harga Perkiraan Sendiri Konstruksi, serta Analisis
+          Standar Belanja.
+        </p>
+        <p>
+          Aplikasi ini dibangun untuk mempermudah perangkat daerah, pelaku usaha, dan masyarakat
+          dalam mengakses data standar harga, analisis belanja, serta perhitungan biaya konstruksi
+          secara akurat, transparan, dan terkini. Dengan penyajian data yang terstruktur dan mudah
+          dipahami, sistem ini diharapkan dapat mendukung efektivitas perencanaan, penganggaran,
+          serta pelaksanaan kegiatan pembangunan di Kabupaten Bogor.
+        </p>
+      </div>
 
-      <!-- ===================== BERITA GRID ===================== -->
-      <h2 class="section-title">BERITA JASA KONSTRUKSI</h2>
+
+      <!-- ===================== BERITA ===================== -->
+      <h2 class="section-title">Berita Jasa Konstruksi</h2>
 
       <div class="row">
-
-        <div class="col-md-4">
+        <div class="col-md-4 mb-4">
           <div class="grid-card">
-            <svg>
-              <rect width="100%" height="100%" fill="#bbb" />
-            </svg>
+            <img src="<?= base_url('assets/img/berita/sld1.jpg') ?>">
             <div class="inner">
               <h5>Judul Berita 1</h5>
               <p>Contoh isi berita singkat sebagai placeholder.</p>
@@ -84,11 +145,9 @@
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 mb-4">
           <div class="grid-card">
-            <svg>
-              <rect width="100%" height="100%" fill="#aaa" />
-            </svg>
+            <img src="<?= base_url('assets/img/berita/sld2.jpeg') ?>">
             <div class="inner">
               <h5>Judul Berita 2</h5>
               <p>Contoh berita yang tampil pada grid card.</p>
@@ -97,11 +156,9 @@
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 mb-4">
           <div class="grid-card">
-            <svg>
-              <rect width="100%" height="100%" fill="#ccc" />
-            </svg>
+            <img src="<?= base_url('assets/img/berita/sld3.jpeg') ?>">
             <div class="inner">
               <h5>Judul Berita 3</h5>
               <p>Tampilan modern dan rapi seperti MASPETRUK.</p>
@@ -109,21 +166,16 @@
             </div>
           </div>
         </div>
-
       </div>
 
 
+      <!-- ===================== PENGUMUMAN ===================== -->
+      <h2 class="section-title mt-5">Pengumuman Terbaru</h2>
 
-      <!-- ===================== PENGUMUMAN GRID ===================== -->
-      <h2 class="section-title mt-5">PENGUMUMAN TERBARU</h2>
-
-      <div class="row">
-
-        <div class="col-md-4">
+      <div class="row mb-5">
+        <div class="col-md-4 mb-4">
           <div class="grid-card">
-            <svg>
-              <rect width="100%" height="100%" fill="#ddd" />
-            </svg>
+            <img src="<?= base_url('assets/img/berita/sld4.jpeg') ?>">
             <div class="inner">
               <h5>Pengumuman 1</h5>
               <p>Kumpulan pengumuman penting bagi masyarakat.</p>
@@ -132,11 +184,9 @@
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 mb-4">
           <div class="grid-card">
-            <svg>
-              <rect width="100%" height="100%" fill="#aaa" />
-            </svg>
+            <img src="<?= base_url('assets/img/berita/sld5.jpg') ?>">
             <div class="inner">
               <h5>Pengumuman 2</h5>
               <p>Pengumuman terbaru mengenai konstruksi.</p>
@@ -145,11 +195,9 @@
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 mb-4">
           <div class="grid-card">
-            <svg>
-              <rect width="100%" height="100%" fill="#bbb" />
-            </svg>
+            <img src="<?= base_url('assets/img/berita/StaticMapService.jpg') ?>">
             <div class="inner">
               <h5>Pengumuman 3</h5>
               <p>Informasi penting yang wajib diperhatikan.</p>
@@ -157,9 +205,9 @@
             </div>
           </div>
         </div>
-
       </div>
 
     </div><!-- end wrapper -->
+
   </div>
 </div>
