@@ -68,36 +68,24 @@ class Perkiraan_hps_model extends CI_Model
             ->get()->result_array();
 
         $kel_spesifikasi = $this->db->select("
-            k.id AS id_kelompok,
-            k.idKelItem AS kodeKelItem,
-            k.UraianKelompok,
-            k.tipe,
-            k.kriteria,
-
-            j.id AS id_jenis,
-            j.NamaJenis,
-
-            s.id AS id_spesifikasi,
-            s.kodeKelompok,
-            s.UraianSpesifikasi,
-            s.satuan,
-
-            h.id AS id_harga,
-            h.TahunHarga,
-            h.harga AS value_harga
-        ")
-
+                k.id AS id_kelompok,
+                k.idKelItem AS kodeKelItem,
+                k.UraianKelompok,
+                k.tipe,
+                k.kriteria,
+                MAX(h.harga) AS value_harga
+            ")
             ->from("tb_kelompok_item k")
             ->join("tb_jenis_item j", "j.idKelompokItem = k.id", "left")
             ->join("tb_spesifikasi_item s", "s.idJenisItem = j.id", "left")
             ->join("tb_thn_harga h", "h.idSpesifikasi = s.id", "left")
-
+            ->group_by("k.id")
             ->order_by("k.tipe ASC")
             ->order_by("k.kriteria ASC")
             ->order_by("k.idKelItem ASC")
-
             ->get()
             ->result_array();
+
 
 
         // Format harga

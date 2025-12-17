@@ -128,6 +128,18 @@ mainApp
                 $scope.jumlahHarga();
             };
 
+            $scope.removeTempRow = function (kategori, index) {
+                if (kategori === 'tenaga') {
+                    $scope.tempRowsTenagaKerja.splice(index, 1);
+                }
+                if (kategori === 'bahan') {
+                    $scope.tempRowsBahan.splice(index, 1);
+                }
+                if (kategori === 'peralatan') {
+                    $scope.tempRowsPeralatan.splice(index, 1);
+                }
+            };
+
             $scope.initSelect2 = function () {
                 $timeout(function () {
 
@@ -307,7 +319,7 @@ mainApp
                 ws.getColumn(6).alignment = { horizontal: 'right' };
                 ws.getColumn(7).alignment = { horizontal: 'right' };
 
-                
+
                 ws.mergeCells('A1:G1');
                 ws.getCell('A1').value = 'SIMULASI HARGA PERKIRAAN SENDIRI (HPS)';
                 setArial11(ws.getRow(1), true);

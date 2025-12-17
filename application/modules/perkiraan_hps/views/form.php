@@ -26,10 +26,8 @@
 														</select>
 													</div>
 												</div>
-												<p>Debug idKegiatan: {{ idKegiatan }}</p>
 												<div class="row">
 													<div class="col-lg-12 col-md-12 col-sm-12">
-
 														<table class="table table-striped">
 															<thead>
 																<tr>
@@ -89,10 +87,15 @@
 																			<option ng-repeat="opt in filterTenaga()" value="{{opt.id_kelompok}}">
 																				{{opt.kodeKelItem}} - {{opt.UraianKelompok}}
 																			</option>
-
-
 																		</select>
-
+																	</td>
+																	<td>
+																		<button
+																			type="button"
+																			class="btn btn-danger btn-sm"
+																			ng-click="removeTempRow('tenaga', $index)">
+																			Hapus
+																		</button>
 																	</td>
 																</tr>
 
@@ -157,18 +160,24 @@
 
 																<!-- ROW TAMBAHAN -->
 																<tr ng-repeat="(i, row) in tempRowsBahan">
-																	<td colspan="7">
+																	<td colspan="6">
 																		<select class="form-control row-select-bahan"
 																			data-row="{{i}}">
 																			<option value="">Pilih Bahan</option>
 																			<option ng-repeat="opt in filterBahan()" value="{{opt.id_kelompok}}">
 																				{{opt.kodeKelItem}} - {{opt.UraianKelompok}}
 																			</option>
-
 																		</select>
 																	</td>
+																	<td>
+																		<button
+																			type="button"
+																			class="btn btn-danger btn-sm"
+																			ng-click="removeTempRow('bahan', $index)">
+																			Hapus
+																		</button>
+																	</td>
 																</tr>
-
 
 																<!-- TOMBOL TAMBAH -->
 																<tr>
@@ -231,18 +240,24 @@
 
 																<!-- ROW TAMBAHAN -->
 																<tr ng-repeat="(i, row) in tempRowsPeralatan">
-																	<td colspan="7">
+																	<td colspan="6">
 																		<select class="form-control row-select-peralatan"
 																			data-row="{{i}}">
 																			<option value="">Pilih Peralatan</option>
 																			<option ng-repeat="opt in filterPeralatan()" value="{{opt.id_kelompok}}">
 																				{{opt.kodeKelItem}} - {{opt.UraianKelompok}}
 																			</option>
-
 																		</select>
 																	</td>
+																	<td>
+																		<button
+																			type="button"
+																			class="btn btn-danger btn-sm"
+																			ng-click="removeTempRow('peralatan', $index)">
+																			Hapus
+																		</button>
+																	</td>
 																</tr>
-
 
 																<!-- TOMBOL TAMBAH -->
 																<tr>
@@ -255,7 +270,6 @@
 																</tr>
 															</tbody>
 														</table>
-
 													</div>
 												</div>
 											</form>
