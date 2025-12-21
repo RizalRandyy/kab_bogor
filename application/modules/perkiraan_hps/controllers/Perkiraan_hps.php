@@ -34,9 +34,9 @@ class Perkiraan_hps extends My_Controller
 		$this->template->load($this->data, null, 'form', null, 'frontend');
 	}
 
-	public function kegiatan_get()
+	public function sshByHspk_get()
 	{
-		$return = $this->Perkiraan_hps_model->getkegiatan();
+		$return = $this->Perkiraan_hps_model->getSshByHspk($this->get('id', TRUE));
 
 		$this->response($return, 200);
 	}
@@ -46,6 +46,34 @@ class Perkiraan_hps extends My_Controller
 		$id = $this->get('id', TRUE);
 		$data = $this->Perkiraan_hps_model->getDetailByKegiatan($id);
 		$this->response($data, 200);
+	}
+
+	public function asb_get()
+	{
+		$return = $this->Perkiraan_hps_model->getAsb();
+
+		$this->response($return, 200);
+	}
+
+	public function getAsbById_get()
+	{
+		$return = $this->Perkiraan_hps_model->getReqAsbById($this->get('id', TRUE));
+
+		$this->response($return, $return['status'] == 500 ? false : 200);
+	}
+
+	public function getById_get()
+	{
+		$return = $this->Perkiraan_hps_model->getReqById($this->get('id', TRUE));
+
+		$this->response($return, $return['status'] == 500 ? false : 200);
+	}
+
+	public function getSshById_get()
+	{
+		$return = $this->Perkiraan_hps_model->getSshById($this->get('id', TRUE));
+
+		$this->response($return, $return['status'] == 500 ? false : 200);
 	}
 
 	public function downloadExcel()

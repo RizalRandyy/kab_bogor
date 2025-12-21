@@ -429,7 +429,7 @@ mainApp
 
 $(document).ready(function () {
     $('#idKegiatan').select2({
-        placeholder: "Pilih Tahun Kegiatan"
+        placeholder: "Pilih Kegiatan HSPK"
     });
     $('#item').select2({
         placeholder: "Pilih Kode Kelompok Item"

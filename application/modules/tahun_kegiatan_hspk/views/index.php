@@ -44,6 +44,7 @@
 												<th class="text-center">Uraian Kegiatan</th>
 												<th class="text-center">Satuan</th>
 												<th class="text-center">Tahun Pekerjaan</th>
+												<th class="text-center">Harga Satuan</th>
 												<?php if ($users['role_access']['tahun_kegiatan_hspk']['accessedit_tahun_kegiatan_hspk'] == 'on' || $users['role_access']['tahun_kegiatan_hspk']['accessdelete_tahun_kegiatan_hspk'] == 'on') { ?>
 													<th class="text-center"></th>
 												<?php } ?>
@@ -58,12 +59,13 @@
 													<input ng-if="b != 'reset'" type="text" class="form-control no-margin form-filter " ng-model="search_Method.val[b]" ng-change="searchMethod(b, search_Method.val[b])" ng-model-options="{debounce: 2000}">
 												</td>
 												<td class="no-padding px-1"></td>
+												<td class="no-padding px-1"></td>
 											</tr>
 											<tr ng-show="message != null">
-												<td colspan="6" class="text-center" ng-bind="message"></td>
+												<td colspan="7" class="text-center" ng-bind="message"></td>
 											</tr>
 											<tr>
-												<td colspan="6" ng-show="loading">
+												<td colspan="7" ng-show="loading">
 													<img class="loader-img" src="<?= base_url('assets/img/loadertsel.gif') ?>" alt="loader">
 													Loading...
 												</td>
@@ -75,6 +77,7 @@
 												<td ng-bind="value.UraianKegiatan"></td>
 												<td ng-bind="value.satuan"></td>
 												<td ng-bind="value.tahunPekerjaan"></td>
+												<td class="text-right" ng-bind="value.harga"></td>
 												<?php if ($users['role_access']['tahun_kegiatan_hspk']['accessedit_tahun_kegiatan_hspk'] == 'on' || $users['role_access']['tahun_kegiatan_hspk']['accessdelete_tahun_kegiatan_hspk'] == 'on') { ?>
 													<td class="text-center" style="white-space: nowrap;">
 														<?php if ($users['role_access']['tahun_kegiatan_hspk']['accessedit_tahun_kegiatan_hspk'] == 'on') { ?>

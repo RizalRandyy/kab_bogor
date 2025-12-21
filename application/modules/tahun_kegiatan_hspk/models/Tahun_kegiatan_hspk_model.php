@@ -42,8 +42,50 @@ class Tahun_kegiatan_hspk_model extends CI_Model
         if (!empty($get_data)) {
             foreach ($get_data as $key => $value) {
                 $get_data[$key]['id'] = encrypt_url($value['id']);
+
+                // ===============================
+                // HITUNG HARGA HSPK
+                // ===============================
+                $detail = $this->db
+                    ->select('id_thn_harga, total_item')
+                    ->where('id_thn_kegiatan', $value['id'])
+                    ->where('id_thn_harga !=', '[]')
+                    ->where('id_thn_harga is not null', null)
+                    ->get('tb_thn_pekerjaan_detail')
+                    ->result_array();
+
+                if (empty($detail)) {
+                    // Jika belum ada harga
+                    $get_data[$key]['harga'] = '-';
+                } else {
+                    $grand_total = 0;
+
+                    foreach ($detail as $d) {
+                        $id_harga = json_decode($d['id_thn_harga']);
+                        $total_item = json_decode($d['total_item']);
+
+                        if (is_array($id_harga)) {
+                            foreach ($id_harga as $ky => $val) {
+                                $harga = $this->db
+                                    ->select('harga')
+                                    ->where('id', $val)
+                                    ->get('tb_thn_harga')
+                                    ->row();
+
+                                if ($harga) {
+                                    $grand_total += ($harga->harga * ($total_item[$ky] ?? 0));
+                                }
+                            }
+                        }
+                    }
+
+                    $get_data[$key]['harga'] = $grand_total > 0
+                        ? 'Rp.' . number_format($grand_total, 0, '', '.')
+                        : '-';
+                }
             }
         }
+        // var_dump($get_data); die;
 
         return [
             'count' => $get_count,

@@ -166,7 +166,7 @@ class Spesifikasi_harga_model extends CI_Model
         $row = $this->db->select('nomor_dokumen')
             ->from('tb_detail_dokumen')
             ->where('tahun', $tahun)
-            ->where("id_jenis_dokumen", 3)
+            ->where("id_jenis_dokumen", 4)
             ->order_by('id', 'DESC')
             ->limit(1)
             ->get()

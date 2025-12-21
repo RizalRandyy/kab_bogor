@@ -24,6 +24,7 @@ class Privilege_hook
 			'asb',
 			'dokumen',
 			'landing_page',
+			'rab'
 		);
 
 		$session = $this->CI->session->userdata('kab_bogor');

@@ -54,7 +54,7 @@
 					<td style="text-align: center">No</td>
 					<td style="text-align: center">Kode Item</td>
 					<td style="text-align: center">Harga</td>
-					<td style="text-align: center">Koefisien</td>
+					<td style="text-align: center">Volume</td>
 					<td style="text-align: center">Total</td>
 				</tr>
 			</thead>

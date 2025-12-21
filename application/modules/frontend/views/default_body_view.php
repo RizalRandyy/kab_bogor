@@ -25,23 +25,14 @@
 							<div class="col-md-10 text-right menu-1">
 								<ul>
 									<!-- <li><a href="<?= base_url("dashboard"); ?>">Dashboard</a></li> -->
-									<li class="has-dropdown">
-										<a href="#">SSH & SBU</a>
-										<ul class="dropdown">
-											<li><a href="<?= base_url("ssh"); ?>">SSH & SBU Kontruksi Umum</a></li>
-										</ul>
+									<li>
+										<a href="<?= base_url("ssh"); ?>">SSH & SBU</a>
 									</li>
-									<li class="has-dropdown">
-										<a href="#">HSPK</a>
-										<ul class="dropdown">
-											<li><a href="<?= base_url("hspk"); ?>">Harga Satuan Pekerjaan (HSP) Kontruksi Umum</a></li>
-										</ul>
+									<li>
+										<a href="<?= base_url("hspk"); ?>">HSPK</a>
 									</li>
-									<li class="has-dropdown">
-										<a href="#">ASB</a>
-										<ul class="dropdown">
-											<li><a href="<?= base_url("asb"); ?>">ASB Kontruksi Umum</a></li>
-										</ul>
+									<li>
+										<a href="<?= base_url("asb"); ?>">ASB</a>
 									</li>
 									<li><a href="<?= base_url("rab"); ?>">RAB</a></li>
 									<li><a href="<?= base_url("perkiraan_hps"); ?>">HPS</a></li>
