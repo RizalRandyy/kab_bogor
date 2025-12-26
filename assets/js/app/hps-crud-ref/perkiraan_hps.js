@@ -29,8 +29,7 @@ mainApp
                         inputTotal: { val: {} },
                         inputKoefisien: { val: {} },
                         hargaAsli: { val: {} },
-                        total: {},
-                        totalAsli: {}
+                        total: {}
                     },
                     peralatan: {
                         table: [],
@@ -39,8 +38,7 @@ mainApp
                         inputTotal: { val: {} },
                         inputKoefisien: { val: {} },
                         hargaAsli: { val: {} },
-                        total: {},
-                        totalAsli: {}
+                        total: {}
                     },
                     tenagaKerja: {
                         table: [],
@@ -49,13 +47,11 @@ mainApp
                         inputTotal: { val: {} },
                         inputKoefisien: { val: {} },
                         hargaAsli: { val: {} },
-                        total: {},
-                        totalAsli: {}
+                        total: {}
                     },
                     meta: {
                         percent: 0,
                         jumlah: 0,
-                        jumlahSht: 0,
                         total_percent: 0,
                         total_all: 0,
                         hasMappedApi: false
@@ -283,6 +279,21 @@ mainApp
                 );
             };
 
+            $scope.addRowBahan = function () {
+                $scope.tempRowsBahan.push({});
+                $scope.initSelect2();
+            };
+
+            $scope.addRowPeralatan = function () {
+                $scope.tempRowsPeralatan.push({});
+                $scope.initSelect2();
+            };
+
+            $scope.addRowTenagaKerja = function () {
+                $scope.tempRowsTenagaKerja.push({});
+                $scope.initSelect2();
+            };
+
             $scope.addItemFromSelect = function (kategori, id, index) {
                 let g = $scope.getGroup(kategori);
                 if (!g) return;
@@ -305,6 +316,39 @@ mainApp
             $scope.getGroup = function (kategori) {
                 let s = $scope.hpsStore[$scope.activeSpesifikasiId];
                 return s ? s[kategori] : null;
+            };
+
+            $scope.removeItemKategori = function (kategori, id) {
+                let g = $scope.getGroup(kategori);
+                if (!g) return;
+
+                const idx = g.table.findIndex(x => x.id == id);
+                if (idx !== -1) {
+                    g.table.splice(idx, 1);
+                }
+
+                delete g.inputHarga.val[id];
+                delete g.inputTotal.val[id];
+                delete g.inputKoefisien.val[id];
+                delete g.hargaAsli.val[id];
+                delete g.total[id];
+
+                $scope.jumlahHarga();
+            };
+
+
+            $scope.removeTempRow = function (kategori, index) {
+                if (kategori === 'bahan') {
+                    $scope.tempRowsBahan.splice(index, 1);
+                }
+
+                if (kategori === 'peralatan') {
+                    $scope.tempRowsPeralatan.splice(index, 1);
+                }
+
+                if (kategori === 'tenagaKerja') {
+                    $scope.tempRowsTenagaKerja.splice(index, 1);
+                }
             };
 
             $scope.initSelect2BySelector = function (selector, placeholder, onSelect) {
@@ -425,49 +469,33 @@ mainApp
                 if (!g) return 0;
 
                 let qty = +g.inputTotal.val[id] || 0;
-                let hargaInput = +g.inputHarga.val[id] || 0;
-                let hargaAsli = +g.hargaAsli.val[id] || 0;
+                let harga = +g.inputHarga.val[id] || 0;
                 let koef = +g.inputKoefisien.val[id] || 1;
 
-                // TOTAL SIMULASI (INPUT)
-                let totalInput = qty * hargaInput * koef;
-                g.total[id] = totalInput;
-
-                // TOTAL SHT (ASLI)
-                let totalAsli = qty * hargaAsli * koef;
-                g.totalAsli[id] = totalAsli;
+                let total = qty * harga * koef;
+                g.total[id] = total;
 
                 $scope.jumlahHarga();
-                return totalInput;
+                return total;
             };
 
             $scope.jumlahHarga = function () {
                 let s = $scope.hpsStore[$scope.activeSpesifikasiId];
                 if (!s) return;
 
-                let totalInput = 0;
-                let totalAsli = 0;
+                let total = 0;
 
                 [s.bahan, s.peralatan, s.tenagaKerja].forEach(group => {
                     group.table.forEach(row => {
-                        totalInput += group.total[row.id] || 0;
-                        totalAsli += group.totalAsli[row.id] || 0;
+                        total += group.total[row.id] || 0;
                     });
                 });
 
-                // HASIL
-                s.meta.jumlah = totalInput;
-                s.meta.jumlahSht = totalAsli;
-
-                // BIAYA UMUM & KEUNTUNGAN (%)
-                let p = +s.meta.percent || 0;
-
-                s.meta.total_percent = totalInput * (p / 100);
-                s.meta.total_all = totalInput + s.meta.total_percent;
-
-                s.meta.total_percent_sht = totalAsli * (p / 100);
-                s.meta.total_all_sht = totalAsli + s.meta.total_percent_sht;
+                s.meta.jumlah = total;
+                s.meta.total_percent = total * (s.meta.percent / 100);
+                s.meta.total_all = total + s.meta.total_percent;
             };
+
 
             $scope.totalHarga = function (percent) {
                 var p = parseFloat(percent || 0);
@@ -786,38 +814,190 @@ mainApp
                 URL.revokeObjectURL(a.href);
             };
 
-            $scope.getKeterangan = function (kategori, id) {
-                let g = $scope.getGroup(kategori);
-                if (!g) return '';
+            // $scope.exportExcelHPS = async function () {
 
-                let qty = +g.inputTotal.val[id] || 0;
-                let hargaInput = +g.inputHarga.val[id] || 0;
-                let hargaAsli = +g.hargaAsli.val[id] || 0;
-                let koef = +g.inputKoefisien.val[id] || 1;
+            //     const s = $scope.hpsStore[$scope.activeSpesifikasiId];
+            //     if (!s) {
+            //         alert('Data HPS belum dipilih');
+            //         return;
+            //     }
 
-                let totalInput = qty * hargaInput * koef;
-                let totalAsli = qty * hargaAsli * koef;
+            //     const bahan = s.bahan;
+            //     const peralatan = s.peralatan;
+            //     const tenagaKerja = s.tenagaKerja;
+            //     const meta = s.meta;
 
-                if (totalInput > totalAsli) return 'Lebih Tinggi';
-                if (totalInput < totalAsli) return 'Lebih Rendah';
-                return 'Sama';
-            };
+            //     const wb = new ExcelJS.Workbook();
+            //     const ws = wb.addWorksheet('HPS');
 
-            $scope.getKeteranganClass = function (kategori, id) {
-                let g = $scope.getGroup(kategori);
-                if (!g) return '';
+            //     let rowNum = 1;
 
-                let qty = +g.inputTotal.val[id] || 0;
-                let hargaInput = +g.inputHarga.val[id] || 0;
-                let hargaAsli = +g.hargaAsli.val[id] || 0;
-                let koef = +g.inputKoefisien.val[id] || 0;
+            //     const borderThin = {
+            //         top: { style: 'thin' },
+            //         left: { style: 'thin' },
+            //         bottom: { style: 'thin' },
+            //         right: { style: 'thin' }
+            //     };
 
-                let totalInput = qty * hargaInput * koef;
-                let totalAsli = qty * hargaAsli * koef;
+            //     const setArial11 = (row, bold = false, italic = false) => {
+            //         row.eachCell(cell => {
+            //             cell.font = { name: 'Arial', size: 11, bold, italic };
+            //             cell.alignment = { ...cell.alignment, vertical: 'middle' };
+            //         });
+            //     };
 
-                return totalAsli > totalInput ? 'text-danger' : '';
-            };
+            //     const borderRow = row => row.eachCell(c => c.border = borderThin);
 
+            //     ws.columns = [
+            //         { width: 8 },
+            //         { width: 45 },
+            //         { width: 14 },
+            //         { width: 8 },
+            //         { width: 12 },
+            //         { width: 18 },
+            //         { width: 20 }
+            //     ];
+
+            //     ws.getColumn(1).alignment = { horizontal: 'center' };
+            //     ws.getColumn(3).alignment = { horizontal: 'center' };
+            //     ws.getColumn(4).alignment = { horizontal: 'center' };
+            //     ws.getColumn(5).alignment = { horizontal: 'center' };
+            //     ws.getColumn(6).alignment = { horizontal: 'right' };
+            //     ws.getColumn(7).alignment = { horizontal: 'right' };
+
+
+            //     ws.mergeCells('A1:G1');
+            //     ws.getCell('A1').value = 'SIMULASI HARGA PERKIRAAN SENDIRI (HPS)';
+            //     setArial11(ws.getRow(1), true);
+            //     ws.getRow(1).alignment = { horizontal: 'center' };
+
+            //     const asb = $scope.options_asb.find(x => x.id == $scope.idAsb);
+            //     const asbText = asb
+            //         ? `${asb.kodeKelompok} - ${asb.UraianKegiatan} (${asb.satuan}) - ${asb.tahunASB}`
+            //         : '';
+
+
+            //     ws.mergeCells('A2:G2');
+            //     ws.getCell('A2').value = asbText;
+            //     setArial11(ws.getRow(2), false, true);
+            //     ws.getRow(2).alignment = { horizontal: 'center' };
+
+            //     rowNum = 2;
+
+            //     ws.addRow([]);
+            //     ws.addRow(['No', 'Uraian', 'Kode', 'Sat.', 'Koefisien', 'Harga Satuan (Rp)', 'Jumlah Harga (Rp)']);
+            //     rowNum = ws.lastRow.number;
+
+            //     let headerRow = ws.getRow(rowNum);
+            //     setArial11(headerRow, true);
+            //     borderRow(headerRow);
+
+            //     const renderGroup = (label, title, group) => {
+            //         ws.addRow([label, title]);
+            //         rowNum++;
+
+            //         ws.mergeCells(`B${rowNum}:G${rowNum}`);
+            //         let gr = ws.getRow(rowNum);
+            //         setArial11(gr, true);
+            //         gr.getCell(1).alignment = { horizontal: 'center' };
+            //         borderRow(gr);
+
+            //         let no = 1;
+            //         let subtotal = 0;
+
+            //         group.table.forEach(row => {
+            //             const d = $scope.options_kel_spesifikasi.find(
+            //                 x => x.id_spesifikasi == row.id
+            //             );
+            //             if (!d) return;
+
+            //             const qty = Number(group.inputTotal.val[row.id]) || 0;
+            //             const harga = Number(group.inputHarga.val[row.id]) || 0;
+            //             const koef = Number(group.inputKoefisien.val[row.id]) || 1;
+
+            //             const jumlah = qty * harga * koef;
+            //             subtotal += jumlah;
+
+            //             ws.addRow([
+            //                 no++,
+            //                 d.UraianKelompok,
+            //                 d.kodeKelItem || '',
+            //                 d.satuan || '',
+            //                 koef,
+            //                 harga,
+            //                 jumlah
+            //             ]);
+
+            //             rowNum++;
+            //             let r = ws.getRow(rowNum);
+            //             r.getCell(5).numFmt = '0.000';
+            //             r.getCell(6).numFmt = '#,##0.00';
+            //             r.getCell(7).numFmt = '#,##0.00';
+            //             setArial11(r);
+            //             borderRow(r);
+            //         });
+
+            //         ws.addRow(['', `JUMLAH HARGA ${title}`, '', '', '', '', subtotal]);
+            //         rowNum++;
+
+            //         ws.mergeCells(`B${rowNum}:F${rowNum}`);
+            //         let sr = ws.getRow(rowNum);
+            //         setArial11(sr, true);
+            //         sr.getCell(2).alignment = { horizontal: 'center' };
+            //         sr.getCell(7).numFmt = '#,##0.00';
+            //         borderRow(sr);
+
+            //         return subtotal;
+            //     };
+
+            //     const totalA = renderGroup('A', 'TENAGA KERJA', tenagaKerja);
+            //     const totalB = renderGroup('B', 'BAHAN', bahan);
+            //     const totalC = renderGroup('C', 'PERALATAN', peralatan);
+
+            //     const D = totalA + totalB + totalC;
+
+            //     ws.addRow(['D', 'Jumlah (A+B+C)', '', '', '', '', D]);
+            //     rowNum++;
+            //     ws.mergeCells(`B${rowNum}:F${rowNum}`);
+            //     let dr = ws.getRow(rowNum);
+            //     setArial11(dr, true);
+            //     dr.getCell(7).numFmt = '#,##0.00';
+            //     borderRow(dr);
+
+            //     const pct = Number(meta.percent || 0);
+            //     const E = meta.total_percent;
+            //     const F = meta.total_all;
+
+            //     ws.addRow(['E', `Biaya Umum dan Keuntungan ${pct}% x D`, '', '', `${pct}%`, '', E]);
+            //     rowNum++;
+            //     ws.mergeCells(`B${rowNum}:F${rowNum}`);
+            //     let er = ws.getRow(rowNum);
+            //     setArial11(er);
+            //     er.getCell(5).alignment = { horizontal: 'center' };
+            //     er.getCell(7).numFmt = '#,##0.00';
+            //     borderRow(er);
+
+            //     ws.addRow(['F', 'Harga Satuan Pekerjaan (D+E)', '', '', '', '', F]);
+            //     rowNum++;
+            //     ws.mergeCells(`B${rowNum}:F${rowNum}`);
+            //     let fr = ws.getRow(rowNum);
+            //     setArial11(fr, true);
+            //     fr.getCell(7).numFmt = '#,##0.00';
+            //     borderRow(fr);
+
+            //     ws.pageSetup.printArea = `A1:G${rowNum}`;
+
+            //     const buf = await wb.xlsx.writeBuffer();
+            //     const blob = new Blob([buf], {
+            //         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            //     });
+
+            //     const a = document.createElement('a');
+            //     a.href = URL.createObjectURL(blob);
+            //     a.download = 'Harga Perkiraan Sendiri (HPS).xlsx';
+            //     a.click();
+            //     URL.revokeObjectURL(a.href);
+            // };
         }
     ]);
 

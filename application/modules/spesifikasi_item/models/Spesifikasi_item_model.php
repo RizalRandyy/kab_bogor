@@ -101,12 +101,12 @@ class Spesifikasi_item_model extends CI_Model
                 ->where('kodeKelompok', $kodeKelompok)
                 ->get('tb_spesifikasi_item')->first_row();
 
-            if ($cek) {
-                return [
-                    'message' => 'Tambah SSH Gagal! Kode Item ' . $jenis_item->kodeKelompok . ' & Kode Spesifikasi ' . $params['idSpesifikasi'] . ' sudah ada!',
-                    'status' => 500,
-                ];
-            }
+            // if ($cek) {
+            //     return [
+            //         'message' => 'Tambah SSH Gagal! Kode Item ' . $jenis_item->kodeKelompok . ' & Kode Spesifikasi ' . $params['idSpesifikasi'] . ' sudah ada!',
+            //         'status' => 500,
+            //     ];
+            // }
 
             $params['kodeKelompok'] = $kodeKelompok;
 

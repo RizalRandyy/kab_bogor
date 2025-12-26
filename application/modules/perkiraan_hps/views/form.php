@@ -35,10 +35,10 @@
 															<tr>
 																<th>No</th>
 																<th class="text-center" style="width: 15%;">Kode Item</th>
-																<th class="text-center" style="width: 40%;">Uraian Kegiatan</th>
-																<th class="text-center" style="width: 10%;">Satuan</th>
-																<th class="text-center" style="width: 10%;">Tahun Kegiatan</th>
-																<th class="text-center" style="width: 20%;">Harga Kegiatan</th>
+																<th class="text-left" style="width: 40%;">Uraian Kegiatan</th>
+																<th class="text-left" style="width: 10%;">Satuan</th>
+																<th class="text-left" style="width: 10%;">Tahun Kegiatan</th>
+																<th class="text-left" style="width: 20%;">Harga Kegiatan</th>
 																<th class="text-center" style="width: 5%;"></th>
 															</tr>
 														</thead>
@@ -56,10 +56,10 @@
 																ng-repeat="(key, value) in data track by $index">
 																<td>{{ key + 1 }}</td>
 																<td class="text-center" ng-bind="value.kodeKelompok"></td>
-																<td class="text-center" ng-bind="value.UraianKegiatan"></td>
-																<td class="text-center" ng-bind="value.satuan"></td>
-																<td class="text-center" ng-bind="value.tahunASB"></td>
-																<td class="text-right">
+																<td class="text-left" ng-bind="value.UraianKegiatan"></td>
+																<td class="text-left" ng-bind="value.satuan"></td>
+																<td class="text-left" ng-bind="value.tahunASB"></td>
+																<td class="text-left">
 																	{{ getHargaKegiatan(value.id) | number:0 }}
 																</td>
 																<td class="text-center" style="white-space: nowrap;">
@@ -83,6 +83,16 @@
 										<div class="col-sm-3">
 											<input class="form-control"
 												ng-value="hpsStore[activeSpesifikasiId].meta.jumlah | currency:'Rp. '"
+												disabled>
+										</div>
+									</div>
+								</div>
+								<div class="col-12 col-md-12 col-lg-12 text-right">
+									<div class="form-group row">
+										<label for="jumlahSht" class="col-sm-9 col-form-label text-sm">Jumlah SHT Perbub ASB</label>
+										<div class="col-sm-3">
+											<input class="form-control"
+												ng-value="hpsStore[activeSpesifikasiId].meta.jumlahSht | currency:'Rp. '"
 												disabled>
 										</div>
 									</div>
@@ -196,11 +206,11 @@
 										<tr>
 											<th>Item</th>
 											<th>SHT Perbub</th>
+											<th>Koefisien</th>
 											<th class="col-total">Harga Survey</th>
 											<th>Volume / Kuantitas</th>
-											<th>Koefisien</th>
 											<th class="col-total">Total</th>
-											<th>Aksi</th>
+											<th>Keterangan</th>
 										</tr>
 									</thead>
 
@@ -213,7 +223,13 @@
 											<td class="text-right">
 												{{ getGroup('tenagaKerja').hargaAsli.val[row.id] | number }}
 											</td>
-
+											<td>
+												<input
+													step="0.001"
+													class="form-control text-right font-12"
+													ng-model="getGroup('tenagaKerja').inputKoefisien.val[row.id]"
+													ng-change="getTotal('tenagaKerja', row.id)">
+											</td>
 											<td>
 												<input
 													class="form-control text-right font-12 col-total"
@@ -226,21 +242,18 @@
 													ng-model="getGroup('tenagaKerja').inputTotal.val[row.id]"
 													ng-change="getTotal('tenagaKerja', row.id)">
 											</td>
-											<td>
-												<input
-													step="0.001"
-													class="form-control text-right font-12"
-													ng-model="getGroup('tenagaKerja').inputKoefisien.val[row.id]"
-													ng-change="getTotal('tenagaKerja', row.id)">
-											</td>
 											<td class="col-total text-right">
 												{{ getTotal('tenagaKerja', row.id) | currency:'Rp. ' }}
 											</td>
-											<td>
-												<button type="button" class="btn btn-danger btn-sm font-12"
-													ng-click="removeItemKategori('tenagaKerja', row.id)">
-													Hapus
-												</button>
+											<td class="text-center">
+												<span class="badge"
+													ng-class="{
+          											    'badge-danger': getKeterangan('tenagaKerja', row.id) === 'Lebih Tinggi',
+          											    'badge-success': getKeterangan('tenagaKerja', row.id) === 'Lebih Rendah',
+          											    'badge-secondary': getKeterangan('tenagaKerja', row.id) === 'Sama'
+          											}">
+													{{ getKeterangan('tenagaKerja', row.id) }}
+												</span>
 											</td>
 										</tr>
 
@@ -268,10 +281,10 @@
 										<!-- TOMBOL TAMBAH -->
 										<tr>
 											<td colspan="7">
-												<button type="button" class="btn btn-success btn-sm"
+												<!-- <button type="button" class="btn btn-success btn-sm"
 													ng-click="addRowTenagaKerja()">
 													+ Tambah Pekerja
-												</button>
+												</button> -->
 											</td>
 										</tr>
 									</tbody>
@@ -287,11 +300,11 @@
 										<tr>
 											<th>Item</th>
 											<th>SHT Perbub</th>
+											<th>Koefisien</th>
 											<th class="col-total">Harga Toko</th>
 											<th>Volume / Kuantitas</th>
-											<th>Koefisien</th>
 											<th class="col-total">Total</th>
-											<th>Aksi</th>
+											<th>Keterangan</th>
 										</tr>
 									</thead>
 
@@ -304,7 +317,13 @@
 											<td class="text-right">
 												{{ getGroup('bahan').hargaAsli.val[row.id] | number }}
 											</td>
-
+											<td>
+												<input
+													step="0.001"
+													class="form-control text-right font-12"
+													ng-model="getGroup('bahan').inputKoefisien.val[row.id]"
+													ng-change="getTotal('bahan', row.id)">
+											</td>
 											<td>
 												<input
 													class="form-control text-right font-12 col-total"
@@ -317,21 +336,18 @@
 													ng-model="getGroup('bahan').inputTotal.val[row.id]"
 													ng-change="getTotal('bahan', row.id)">
 											</td>
-											<td>
-												<input
-													step="0.001"
-													class="form-control text-right font-12"
-													ng-model="getGroup('bahan').inputKoefisien.val[row.id]"
-													ng-change="getTotal('bahan', row.id)">
-											</td>
 											<td class="col-total text-right font-12">
 												{{ getTotal('bahan', row.id) | currency:'Rp. ' }}
 											</td>
-											<td>
-												<button type="button" class="btn btn-danger btn-sm font-12"
-													ng-click="removeItemKategori('bahan', row.id)">
-													Hapus
-												</button>
+											<td class="text-center">
+												<span class="badge"
+													ng-class="{
+          											    'badge-danger': getKeterangan('bahan', row.id) === 'Lebih Tinggi',
+          											    'badge-success': getKeterangan('bahan', row.id) === 'Lebih Rendah',
+          											    'badge-secondary': getKeterangan('bahan', row.id) === 'Sama'
+          											}">
+													{{ getKeterangan('bahan', row.id) }}
+												</span>
 											</td>
 										</tr>
 
@@ -346,25 +362,27 @@
 													</option>
 												</select>
 											</td>
-											<td>
-												<button
-													type="button"
-													class="btn btn-danger btn-sm font-12"
-													ng-click="removeTempRow('bahan', $index)">
-													Hapus
-												</button>
+											<td class="text-center">
+												<span class="badge"
+													ng-class="{
+          											    'badge-danger': getKeterangan('bahan', row.id) === 'Lebih Tinggi',
+          											    'badge-success': getKeterangan('bahan', row.id) === 'Lebih Rendah',
+          											    'badge-secondary': getKeterangan('bahan', row.id) === 'Sama'
+          											}">
+													{{ getKeterangan('bahan', row.id) }}
+												</span>
 											</td>
 										</tr>
 
 										<!-- TOMBOL TAMBAH -->
-										<tr>
+										<!-- <tr>
 											<td colspan="7">
 												<button type="button" class="btn btn-success btn-sm"
 													ng-click="addRowBahan()">
 													+ Tambah Bahan
 												</button>
 											</td>
-										</tr>
+										</tr> -->
 									</tbody>
 								</table>
 
@@ -378,11 +396,11 @@
 										<tr>
 											<th>Item</th>
 											<th>SHT Perbub</th>
+											<th>Koefisien</th>
 											<th class="col-total">Harga Toko</th>
 											<th>Volume / Kuantitas</th>
-											<th>Koefisien</th>
 											<th class="col-total">Total</th>
-											<th>Aksi</th>
+											<th>Keterangan</th>
 										</tr>
 									</thead>
 
@@ -395,7 +413,13 @@
 											<td class="text-right">
 												{{ getGroup('peralatan').hargaAsli.val[row.id] | number }}
 											</td>
-
+											<td>
+												<input
+													step="0.001"
+													class="form-control text-right font-12"
+													ng-model="getGroup('peralatan').inputKoefisien.val[row.id]"
+													ng-change="getTotal('peralatan', row.id)">
+											</td>
 											<td>
 												<input
 													class="form-control text-right font-12 col-total"
@@ -408,21 +432,18 @@
 													ng-model="getGroup('peralatan').inputTotal.val[row.id]"
 													ng-change="getTotal('peralatan', row.id)">
 											</td>
-											<td>
-												<input
-													step="0.001"
-													class="form-control text-right font-12"
-													ng-model="getGroup('peralatan').inputKoefisien.val[row.id]"
-													ng-change="getTotal('peralatan', row.id)">
-											</td>
 											<td class="col-total text-right">
 												{{ getTotal('peralatan', row.id) | currency:'Rp. ' }}
 											</td>
-											<td>
-												<button type="button" class="btn btn-danger btn-sm font-12"
-													ng-click="removeItemKategori('peralatan', row.id)">
-													Hapus
-												</button>
+											<td class="text-center">
+												<span class="badge"
+													ng-class="{
+          											    'badge-danger': getKeterangan('peralatan', row.id) === 'Lebih Tinggi',
+          											    'badge-success': getKeterangan('peralatan', row.id) === 'Lebih Rendah',
+          											    'badge-secondary': getKeterangan('peralatan', row.id) === 'Sama'
+          											}">
+													{{ getKeterangan('peralatan', row.id) }}
+												</span>
 											</td>
 										</tr>
 
@@ -437,23 +458,25 @@
 													</option>
 												</select>
 											</td>
-											<td>
-												<button
-													type="button"
-													class="btn btn-danger btn-sm font-12"
-													ng-click="removeTempRow('peralatan', $index)">
-													Hapus
-												</button>
+											<td class="text-center">
+												<span class="badge"
+													ng-class="{
+          											    'badge-danger': getKeterangan('peralatan', row.id) === 'Lebih Tinggi',
+          											    'badge-success': getKeterangan('peralatan', row.id) === 'Lebih Rendah',
+          											    'badge-secondary': getKeterangan('peralatan', row.id) === 'Sama'
+          											}">
+													{{ getKeterangan('peralatan', row.id) }}
+												</span>
 											</td>
 										</tr>
 
 										<!-- TOMBOL TAMBAH -->
 										<tr>
 											<td colspan="7">
-												<button type="button" class="btn btn-success btn-sm"
+												<!-- <button type="button" class="btn btn-success btn-sm"
 													ng-click="addRowPeralatan()">
 													+ Tambah Peralatan
-												</button>
+												</button> -->
 											</td>
 										</tr>
 									</tbody>

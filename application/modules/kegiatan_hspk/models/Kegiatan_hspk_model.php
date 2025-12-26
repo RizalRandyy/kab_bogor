@@ -81,12 +81,12 @@ class Kegiatan_hspk_model extends CI_Model
                 ->where('idKegiatan', $params['idKegiatan'])
                 ->get('tb_kegiatan')->first_row();
 
-            if ($cek) {
-                return [
-                    'message' => 'Tambah Kegiatan Gagal! Kode Kegiatan ' . $params['idKegiatan'] . ' sudah ada!',
-                    'status' => 500,
-                ];
-            }
+            // if ($cek) {
+            //     return [
+            //         'message' => 'Tambah Kegiatan Gagal! Kode Kegiatan ' . $params['idKegiatan'] . ' sudah ada!',
+            //         'status' => 500,
+            //     ];
+            // }
 
             if ($this->db->insert('tb_kegiatan', $params)) {
                 return [

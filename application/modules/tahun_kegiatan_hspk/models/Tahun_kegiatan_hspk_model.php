@@ -163,12 +163,12 @@ class Tahun_kegiatan_hspk_model extends CI_Model
 
             $params['kodeKelompok'] = $kodeKelompok;
 
-            if ($cek) {
-                return [
-                    'message' => 'Tambah Tahun Kegiatan Gagal! Kode Kegiatan ' . $kodeKelompok . ' & Tahun ' . $params['tahunPekerjaan'] . ' sudah ada!',
-                    'status' => 500,
-                ];
-            }
+            // if ($cek) {
+            //     return [
+            //         'message' => 'Tambah Tahun Kegiatan Gagal! Kode Kegiatan ' . $kodeKelompok . ' & Tahun ' . $params['tahunPekerjaan'] . ' sudah ada!',
+            //         'status' => 500,
+            //     ];
+            // }
 
             if ($this->db->insert('tb_thn_kegiatan', $params)) {
                 return [

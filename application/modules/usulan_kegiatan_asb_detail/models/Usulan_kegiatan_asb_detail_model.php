@@ -72,6 +72,7 @@ class Usulan_kegiatan_asb_detail_model extends CI_Model
                 foreach ($id_thn_pekerjaan_detail as $ky => $val) {
                     $hspk_detail = $this->db->query("SELECT * FROM tb_thn_pekerjaan_detail WHERE id = ?", [$val])->first_row();
 
+
                     $id_harga = json_decode($hspk_detail->id_thn_harga);
                     $total_item = json_decode($hspk_detail->total_item);
 
